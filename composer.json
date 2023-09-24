@@ -6,11 +6,19 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "barryvdh/laravel-dompdf": "^2.0",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "intervention/image": "^2.7",
+        "laravel/cashier": "*",
         "laravel/framework": "^8.75",
+        "laravel/passport": "*",
         "laravel/sanctum": "^2.11",
-        "laravel/tinker": "^2.5"
+        "laravel/tinker": "^2.5",
+        "laravel/ui": "*",
+        "nesbot/carbon": "^2.62",
+        "simplesoftwareio/simple-qrcode": "^4.2",
+        "spatie/laravel-permission": "^5.5"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

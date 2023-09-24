@@ -1,0 +1,184 @@
+<template>
+<section class="content">
+    <div class="container-fluid">            
+        <div class="row">
+            <section class="col-lg-8 connectedSortable">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card custom-card crm-highlight-card">
+                            <div class="card-body"> 
+                                <div class="d-flex align-items-center justify-content-between"> 
+                                    <div> 
+                                        <div class="fw-semibold fs-18 text-fixed-white mb-2">Your KYC registration is incomplete</div> 
+                                        <span class="d-block fs-12 text-fixed-white">
+                                            <span class="op-7">You have completed</span> 
+                                            <span class="fw-semibold text-warning">48%</span> 
+                                            <span class="op-7">of the necessary KYC, you can also check your status</span>.
+                                        </span> 
+                                        <span class="d-block fw-semibold mt-1">
+                                            <a class="text-fixed-white" href="/profile"><u>Click here</u></a>
+                                        </span> 
+                                    </div> 
+                                    <div> 
+                                        <div id="crm-main" style="min-height: 105.7px;">
+                                            <div id="apexchartsgf9wn099" class="apexcharts-canvas apexchartsgf9wn099 apexcharts-theme-light" style="width: 100px; height: 105.7px;">
+                                                <svg id="SvgjsSvg1001" width="100" height="105.7" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svgjs="http://svgjs.dev" class="apexcharts-svg" xmlns:data="ApexChartsNS" transform="translate(0, 0)" style="background: transparent;">
+                                                    <g id="SvgjsG1003" class="apexcharts-inner apexcharts-graphical" transform="translate(-0.5, 0)"><defs id="SvgjsDefs1002"><clipPath id="gridRectMaskgf9wn099"><rect id="SvgjsRect1005" width="109" height="127" x="-3" y="-1" rx="0" ry="0" opacity="1" stroke-width="0" stroke="none" stroke-dasharray="0" fill="#fff"></rect></clipPath><clipPath id="forecastMaskgf9wn099"></clipPath><clipPath id="nonForecastMaskgf9wn099"></clipPath><clipPath id="gridRectMarkerMaskgf9wn099"><rect id="SvgjsRect1006" width="107" height="129" x="-2" y="-2" rx="0" ry="0" opacity="1" stroke-width="0" stroke="none" stroke-dasharray="0" fill="#fff"></rect></clipPath></defs><g id="SvgjsG1007" class="apexcharts-radialbar"><g id="SvgjsG1008"><g id="SvgjsG1009" class="apexcharts-tracks"><g id="SvgjsG1010" class="apexcharts-radialbar-track apexcharts-track" rel="1"><path id="apexcharts-radialbarTrack-0" d="M 51.5 19.68841463414634 A 31.81158536585366 31.81158536585366 0 1 1 51.49444783097905 19.68841511866449" fill="none" fill-opacity="1" stroke="rgba(242,242,242,0.85)" stroke-opacity="1" stroke-linecap="round" stroke-width="4.806231707317075" stroke-dasharray="0" class="apexcharts-radialbar-area" data:pathOrig="M 51.5 19.68841463414634 A 31.81158536585366 31.81158536585366 0 1 1 51.49444783097905 19.68841511866449"></path></g></g><g id="SvgjsG1012"><g id="SvgjsG1016" class="apexcharts-series apexcharts-radial-series" seriesName="Status" rel="1" data:realIndex="0"><path id="SvgjsPath1017" d="M 51.5 19.68841463414634 A 31.81158536585366 31.81158536585366 0 0 1 55.37685702121338 83.07446663248744" fill="none" fill-opacity="0.85" stroke="rgba(255,255,255,0.9)" stroke-opacity="1" stroke-linecap="round" stroke-width="4.95487804878049" stroke-dasharray="0" class="apexcharts-radialbar-area apexcharts-radialbar-slice-0" data:angle="173" data:value="48" index="0" j="0" data:pathOrig="M 51.5 19.68841463414634 A 31.81158536585366 31.81158536585366 0 0 1 55.37685702121338 83.07446663248744"></path></g><circle id="SvgjsCircle1013" r="29.408469512195122" cx="51.5" cy="51.5" class="apexcharts-radialbar-hollow" fill="#ffffff"></circle><g id="SvgjsG1014" class="apexcharts-datalabels-group" transform="translate(0, 0) scale(1)" style="opacity: 1;"><text id="SvgjsText1015" font-family="Helvetica, Arial, sans-serif" x="51.5" y="56.5" text-anchor="middle" dominant-baseline="auto" font-size=".875rem" font-weight="600" fill="#4b9bfa" class="apexcharts-text apexcharts-datalabel-value" style="font-family: Helvetica, Arial, sans-serif;">48%</text></g></g></g></g><line id="SvgjsLine1018" x1="0" y1="0" x2="103" y2="0" stroke="#b6b6b6" stroke-dasharray="0" stroke-width="1" stroke-linecap="butt" class="apexcharts-ycrosshairs"></line><line id="SvgjsLine1019" x1="0" y1="0" x2="103" y2="0" stroke-dasharray="0" stroke-width="0" stroke-linecap="butt" class="apexcharts-ycrosshairs-hidden"></line></g><g id="SvgjsG1004" class="apexcharts-annotations"></g>
+                                                </svg>
+                                                <div class="apexcharts-legend"></div>
+                                            </div>
+                                        </div> 
+                                    </div> 
+                                </div> 
+                            </div>
+                        </div>    
+                    </div>
+                    <div class="col-md-6">
+                        <DashboardTicket :tickets="tickets" />
+                    </div>
+                    <div class="col-md-12">
+                        <LoanAll />
+                    </div>
+                </div>
+            </section>
+            <section class="col-lg-4 connectedSortable">
+                <div class="card">
+                    <div class="card-header border-0">
+                        <h3 class="card-title">Recent Activities</h3>
+                        <div class="card-tools">
+                        <a href="#" class="btn btn-tool btn-sm">
+                            <i class="fas fa-download"></i>
+                        </a>
+                        <a href="#" class="btn btn-tool btn-sm">
+                            <i class="fas fa-bars"></i>
+                        </a>
+                        </div>
+                    </div>
+                    <div class="card-body table-responsive p-0">
+                        <table class="table table-striped table-valign-middle">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Activity</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="activity in activities" :key="activity.id">
+                                    <td>
+                                        <img class="img-circle img-size-32 mr-2" :src="(activity.user.image) ? '/img/profile/'+activity.user.image : '/img/profile/default.png'" :alt="activity.user ? activity.user.first_name+' '+activity.user.middle_name+' '+activity.user.last_name : 'Default Image' " :title="activity.user ? activity.user.first_name+' '+activity.user.middle_name+' '+activity.user.last_name : 'User\'s  Image' ">
+                                        {{activity.user | FullName}}
+                                    </td>
+                                    <td>{{activity.subject}}</td>
+                                    <td><span class="fs-14">{{ activity.created_at | excelDate }}</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- <div class="card custom-card"> 
+                    <div class="card-header justify-content-between"> 
+                        <div class="card-title"> Recent Activites </div> 
+                        <div class="dropdown"> 
+                        <a href="javascript:void(0);" class="p-2 fs-12 text-muted" data-bs-toggle="dropdown"> View All<i class="fa fa-arrow-down-s-line align-middle ms-1 d-inline-block"></i> </a> 
+                            <ul class="dropdown-menu" role="menu"> 
+                                <li><a class="dropdown-item" href="javascript:void(0);">Download</a></li> 
+                                <li><a class="dropdown-item" href="javascript:void(0);">Import</a></li> 
+                                <li><a class="dropdown-item" href="javascript:void(0);">Export</a></li> 
+                            </ul> 
+                        </div> 
+                    </div> 
+                    <div class="card-body"> 
+                        <ul class="list-unstyled mb-0"> 
+                            <li class="mb-3" v-for="activity in activities" :key="activity.id"> 
+                                <a href="javascript:void(0);"> 
+                                    <div class="d-flex align-items-center justify-content-between"> 
+                                        <div class="d-flex align-items-top justify-content-center"> 
+                                            <div class="me-2"> 
+                                                <span class="avatar avatar-md avatar-rounded"> 
+                                                    <img :src="(activity.user.image) ? '/img/profile/'+activity.user.image : '/img/profile/default.png'" :alt="activity.user ? activity.user.first_name+' '+activity.user.middle_name+' '+activity.user.last_name : 'Default Image' " :title="activity.user ? activity.user.first_name+' '+activity.user.middle_name+' '+activity.user.last_name : 'User\'s  Image' "> 
+                                                </span> 
+                                            </div> 
+                                            <div> 
+                                                <p class="mb-0 fw-semibold">{{activity.user ? activity.user.first_name+' '+activity.user.middle_name+' '+activity.user.last_name : 'User\'s  Image'}}</p>
+                                                <p class="mb-0 text-muted fs-12">{{activity.subject}}</p>
+                                            </div> 
+                                        </div> 
+                                        <div> 
+                                            <span class="fs-14">{{ activity.created_at | excelDate }}</span> 
+                                        </div> 
+                                    </div> 
+                                </a> 
+                            </li>
+                        </ul> 
+                    </div> 
+                </div> --> 
+                     
+            </section>
+        </div>
+    </div>
+</section>
+</template>
+<script>
+import moment from 'moment'
+export default {
+    data(){
+        return {
+            activities: [],
+            birthdays: [],
+            contacts: [],
+            editMode: false,
+            loans: {},
+            messages: [],
+            message_rooms: [],
+            month: '',
+            new_staffs: [],
+            notices: {},
+            staff_months: [],
+            tickets: {},   
+            settings: {
+                suppressScrollY: false,
+                suppressScrollX: false,
+                wheelPropagation: false
+            },
+        }
+    },
+    methods:{
+        getAllInitials(){
+            axios.get('/api/dashboard')
+            .then(response =>{
+                this.birthdays      = response.data.birthdays;
+                this.contacts       = response.data.contacts;
+                this.chats          = response.data.chats;
+                this.messages       = response.data.messages;
+                this.message_rooms  = response.data.chats;
+                this.notices        = response.data.notices;
+                this.new_staffs     = response.data.new_staffs;
+                this.tickets        = response.data.tickets;
+                this.staff_months   = response.data.staff_months;
+                this.loans          = response.data.loans;
+                this.activities     = response.data.activities;
+
+            })
+            .catch(()=>{
+                this.$Progress.fail();
+                toast.fire({icon: 'error', title: 'Dashboard not loaded successfully',});
+            });
+        },
+        scrollHanle(evt) {
+            console.log(evt)
+        },
+    },
+    mounted() {
+        this.getAllInitials();
+    }
+}
+</script>
+<style >
+.scroll-area {
+  position: relative;
+  margin: auto;
+  width: 600px;
+  height: 400px;
+}
+</style>
