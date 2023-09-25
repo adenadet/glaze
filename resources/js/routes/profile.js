@@ -7,6 +7,7 @@ import PMFormBasic from '../profile/forms/Basic.vue';
 import PMFormBioData from '../profile/forms/BioData.vue';
 import PMFormNOK from '../profile/forms/NextOfKin.vue';
 import PMFormPassword from '../profile/forms/Password.vue';
+import PMFormSocials from '../profile/forms/Socials.vue';
 
 
 Vue.component('Profile',        Profile);
@@ -15,6 +16,7 @@ Vue.component('PMFormBasic',  PMFormBasic);
 Vue.component('PMFormBioData',  PMFormBioData);
 Vue.component('PMFormNOK',      PMFormNOK);
 Vue.component('PMFormPassword', PMFormPassword);
+Vue.component('PMFormSocials', PMFormSocials);
 let routes = [
     {path: '/profile', component: Profile},
 ];

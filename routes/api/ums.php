@@ -15,6 +15,7 @@ Route::group(['prefix'=>'ums'], function () {
 
     Route::apiResources([
         '/addresses'    => 'CustomerAddressController',
+        '/address_verifications' => 'AddressVerificationController',
         '/branches'     => 'BranchController',
         '/bios'         => 'BioController',
         '/customers'    => 'CustomerController',

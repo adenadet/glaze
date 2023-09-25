@@ -37,59 +37,86 @@
             </div>
         </div>
     </div>
-    <button @click.prevent="updateNextofKin" type="submit" name="submit" class="submit btn btn-success">Submit </button>
+    <button @click.prevent="editMode ? updateNextOfKin() : createNextOfKin()" type="submit" name="submit" class="submit btn btn-success">Submit </button>
 </form>
 </template>
 <script>
-    export default {
-        data(){
-            return {
-                nokForm: new Form({
-                    id:'',
-                    name:'',
-                    relationship:'',
-                    address:'',
-                    email:'',
-                    phone:'',
-                }),
-                editMode:false,
-            }
+export default {
+    data(){
+        return {
+            nokForm: new Form({
+                id:'',
+                name:'',
+                relationship:'',
+                address:'',
+                email:'',
+                phone:'',
+            }),
+            editMode:false,
+        }
+    },
+    methods:{
+        createNextOfKin(){
+            this.$Progress.start();
+            this.nokForm.post('/api/ums/nok')
+            .then(response =>{
+                this.$Progress.finish();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'The Next of Kin details has been created',
+                    showConfirmButton: false,
+                    timer: 1500
+                    });
+                })
+            .catch(()=>{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: 'Please try again later!'
+                });
+            this.$Progress.fail();
+            });        
         },
-        methods:{
-            updateNextofKin(){
-                this.$Progress.start();
-                this.nokForm.post('/api/hrms/nok')
-                .then(response =>{
-                    this.$Progress.finish();
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'The Next of Kin details has been updated',
-                        showConfirmButton: false,
-                        timer: 1500
-                        });
-                    })
-                .catch(()=>{
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Something went wrong!',
-                        footer: 'Please try again later!'
-                        });
-                    this.$Progress.fail();
-                    });  
-                      
-            },
-            
+        updateNextOfKin(){
+            this.$Progress.start();
+            this.nokForm.put('/api/ums/nok/'+this.nokForm.id)
+            .then(response =>{
+                this.$Progress.finish();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'The Next of Kin details has been updated',
+                    showConfirmButton: false,
+                    timer: 1500
+                    });
+                })
+            .catch(()=>{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: 'Please try again later!'
+                });
+            this.$Progress.fail();
+            });  
+                
         },
-        mounted() {
-            this.nokForm.fill(this.nok);
-            Fire.$on('NextOfKinFill', update =>{
+        
+    },
+    mounted() {
+        this.nokForm.fill(this.nok);
+        Fire.$on('NextOfKinFill', update =>{
+            if(update.id != null){
                 this.editMode = true;
                 this.nokForm.fill(update);
-            });
-        },
-        props:{
-            'nok': Object,
-        },
-    }
+            }
+            else{
+                this.editMode = false;
+            }
+        });
+    },
+    props:{
+        'nok': Object,
+    },
+}
 </script>

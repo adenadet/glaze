@@ -16,15 +16,11 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
     public function index()
     {
         $params = [
             'page_title' => 'Dashboard',
+            'page' => 'Customer',
         ];
         return view('home')->with($params);
     }

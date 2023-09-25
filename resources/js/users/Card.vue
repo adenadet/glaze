@@ -5,7 +5,8 @@
             <img class="img-circle elevation-2" :src="user | userImage" alt="User Avatar">
         </div>
         <h3 class="widget-user-username">{{user | FullName}}</h3>
-        <h5 class="widget-user-desc">Lead Developer</h5>
+        <h5 class="widget-user-desc">{{ user.phone+' | '+user.email }}</h5>
+        <h6 class="widget-user-desc">{{ user.dob }}</h6>
     </div>
     <div class="card-footer p-0">
         <ul class="nav flex-column">
@@ -20,14 +21,14 @@
                 </router-link>
             </li>
             <li class="nav-item">
-            <a href="#" class="nav-link">
-                Missed Payments <span class="float-right badge bg-success">12</span>
-            </a>
+                <a href="#" class="nav-link">
+                    Missed Payments <span class="float-right badge bg-success">12</span>
+                </a>
             </li>
             <li class="nav-item">
-            <a href="#" class="nav-link">
-                Followers <span class="float-right badge bg-danger">842</span>
-            </a>
+                <a href="#" class="nav-link">
+                    Followers <span class="float-right badge bg-danger">842</span>
+                </a>
             </li>
         </ul>
     </div>

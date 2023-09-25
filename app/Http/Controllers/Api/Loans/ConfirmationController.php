@@ -15,14 +15,14 @@ class ConfirmationController extends Controller
     public function index()
     {
         $roles = DB::table('model_has_roles')->where('model_id','=', 1)->pluck('role_id');
-        $matrix = ConfirmationMatrix::select('id')->get();
+        $matrix = ConfirmationMatrix::pluck('id');
         
         $matrixes = [];
-        print_r($matrix);
+
         for ($i = 0; $i < count($matrix); $i++){
             
             $matrix_levels = [
-                'matrix_id' => $matrix[$i].['matrix_id'],
+                'matrix_id' => $matrix[$i],
                 'status' => ConfirmationMatrixItem::whereIn('role_id', $roles)->pluck('stage_number')
             ];
 

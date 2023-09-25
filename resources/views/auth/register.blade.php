@@ -44,15 +44,20 @@
                                         <input type="text" class="form-control form-control-lg @error('last_name') is-invalid @enderror" id="last_name" name="last_name" placeholder="last name" required> 
                                         @error('last_name')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
                                     </div>
-                                    <div class="col-xl-6 mt-0 mb-3"> 
+                                    <div class="col-xl-4 mt-0 mb-3"> 
                                         <label class="form-label text-default">Email</label> 
                                         <input type="email" class="form-control form-control-lg @error('email') is-invalid @enderror" id="email" name="email" placeholder="email" required>
                                         @error('email')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror 
                                     </div>
-                                    <div class="col-xl-6 mt-0 mb-3"> 
+                                    <div class="col-xl-4 mt-0 mb-3"> 
                                         <label class="form-label text-default">Phone</label> 
                                         <input type="text" class="form-control form-control-lg @error('phone') is-invalid @enderror" id="phone" name="phone" placeholder="phone" required> 
                                         @error('phone')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
+                                    </div>
+                                    <div class="col-xl-4 mt-0 mb-3"> 
+                                        <label class="form-label text-default">BVN</label> 
+                                        <input type="text" class="form-control form-control-lg @error('bvn') is-invalid @enderror" id="bvn" name="bvn" placeholder="bank verification number" required> 
+                                        @error('bvn')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
                                     </div>
                                     <div class="col-xl-6 mb-3"> 
                                         <label class="form-label text-default d-block">Password</label> 

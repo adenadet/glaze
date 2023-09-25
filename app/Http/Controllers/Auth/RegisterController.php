@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use App\Models\Finance\Wallet;
+use App\Models\Log\Activity;
 use Spatie\Permission\Models\Role;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
@@ -30,6 +31,7 @@ class RegisterController extends Controller
             'email'         => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password'      => ['required', 'string', 'min:8',],
             'phone'         => ['required', 'numeric', 'min:10',],
+            'bvn'           => ['required', 'numeric', 'min:11',],
         ]);
     }
 
@@ -42,21 +44,29 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'phone' => $data['phone'],
+            'bvn' => $data['bvn'],
         ]);
 
-        $wallet = Wallet::create([
+        /*$wallet = Wallet::create([
             'user_id' => $user->id,
             'balance' => 0.00,
             'created_by' => $user->id,
             'updated_by' => $user->id, 
             'status' => 1,
-        ]);
+        ]);*/
         
         $user->assignRole('Customer');
 
-        return $user; 
+        Activity::create([
+            'subject' => $user->first_name.' '.$user->last_name.' has successfully registered',
+            'url' => 'New Registration',
+            'method' => 'create', 
+            'ip' => \Illuminate\Support\Facades\Request::ip(), 
+            'agent' => \Illuminate\Support\Facades\Request::header('User-Agent'), 
+            'user_id' => $user->id,
+        ]);
 
-
+        return $user;
         
     }
 }

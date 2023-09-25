@@ -2,26 +2,14 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-xl-4 col-lg-6 col-md-5 col-sm-12 layout-top-spacing">
-            <div class="card custom-card overflow-hidden"> 
+            <div class="card  card-widget widget-user"> 
                 <div class="card-body p-0"> 
-                    <div class="d-sm-flex align-items-top p-4 border-bottom border-block-end-dashed main-profile-cover"> 
-                        <div> 
-                            <span class="avatar avatar-xxl avatar-rounded online me-3"> 
-                                <img src="/assets/images/faces/9.jpg" class="img-circle" alt=""> 
-                            </span> 
-                        </div> 
-                        <div class="flex-fill main-profile-info"> 
-                            <div class="d-flex align-items-center justify-content-between"> 
-                                <h6 class="fw-semibold mb-1 text-fixed-white">{{user.first_name}} {{user.middle_name}} {{user.last_name}}</h6> 
-                                <!--<button class="btn btn-light btn-wave waves-effect waves-light"><i class="ri-add-line me-1 align-middle d-inline-block"></i>Follow</button>--> 
-                            </div> 
-                            <p class="mb-1 text-muted text-fixed-white op-7">Chief Executive Officer (C.E.O)</p>
-                            <p class="fs-12 text-fixed-white mb-4 op-5"> 
-                                <span class="me-3"><i class="ri-building-line me-1 align-middle"></i>{{user.area_id ? user.area.name: ''}}</span>
-                                <span><i class="ri-map-pin-line me-1 align-middle"></i>{{user.state_id ? user.state.name: ''}}</span> 
-                            </p>
-                        </div> 
-                    </div> 
+                    <div class="widget-user-header bg-success">
+                        <h3 class="widget-user-username">{{user | FullName}}</h3>
+                    </div>
+                    <div class="widget-user-image">
+                        <img class="img-circle elevation-2" :src="user | userImage" :alt="user | FullName">
+                    </div>
                     <div class="p-4 border-bottom border-block-end-dashed"> 
                         <p class="fs-15 mb-2 me-4 fw-semibold">Contact Information :</p>
                         <div class="text-muted"> 
@@ -82,7 +70,7 @@
                             <PMFormSocials />     
                         </div> 
                         <div class="tab-pane text-muted" id="kyc" role="tabpanel">
-                            <PMFormKYC />     
+                            <UserFormKYC :user="user"/>     
                         </div> 
                     </div> 
                 </div> 
