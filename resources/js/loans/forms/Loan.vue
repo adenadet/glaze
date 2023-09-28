@@ -96,14 +96,8 @@
                 return (1 + (interest/100));
             },
             interestRate(){
-                //let interest = 0;
                 let getIndex = this.loan_types.map(object => object.id).indexOf(this.loanData.loan_type_id);
-                //console.log(getIndex);
-                //console.log(this.loan_types[getIndex]);
                 let interest = this.loan_types[getIndex].percentage / 52 / 100;
-
-                //console.log(interest);
-
                 return Number(interest);
             },
 
@@ -200,22 +194,20 @@
             }, 
         },
         mounted() {
-            
-            //this.getInitials();
             Fire.$on('LoanDataFill', loan =>{
-                console.log(loan);
-                this.loanData.id = loan.id;
-                this.loanData.name = loan.name;
-                this.loanData.amount = loan.amount;
-                this.loanData.loan_type_id = loan.type_id;
-                this.loanData.user_id = loan.user_id;
-                this.loanData.duration = loan.duration;
+                if (loan != null){
+                    this.loanData.id = loan.id;
+                    this.loanData.name = loan.name;
+                    this.loanData.amount = loan.amount;
+                    this.loanData.loan_type_id = loan.type_id;
+                    this.loanData.user_id = loan.user_id;
+                    this.loanData.duration = loan.duration;
 
-                this.loanData.bank_id = loan.bank_id;
-                this.loanData.acct_number = loan.acct_number;
-                this.loanData.acct_name = loan.acct_name;
-
-                //this.loanData.fill(loan);
+                    this.loanData.bank_id = loan.bank_id;
+                    this.loanData.acct_number = loan.acct_number;
+                    this.loanData.acct_name = loan.acct_name;
+                }
+                
             });     
         },
         props: {

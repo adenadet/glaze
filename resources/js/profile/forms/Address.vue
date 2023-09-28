@@ -128,27 +128,10 @@ export default {
                 });  
                     
         },
-        getProfilePic(){
-            let photo = (this.AddressData.image.length >= 150) ? this.AddressData.image : "./"+this.AddressData.image;
-            return photo;
-            },
-        updateProfilePic(e){
-            let file = e.target.files[0];
-            let reader = new FileReader();
-            if (file['size'] < 2000000){
-                reader.onloadend = (e) => {this.AddressData.image = reader.result}
-                reader.readAsDataURL(file)
-                //alert(reader.result)
-            }
-            else{
-                Swal.fire({type: 'error', title: 'File is too large'});
-            }
-        },
     },
     props:{
         areas: Array,
         states: Array,
-        nations: Array,
         user: Object,
         editMode: Boolean,
         source: String,

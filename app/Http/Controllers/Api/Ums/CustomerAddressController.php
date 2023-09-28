@@ -48,7 +48,12 @@ class CustomerAddressController extends Controller
 
     public function show($id)
     {
-        //
+        $address = CustomerAddress::where('id', '=', $id)->with(['area', 'customer', 'state', 'verification'])->first();
+        
+        return response()->json([
+            'address' => $address,
+            'address_verification' => $address->verification,
+        ]);
     }
 
     public function update(Request $request, $id)

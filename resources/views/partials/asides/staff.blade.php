@@ -20,8 +20,8 @@
                 <li class="nav-item"><a href="#" class="nav-link"><i class="nav-icon fas fa-check"></i><p>Confirmation<i class="fas fa-angle-left right"></i></p></a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item"><a href="/staff/confirm/loans" class="nav-link"><i class="nav-icon fas fa-file"></i><p>Approve Loans</p></a></li>
-                        <li class="nav-item"><a href="/staff/confirm/address" class="nav-link"><i class="nav-icon fas fa-file"></i><p>Confirm Address</p></a></li>
-                        <li class="nav-item"><a href="/staff/confirm/bvn" class="nav-link"><i class="nav-icon fas fa-file"></i><p>Confirm BVN</p></a></li>
+                        <li class="nav-item"><a href="/staff/confirm/addresses" class="nav-link"><i class="nav-icon fas fa-file"></i><p>Confirm Address</p></a></li>
+                        <li class="nav-item"><a href="/staff/confirm/bvns" class="nav-link"><i class="nav-icon fas fa-file"></i><p>Confirm BVN</p></a></li>
                     </ul>
                 </li>
             </ul>

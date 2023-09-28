@@ -36,6 +36,7 @@
                                 <div class="dropdown-menu">
                                     <router-link class="btn btn-block dropdown-item" :to="'/staff/loans/'+loan.id"><i class="fa fa-eye mr-1 text-primary"></i> View </router-link>
                                     <!--router-link class="btn btn-block dropdown-item" :to="'/staff/loans/1'"><i class="fa fa-file mr-1 text-primary"></i> Add Files </router-link-->
+                                    <button class="btn btn-block dropdown-item" @click="assignLoan(loan)"><i class="fa fa-user-cog mr-1 text-success"></i> Assign Loan</button>
                                     <button class="btn btn-block dropdown-item" @click="closeLoan()"><i class="fa fa-times mr-1 text-danger"></i> Close Loan</button>
                                     <button class="btn btn-block dropdown-item" @click="deleteLoan(1)"><i class="fa fa-trash mr-1 text-danger"></i> Delete Loan Request</button>
                                 </div>
@@ -80,6 +81,14 @@ export default {
             this.loan = {};
             Fire.$emit('LoanDataFill', {});
             $('#loanModal').modal('show');
+            this.$Progress.finish();
+        },
+        assignLoan(loan){
+            if (loan.account_officer == null){this.editMode = false;}
+            else{this.editMode = true;}
+            this.loan = loan;
+            Fire.$emit('LoanAssignDataFill', loan);
+            $('#loanAssignModal').modal('show');
             this.$Progress.finish();
         },
         closeLoan(){

@@ -65,30 +65,30 @@ class AddressVerificationController extends Controller
     public function index()
     {
         return response()->json([
-            'unverified' => CustomerAddress::where('status', '=', 0)->whereNull('confirmed_by')->paginate(20),
+            'unverified' => CustomerAddress::where('status', '=', 0)->whereNull('confirmed_by')->with(['area', 'customer', 'state'])->paginate(20),
         ]);
     }
 
     public function store(Request $request)
     {
         $verification = CustomerAddressVerification::create([
-            'customer_id' => $request->input('customer_id'),
-            'customer_address' => $request->input('customer_address'),
-            'date_of_visit' => $request->input('date_of_visit'),
-            'date_of_visit_additional' => $request->input('date_of_visit_additional') ?? NULL,
-            'found_address' => $request->input('found_address'),
-            'alt_address' =>  $request->input('alt_address') ?? NULL,
-            'person_met_status'  => $request->input('person_met_status'),
-            'person_met' => $request->input('person_met') ?? NULL,
-            'ease_of_location' => $request->input('ease_of_location'),
-            'description' => $request->input('description'),
-            'verification_officer_id' => auth('api')->id(),
-            'verification_officer_signature' => NULL,
-            'verification_date' => $request->input('verification_date') ?? date('Y-m-d'),
-            'status' => 1,
+            'address_id' => $request->input('address_id'),
+            'alternate_address' => $request->input('alternate_address') ?? NULL,
+            'description' => $request->input('description') ?? NULL,
+            'location_ease' => $request->input('location_ease'),
+            'met_with' => $request->input('met_with'),
+            'met_with_name' => $request->input('met_with_name') ?? NULL,
+            'met_with_relations' => $request->input('met_with_relations') ?? NULL,
+            'met_with_phone' => $request->input('met_with_phone') ?? NULL,
+            'remarks' => $request->input('remarks'),
+            'visit_update' => $request->input('visit_update'),
+            'visit_date' => $request->input('visit_date'),
+            'visit_date_2' => $request->input('visit_date') ?? NULL,
+            'created_by' => auth('api')->id(),
+            'updated_by' => auth('api')->id(),
         ]);
 
-        $address = CustomerAddress::where('user_id', '=', $request->input('customer_id'))->first();
+        $address = CustomerAddress::where('id', '=', $request->input('address_id'))->first();
         $address->status = 1;
         $address->save();
 
@@ -108,20 +108,18 @@ class AddressVerificationController extends Controller
     {
         $verification = CustomerAddressVerification::where('id', '=', $id)->first();
         
-        $verification->customer_id = $request->input('customer_id');
-        $verification->customer_address = $request->input('customer_address');
-        $verification->date_of_visit = $request->input('date_of_visit');
-        $verification->date_of_visit_additional = $request->input('date_of_visit_additional') ?? NULL;
-        $verification->found_address = $request->input('found_address');
-        $verification->alt_address =  $request->input('alt_address') ?? NULL;
-        $verification->person_met_status = $request->input('person_met_status');
-        $verification->person_met = $request->input('person_met') ?? NULL;
-        $verification->ease_of_location = $request->input('ease_of_location');
+        $verification->alternate_address = $request->input('alternate_address');
         $verification->description = $request->input('description');
-        $verification->verification_officer_id = auth('api')->id();
-        $verification->verification_officer_signature = NULL;
-        $verification->verification_date = $request->input('verification_date') ?? date('Y-m-d');
-        $verification->status = 1;
+        $verification->location_ease = $request->input('location_ease');
+        $verification->met_with = $request->input('met_with');
+        $verification->met_with_name = $request->input('met_with_name');
+        $verification->met_with_relations = $request->input('met_with_relations');
+        $verification->met_with_phone = $request->input('met_with_phone');
+        $verification->remarks = $request->input('remarks');
+        $verification->visit_update = $request->input('visit_update');
+        $verification->visit_date = $request->input('visit_date');
+        $verification->visit_date_2 = $request->input('visit_date_2');
+        $verification->updated_by = auth('api')->id();
         
         $verification->save();
 

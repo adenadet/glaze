@@ -66,7 +66,6 @@
 export default {
     data(){
         return  {
-            editMode: false,
             kyc_items: [],
             UserKYCData: new Form({
                 kyc_items:[], 
@@ -102,9 +101,7 @@ export default {
             this.$Progress.start();
             this.UserKYCData.post('/api/ums/kyc_store', {
                 transformrequest: [
-                    function (data, headers){
-                        return objecttoformdata(data);
-                    }
+                    function (data, headers){return objecttoformdata(data);}
                 ]
             })
             .then(response =>{
@@ -118,12 +115,7 @@ export default {
                 });
             })
             .catch(()=>{
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Something went wrong!',
-                    footer: 'Please try again later!'
-                });
+                Swal.fire({icon: 'error', title: 'Oops...', text: 'Something went wrong!', footer: 'Please try again later!'});
                 this.$Progress.fail();
             });
         },
@@ -131,22 +123,13 @@ export default {
             axios.get('/api/ums/kyc_items').then(response =>{
                 this.kyc_items = response.data.kyc_items;
                 for (let i=0; i < this.kyc_items.length; i++){
-                    var item = {
-                        name: this.kyc_items[i].name,
-                        file: '',
-                        expiry_date: '',
-                        type: '',
-                        identification: '',
-                    };
+                    var item = {name: this.kyc_items[i].name, file: '', expiry_date: '', type: '', identification: '',};
                     this.UserKYCData.kyc_items.push(item);
                 }
             })
             .catch(()=>{
                 this.$Progress.fail();
-                toast.fire({
-                    icon: 'error',
-                    title: 'User KYC items not loaded successfully',
-                })
+                toast.fire({icon: 'error', title: 'User KYC items not loaded successfully',});
             });
         },
         updateUserKYCData(){

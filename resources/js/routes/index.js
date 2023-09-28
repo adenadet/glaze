@@ -2,7 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 
 //import applicant from './applicant';
-
+import approvals from './approvals';
 import chats from './chats';
 import customers from './customers';
 import contacts from './contacts';
@@ -28,6 +28,7 @@ import ums from './ums';
 
 const baseRoutes = [];
 const routes = baseRoutes.concat(
+    approvals,
     chats,
     contacts,
     customers,

@@ -24,4 +24,8 @@ class CustomerAddress extends Structure
         return $this->belongsTo('App\Models\Area', 'area_id', 'id');
     }
 
+    public function verification(){
+        return $this->belongsTo('App\Models\Ums\CustomerAddressVerification', 'id', 'address_id');
+    }
+
 }

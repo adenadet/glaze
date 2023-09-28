@@ -14,8 +14,8 @@
                         <a class="nav-link active" id="customer-tab" data-toggle="pill" href="#customer" role="tab" aria-controls="customer" aria-selected="true">Customer <span class="badge badge-primary right"><i class="fas fa-check-circle"></i></span></a>
                         <a class="nav-link" id="customer-tab" data-toggle="pill" href="#address" role="tab" aria-controls="address" aria-selected="true">Address <span class="badge badge-primary right"><i class="fas fa-check-circle"></i></span></a>
                         <a class="nav-link" id="kyc-tab" data-toggle="pill" href="#kyc" role="tab" aria-controls="kyc" aria-disabled="true">KYC</a>
-                        <a class="nav-link" id="loan-details-tab" data-toggle="pill" href="#loan" role="tab" aria-controls="loan" aria-selected="false" aria-disabled="true">Loan Details <span class="badge badge-primary right" v-if="current_loan.status >= 3"><i class="fas fa-check-circle"></i></span></a>
-                        <a class="nav-link" :class="current_loan.status == 3 ? '' : 'disabled'" id="vert-tabs-profile-tab" data-toggle="pill" href="#vert-tabs-profile" role="tab" aria-controls="vert-tabs-profile" aria-selected="false" aria-disabled="true">Guarantors</a>
+                        <a class="nav-link" id="loan-details-tab" data-toggle="pill" href="#loan" role="tab" aria-controls="loan" aria-selected="false" aria-disabled="true">Loan Details <span class="badge badge-primary right" v-if="current_loan != null && current_loan.status >= 3"><i class="fas fa-check-circle"></i></span></a>
+                        <a class="nav-link" :class="current_loan != null && current_loan.status == 3 ? '' : 'disabled'" id="vert-tabs-profile-tab" data-toggle="pill" href="#vert-tabs-profile" role="tab" aria-controls="vert-tabs-profile" aria-selected="false" aria-disabled="true">Guarantors</a>
                     </div>
                 </div>
                 <div class="col-8 col-sm-9">
