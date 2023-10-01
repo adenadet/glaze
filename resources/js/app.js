@@ -37,16 +37,6 @@ window.toast = toast;
 //Import Moment for DateTime functions
 import moment from 'moment';
 
-//Import Video Player
-//import VueVideoPlayer from 'vue-video-player';
-//import 'video.js/dist/video-js.css'
-//import 'vue-video-player/src/custom-theme.css'
-
-/*Vue.use(VueVideoPlayer, /* {
-    options: global default options,
-    events: global videojs events} 
-    );*/
-
 //Import VueRouter for SPA Routing
 import VueRouter from 'vue-router';
 Vue.use(VueRouter);
@@ -111,6 +101,7 @@ Vue.filter('currency', function(value) {
 });
 
 Vue.filter('ExcelDate', function(text){
+    if (text == null){return 'N/A';}
     return moment(text).format('Do MMMM, YYYY');
 });
 

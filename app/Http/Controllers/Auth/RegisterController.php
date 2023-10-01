@@ -7,6 +7,7 @@ use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use App\Models\Finance\Wallet;
 use App\Models\Log\Activity;
+use App\Models\Ums\Customer;
 use Spatie\Permission\Models\Role;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
@@ -54,6 +55,12 @@ class RegisterController extends Controller
             'updated_by' => $user->id, 
             'status' => 1,
         ]);*/
+        Customer::create([
+            'user_id' => $user->id,
+            'status' => 1,
+            'created_by' => $user->id,
+            'updated_by' => $user->id,
+        ]);
         
         $user->assignRole('Customer');
 

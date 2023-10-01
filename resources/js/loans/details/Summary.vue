@@ -7,7 +7,7 @@
             <table class="table table-sm table-bordered table-hover table-stripped">
                 <tbody>
                     <tr>
-                        <td >Loan Name/ID</td>
+                        <td >Loan Name</td>
                         <td colspan="3"><strong>{{ account.name }} [{{ account.unique_id }}]</strong></td>
                         <td>Loan Type</td>
                         <td><strong>{{ account.type ? account.type.name : 'Old Type' }}</strong></td>

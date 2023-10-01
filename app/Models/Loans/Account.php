@@ -31,6 +31,10 @@ class Account extends Model
         return $this->belongsTo('App\Models\Loans\Type', 'type_id', 'id');
     }
 
+    public function matrix_level(){
+        return $this->belongsTo('App\Models\Loans\ConfirmationMatrixItem', 'App\Models\Loans\ConfirmationMatrix',);
+    }
+
     public function user(){
         return $this->belongsTo('App\Models\User', 'user_id', 'id');
     }

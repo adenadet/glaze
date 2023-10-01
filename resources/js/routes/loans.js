@@ -7,6 +7,7 @@ import LoanAdvert           from '../loans/Advert.vue';
 import LoanAssigned         from '../loans/Assigned.vue';
 import LoanConfirm          from '../loans/Confirm.vue';
 import LoanConfirmAll       from '../loans/Confirms.vue';
+import LoanCustomer         from '../loans/Customer.vue';
 import LoanInitiate         from '../loans/Initiate.vue';
 import LoanNew              from '../loans/Initiate.vue';
 import LoanPending          from '../loans/Pending.vue';
@@ -20,7 +21,9 @@ Vue.component('LoanAll',            LoanAll);
 Vue.component('LoanAdmin',          LoanAdmin);
 Vue.component('LoanAdvert',         LoanAdvert);
 Vue.component('LoanAssigned',       LoanAssigned);
+Vue.component('LoanConfirms',       LoanConfirmAll);
 Vue.component('LoanConfirm',        LoanConfirm);
+Vue.component('LoanCustomer',       LoanCustomer)
 Vue.component('LoanInitiate',       LoanInitiate);
 Vue.component('LoanNew',            LoanNew);
 Vue.component('LoanPending',        LoanPending);
@@ -30,12 +33,15 @@ Vue.component('LoanStaff',          LoanStaff);
 Vue.component('LoanStaffSingle',    LoanStaffSingle);
 Vue.component('LoanTypes',          LoanTypes);
 
-    import LoanDetailCheckList     from '../loans/details/CheckList.vue';
+    import LoanDetailCheckList      from '../loans/details/CheckList.vue';   
+    import LoanDetailConfirmations  from '../loans/details/Confirmations.vue';
     import LoanDetailGuarantors     from '../loans/details/Guarantors.vue';
     import LoanDetailRepayments     from '../loans/details/Repayments.vue';
     import LoanDetailSummary        from '../loans/details/Summary.vue';
+    //import LoanDetailSummary        from '../loans/details/Summary.vue';
 
     Vue.component('LoanDetailCheckList', LoanDetailCheckList);
+    Vue.component('LoanDetailConfirmations', LoanDetailConfirmations);
     Vue.component('LoanDetailGuarantors', LoanDetailGuarantors);
     Vue.component('LoanDetailRepayments', LoanDetailRepayments);
     Vue.component('LoanDetailSummary', LoanDetailSummary);
@@ -43,6 +49,7 @@ Vue.component('LoanTypes',          LoanTypes);
     import LoanClose                from '../loans/forms/Close.vue';
     import LoanForm                 from '../loans/forms/Loan.vue';
     import LoanFormCheckList        from '../loans/forms/CheckList.vue';
+    import LoanFormConfirm          from '../loans/forms/Confirm.vue';
     import LoanFormInitial          from '../loans/forms/Initial.vue';
     import LoanFormRepayment        from '../loans/forms/Repayment.vue';
     import LoanFormRequirement      from '../loans/forms/Requirement.vue';
@@ -51,6 +58,7 @@ Vue.component('LoanTypes',          LoanTypes);
     Vue.component('LoanClose',              LoanClose);
     Vue.component('LoanForm',               LoanForm);
     Vue.component('LoanFormCheckList',      LoanFormCheckList);
+    Vue.component('LoanFormConfirm',        LoanFormConfirm);
     Vue.component('LoanFormInitial',        LoanFormInitial);
     Vue.component('LoanFormRepayment',      LoanFormRepayment);
     Vue.component('LoanFormRequirement',    LoanFormRequirement);
@@ -66,6 +74,7 @@ let routes = [
     {path: '/loans/:id',                            component: LoanSingle},
     
     {path: '/staff/loans',                          component: LoanStaff},
+    {path: '/staff/loans/:id',                      component: LoanStaffSingle},
     {path: '/staff/loans/pending',                  component: LoanPending},
     {path: '/staff/accounts/assigned',              component: LoanAssigned},
     {path: '/staff/confirm/loans',                  component: LoanConfirmAll},

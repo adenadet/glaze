@@ -27,23 +27,23 @@
                         <div class="card-body">
                             <div class="tab-content" id="custom-tabs-one-tabContent">
                                 <div class="tab-pane fade show active" id="basic" role="tabpanel" aria-labelledby="basic-tab">
-                                    <UserFormBasic :user="customer" :staffs="staffs" />
+                                    <UserDetailBasic :user="customer" :staffs="staffs" />
                                 </div>
                                 <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
-                                    <UserFormAddress :user="customer" :staffs="staffs" />
+                                    <CustomerDetailAddress />
                                 </div>
                                 <div class="tab-pane fade" id="next-of-kin" role="tabpanel" aria-labelledby="next-of-kin-tab">
-                                    <UserFormNOK :user="customer" />
+                                    <UserDetailNOK :user="customer" />
                                 </div>
                                 <div class="tab-pane fade" id="kyc" role="tabpanel" aria-labelledby="kyc-tab">
-                                    <UserFormKYC :user="customer" />
+                                    <UserDetailKYC :user="customer" />
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <LoanAll mode="staff" :user="customer" />
                 </div>
             </div>
+            <LoanCustomer />
         </div>
     </div>
 </section>
@@ -74,7 +74,7 @@ export default {
 
             Fire.$emit('BioDataFill', this.customer);
             Fire.$emit('NextOfKinFill', this.customer.next_of_kin);
-            Fire.$emit('AddressDataFill', this.customer.customer_address);
+            Fire.$emit('AddressDataFill', response.data.customer_address);
             
         }
     },

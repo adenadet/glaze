@@ -22,19 +22,6 @@
                         <option value=3>Bank Deposit/Transfer</option>
                     </select> 
                 </div>
-                <div class="mb-3" v-show="repaymentData.payment_mode_id == 1">
-                    <paystack style="margin-auto;" 
-                    class="btn btn-primary" type="button" 
-                    :amount="this.repaymentData.amount * 100" 
-                    :email="repaymentData.email" 
-                    :paystackkey="PUBLIC_KEY" 
-                    :callback="processRepayment" 
-                    :close="close" 
-                    :reference="genRef()" 
-                    :embed="false">
-                        PAY NGN {{this.repaymentData.amount}} Online
-                    </paystack>
-                </div>
                 <div class="mb-3" v-show="repaymentData.payment_mode_id == 2">
                     Coming Soon
                 </div> 

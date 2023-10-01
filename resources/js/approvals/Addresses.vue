@@ -4,7 +4,7 @@
         <div class="card-header">
             <h3 class="card-title">Unconfirmed Addresses</h3>
         </div>
-        <div class="card-body table-responsive p-0" style="height: 500px;" v-if="addresses.data != null && addresses.data.length != 0">
+        <div class="card-body table-responsive p-0" style="max-height: 500px;" v-if="addresses.data != null && addresses.data.length != 0">
             <table class="table table-head-fixed text-nowrap">
                 <thead>
                 <tr>

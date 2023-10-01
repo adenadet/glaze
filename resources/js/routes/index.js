@@ -8,12 +8,12 @@ import customers from './customers';
 import contacts from './contacts';
 import dashboard from './dashboard';
 //import domiciliary from './domiciliary';
-import eservices from './eservices';
-import external from './external';
+//import eservices from './eservices';
+//import external from './external';
 //import hims from './hims';
 //import hr from './hr';
 import guarantor from './guarantor';
-import learn from './learn';
+//import learn from './learn';
 import loans from './loans';
 import notices from './notices';
 
@@ -34,7 +34,7 @@ const routes = baseRoutes.concat(
     customers,
     dashboard,
     //eservices,
-    external,
+    //external,
     //hims, 
     guarantor,
     //hr, 

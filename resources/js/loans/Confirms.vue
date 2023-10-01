@@ -9,7 +9,7 @@
         </div> 
         <div class="card-body"> 
             <div class="table-responsive"> 
-                <table class="table" v-if="accounts != null && accounts.data != null && accounts.data.length != 0 "> 
+                <table class="table" v-if="accounts != null && accounts.length != 0 "> 
                     <thead>
                         <tr>
                             <th scope="col">Customer Name</th>
@@ -25,6 +25,7 @@
                     </thead> 
                     <tbody>
                         <tr v-for="account in accounts.data" :key="account.id">
+                            <th scope="row">{{account.user | FullName}}</th>
                             <th scope="row">{{account.name}} <br /><span class="text-muted">{{ account.unique_id }}</span></th>
                             <td>{{ account.type ? account.type.name : 'Old Type' }}</td>
                             <td>{{ account.amount}}</td>
@@ -35,7 +36,7 @@
                             <td>
                                 <button type="button" class="btn btn-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
                                 <div class="dropdown-menu">
-                                    <router-link class="btn btn-block dropdown-item" :to="'/loans/1'"><i class="fa fa-eye mr-1 text-primary"></i> View </router-link>
+                                    <router-link class="btn btn-block dropdown-item" :to="'/staff/confirm/loans/'+account.id"><i class="fa fa-eye mr-1 text-primary"></i> View </router-link>
                                     <button v-if="account.status > 13" class="btn btn-block dropdown-item" @click="closeLoan()"><i class="fa fa-times mr-1 text-danger"></i> Close Loan</button>
                                     <button v-else class="btn btn-block dropdown-item" @click="deleteLoan(1)"><i class="fa fa-trash mr-1 text-danger"></i> Delete Loan Request</button>
                                 </div>
@@ -108,9 +109,7 @@ export default {
             });
         },
         getInitials(){
-            this.initial_route = '/api/loans/confirms';
-            this.option_mode = "customer";
-            axios.get(this.initial_route).then(response =>{
+            axios.get('/api/loans/confirms').then(response =>{
                 this.reloadPage(response);
                 toast.fire({icon: 'success', title: 'Loan Accounts loaded successfully',});
             })

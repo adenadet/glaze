@@ -8,16 +8,16 @@
                         <button type="button" class="btn btn-default" data-bs-dismiss="modal" aria-label="Close" @click="closeModal()"><i class="fa fa-times text-success"></i></button>
                     </div>
                     <div class="modal-body">
-                        <LoanFormRepayment :loan="repayment.account"/>
+                        <LoanFormRepayment :loan="account"/>
                     </div>
                 </div>
             </div>
         </div>
         <div class="card-header">
-            <div class="card-title">Repayments </div> 
+            <h3 class="card-title">Repayments </h3> 
         </div>
         <div class="card-body"> 
-            <div class="table-responsive">
+            <div class="table-responsive" v-if="repayments != null && repayments.data != null && repayments.data.length != 0">
                 <table class="table text-nowrap">
                     <thead>
                         <tr>
@@ -39,6 +39,17 @@
                     </tbody>
                 </table>
             </div>
+            <div class="row" v-else>
+                <div class="col-12">
+                    <div class="info-box">
+                        <span class="info-box-icon bg-danger"><i class="far fa-star"></i></span>
+                        <div class="info-box-content">
+                            <span class="info-box-text">No Repayments Yet</span>
+                            <span class="info-box-number">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -47,9 +58,10 @@ export default {
     data(){
         return {
             account: {},
-            repayments: {},
             editMode: false,
             form: new Form({}),
+            repayments: {},
+            repayment: {},
         }
     },
     methods:{

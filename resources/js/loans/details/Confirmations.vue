@@ -1,29 +1,29 @@
 <template>
-    <div class="timeline timeline-inverse" v-for="action in actions.data">
-        <div>
-            <i class="fas fa-envelope bg-primary"></i>
+<section class="card">
+    <div class="card-header">
+        <h3 class="card-title">Loan Confirmation Timeline</h3>
+    </div>
+    <div class="card-body">
+        <div class="timeline timeline-inverse">
+            <div v-for="action in actions.data">
+                <i class="fa" :class="action.start_stage < action.end_stage ? 'fa-check bg-primary' : 'fa-times bg-danger'"></i>
 
-            <div class="timeline-item">
-                <span class="time"><i class="far fa-clock"></i> 12:05</span>
-
-                <h3 class="timeline-header"><a href="#">Support Team</a> sent you an email</h3>
-
-                <div class="timeline-body">
-                    Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles,
-                    weebly ning heekya handango imeem plugg dopplr jibjab, movity
-                    jajah plickers sifteo edmodo ifttt zimbra. Babblely odeo kaboodle
-                    quora plaxo ideeli hulu weebly balihoo...
+                <div class="timeline-item">
+                    <span class="time"><i class="far fa-clock"></i> {{ action.created_at | excelDate }}</span>
+                    <h3 class="timeline-header"><a href="#">{{ action.creator | FullName }}</a> sent {{ action.summary }}</h3>
+                    <div class="timeline-body" v-if="action.description != null" v-html="action.description"></div>
                 </div>
             </div>
         </div>
     </div>
+</section>
 </template>
 <script>
 export default {
     data(){
         return {
             account: {},
-            checklists: {},
+            actions: {},
             editMode: false,
             form: new Form({}),
         }
@@ -31,13 +31,9 @@ export default {
     methods:{
         getAllInitials(){
             this.$Progress.start();
-            axios.get('/api/loans/confirmations/'+this.$route.params.id).then(response =>{
+            axios.get('/api/loans/confirms/'+this.$route.params.id).then(response =>{
                 this.reloadPage(response);
                 this.$Progress.finish();
-                toast.fire({
-                    icon: 'success',
-                    title: 'Account was loaded successfully',
-                });
             })
             .catch(()=>{
                 this.$Progress.fail();
@@ -49,7 +45,7 @@ export default {
         },
         reloadPage(response){
             this.account = response.data.account;
-            this.checklists = response.data.checklists;
+            this.actions = response.data.actions;
         }
     },
     mounted() {

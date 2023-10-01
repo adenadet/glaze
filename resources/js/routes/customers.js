@@ -6,11 +6,15 @@ import CustomerSingle    from '../customers/Single.vue';
 //import CustomerStaff     from '../customers/Staff.vue';
 import CustomerMiniCard  from '../customers/MiniCard.vue';
 
+
+    import CustomerDetailAddress from '../customers/details/Address.vue';
+
 Vue.component('CustomerAll',     CustomerAll);
 Vue.component('CustomerMiniCard',   CustomerMiniCard);
 Vue.component('CustomerSingle',  CustomerSingle);
 //Vue.component('CustomerStaff',   CustomerStaff);
 
+    Vue.component('CustomerDetailAddress', CustomerDetailAddress);
 let routes = [
     {path: '/staff/customers',           component:CustomerAll},
     {path: '/staff/customers/:id',       component:CustomerSingle},

@@ -7,6 +7,7 @@ Route::group(['prefix'=>'loans'], function () {
     Route::get('/accounts/staffs/{id}', 'AccountController@staff_show')->name('accounts.staff_show');
     Route::get('/accounts/customer/{id}', 'AccountController@customer')->name('accounts.customer');
     Route::get('/accounts/pending', 'AccountController@pending')->name('accounts.pending');
+    Route::get('/confirms/initials/{id}', 'ConfirmationController@initials')->name('confirms.initialize');
     Route::get('/guarantors/loans/{id}', 'GuarantorController@display')->name('guarantors.loans');
     Route::get('/repayments/initials', 'RepaymentController@initials')->name('repayments.initialize');
     Route::get('/types/initials', 'TypeController@initials')->name('types.initialize');

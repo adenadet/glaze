@@ -54,12 +54,13 @@ class CustomerController extends Controller
 
     public function show($id)
     {
-        $staffs = Employee::select('user_id')->get();
+        //$staffs = Employee::select('user_id')->get();
         return response()->json([
-            'customer' => User::where('id', '=', $id)->with('next_of_kin', 'customer_accounts', 'customer_address', 'social_medias', 'customer_kyc')->with(['area', 'state',])->first(),
+            'customer' => User::where('id', '=', $id)->with('next_of_kin', 'customer_accounts', 'customer_address', 'social_medias', 'customer_kyc')->first(),
+            'customer_address' => CustomerAddress::where('user_id', '=', $id)->with(['area', 'state', 'verifier'])->first(),
             'all_loans_cnt' => Account::where('user_id', '=', $id)->where('status', '>=', '5')->count(),
             'completed_loans_cnt' => Account::where('user_id', '=', $id)->where('status', '=', '10')->count(),
-            'staffs' => User::whereIn('id', $staffs)->orderBy('last_name', 'ASC')->get(),
+            //'staffs' => User::whereIn('id', $staffs)->orderBy('last_name', 'ASC')->get(),
         ]);
     }
 

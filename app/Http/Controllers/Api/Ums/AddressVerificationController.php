@@ -90,6 +90,8 @@ class AddressVerificationController extends Controller
 
         $address = CustomerAddress::where('id', '=', $request->input('address_id'))->first();
         $address->status = 1;
+        $address->confirmed_by = auth('api')->id();
+        $address->confirmed_at = date('Y-m-d');
         $address->save();
 
         return response()->json([
@@ -122,6 +124,12 @@ class AddressVerificationController extends Controller
         $verification->updated_by = auth('api')->id();
         
         $verification->save();
+
+        $address = CustomerAddress::where('id', '=', $request->input('address_id'))->first();
+        $address->status = 1;
+        $address->confirmed_by = auth('api')->id();
+        $address->confirmed_at = date('Y-m-d');
+        $address->save();
 
         return response()->json([
             'unverified' => CustomerAddress::where('status', '=', 0)->whereNull('confirmed_by')->get(),

@@ -7,6 +7,11 @@ import UserCard      from '../users/Card.vue';
 import UserRoles    from '../users/Roles.vue';  
 import UserStaffs      from '../users/Staffs.vue';  
 
+    import UserDetailAddress      from '../users/details/Address.vue';
+    import UserDetailBasic      from '../users/details/Basic.vue';
+    import UserDetailKYC      from '../users/details/KYC.vue';
+    import UserDetailNOK      from '../users/details/NOK.vue';
+
     import UserFormAddress   from '../users/forms/Address.vue';    
     import UserFormAssignRole   from '../users/forms/AssignRole.vue';    
     import UserFormBasic         from '../users/forms/Basic.vue'; 
@@ -19,6 +24,11 @@ Vue.component('UserRoles',              UserRoles);
 Vue.component('UserAll',                UserAll);
 Vue.component('UserCard',               UserCard);
 Vue.component('UserStaffs',             UserStaffs);
+
+    Vue.component('UserDetailAddress',  UserDetailAddress);
+    Vue.component('UserDetailBasic',    UserDetailBasic);
+    Vue.component('UserDetailKYC',      UserDetailKYC);
+    Vue.component('UserDetailNOK',      UserDetailNOK);
 
     Vue.component('UserFormAddress',    UserFormAddress);
     Vue.component('UserFormAssignRole', UserFormAssignRole);
