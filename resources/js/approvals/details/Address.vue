@@ -21,7 +21,7 @@
                     </tr>
                     <tr>
                         <th>Street:</th>
-                        <td>{{ address.street2 }}</td>
+                        <td>{{ address.street_2 }}</td>
                     </tr>
                     <tr>
                         <th>City:</th>
@@ -49,15 +49,10 @@ export default {
             address: {},
         }
     },
-    methods:{},
     mounted() {
-        //this.getInitials();
         Fire.$on('AddressDataFill', address =>{
             this.address = address;
         });     
-    },
-    props: {
-        editMode: Boolean,
     },
 }
 </script>

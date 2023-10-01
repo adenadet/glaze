@@ -8,6 +8,7 @@ import CustomerMiniCard  from '../customers/MiniCard.vue';
 
 
     import CustomerDetailAddress from '../customers/details/Address.vue';
+    import CustomerDetailAddressVerification from '../customers/details/AddressVerification.vue';
 
 Vue.component('CustomerAll',     CustomerAll);
 Vue.component('CustomerMiniCard',   CustomerMiniCard);
@@ -15,6 +16,7 @@ Vue.component('CustomerSingle',  CustomerSingle);
 //Vue.component('CustomerStaff',   CustomerStaff);
 
     Vue.component('CustomerDetailAddress', CustomerDetailAddress);
+    Vue.component('CustomerDetailAddressVerification', CustomerDetailAddressVerification);
 let routes = [
     {path: '/staff/customers',           component:CustomerAll},
     {path: '/staff/customers/:id',       component:CustomerSingle},

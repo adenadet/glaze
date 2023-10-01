@@ -1,10 +1,7 @@
 <template>
 <section>
-    <div class="" v-if="!editMode && address.verification != null">
-        <CustomerDetailAddressConfirmation />
-        <input type="button" name="button" class="button btn btn-success" value="Update" @click="editAddressVerification()"/>
-    </div>
-    <form id="password_form" @submit.prevent="editMode ? updateAddressVerification() : createAddressVerification()" v-else>
+    
+    <form id="password_form" @submit.prevent="editMode ? updateAddressVerification() : createAddressVerification()">
         <div class="row">
             <div class="col-md-6 col-sm-12">
                 <div class="form-group">
@@ -132,16 +129,13 @@ export default {
             .then(
                 response => {
                     this.$Progress.finish();
-                    this.$route.push('/staffs/confirm/addresses');
+                    this.$router.push('/staff/confirm/addresses');
                 }
             )
             .catch(()=> {
                 this.$Progress.fail();
                 toast.fire({icon: 'error', title: 'Address Verification not sent',});
             })
-        },
-        editAddressVerification(){
-            this.editMode = true;
         },
         updateAddressVerification(){
             this.$Progress.start();
@@ -150,7 +144,7 @@ export default {
             .then(
                 response => {
                     this.$Progress.finish();
-                    this.$route.push('/staffs/confirm/addresses');
+                    this.$router.push('/staff/confirm/addresses');
                 }
             )
             .catch(()=> {
@@ -164,9 +158,7 @@ export default {
             this.address = address;
         });  
         Fire.$on('AddressVerificationDataFill', requirement =>{
-            if (requirement != null){
-                this.AddressConfirmationData.fill(requirement);
-            }
+            if (requirement != null){this.AddressConfirmationData.fill(requirement);}
         });  
     },
 }

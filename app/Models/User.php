@@ -33,6 +33,10 @@ class User extends Authenticatable
         return $this->belongsTo('App\Models\Area', 'area_id', 'id');
     }
 
+    public function customer(){
+        return $this->belongsTo('App\Models\Ums\Customer', 'id', 'user_id');
+    }
+
     public function customer_accounts(){
         return $this->hasMany('App\Models\Ums\CustomerAccount', 'user_id', 'id');
     }
@@ -50,7 +54,7 @@ class User extends Authenticatable
     }
 
     public function loans(){
-        return $this->hasMany('App\Models\Loan', 'user_id', 'id');
+        return $this->hasMany('App\Models\Loans\Account', 'user_id', 'id');
     }
 
     public function next_of_kin(){

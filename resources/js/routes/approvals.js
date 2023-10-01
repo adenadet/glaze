@@ -28,6 +28,8 @@ Vue.component('ApproveBVN', ApproveBvn);
 let routes = [
     {path: '/staff/confirm/addresses', component: ApproveAddresses},
     {path: '/staff/confirm/address/:id', component: ApproveAddress},
+    {path: '/staff/confirm/bvns', component: ApproveBVNs},
+    {path: '/staff/confirm/bvns/:id', component: ApproveBvn},
 ];
 
 export default routes
