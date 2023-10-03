@@ -70,7 +70,8 @@
                             <PMFormSocials />     
                         </div> 
                         <div class="tab-pane text-muted" id="kyc" role="tabpanel">
-                            <UserFormKYC :user="user"/>     
+                            <UserDetailKYC  :user="user" v-show="user.kyc_items != null && user.kyc_items.length != 0"/>
+                            <UserFormKYC :user="user" v-show="user.kyc_items.length == null ||  user.kyc_items.length == 0"/>     
                         </div> 
                     </div> 
                 </div> 

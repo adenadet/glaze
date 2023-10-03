@@ -45,7 +45,6 @@
             </tr>
         </table> 
         <div class="col-md-12 mb-3" v-else>
-
             <hr class="m-0"/> 
             <div class="row mt-2">
                 <div class="col-3"><input type="text" class="form-control" required :placeholder="'Type of '+item.name" v-model="UserKYCData.kyc_items[index].type"></div>
@@ -85,7 +84,7 @@ export default {
     methods:{
         addFile(fileKey, event) {
             let file = event.target.files[0];
-            console.log(file);
+            let reader = new FileReader();
             if (file['size'] > 2000000){
                 Swal.fire({icon: 'error', title: 'File is too large'});
             }
@@ -93,23 +92,23 @@ export default {
                 Swal.fire({icon: 'error', title: 'Invalid File Type'});
             }
             else{
-                this.UserKYCData.kyc_items[fileKey].file = file;
-                console.log(this.UserKYCData.kyc_items[fileKey].file);
+                reader.onloadend = (event) => {
+                    this.UserKYCData.kyc_items[fileKey].file = reader.result;
+                    this.UserKYCData.kyc_items[fileKey].file_type = ((file['type'] == 'image/png') || (file['type'] == 'image/jpg') || (file['type'] == 'image/jpeg')) ? 'Image': 'PDF';
+                    }
+                reader.readAsDataURL(file)
             }
         },
         createUserKYCData(){
             this.$Progress.start();
-            this.UserKYCData.post('/api/ums/kyc_store', {
-                transformrequest: [
-                    function (data, headers){return objecttoformdata(data);}
-                ]
-            })
+            this.UserKYCData.user_id = this.user.id;
+            this.UserKYCData.post('/api/ums/user_kyc')
             .then(response =>{
                 this.$Progress.finish();
                 Fire.$emit('Reload', response);
                 Swal.fire({
                     icon: 'success',
-                    title: 'The User '+ response.data.user.first_name+' '+  response.data.user.last_name+' has been created',
+                    title: 'The User KYC has been created',
                     showConfirmButton: false,
                     timer: 1500
                 });
@@ -123,7 +122,7 @@ export default {
             axios.get('/api/ums/kyc_items').then(response =>{
                 this.kyc_items = response.data.kyc_items;
                 for (let i=0; i < this.kyc_items.length; i++){
-                    var item = {name: this.kyc_items[i].name, file: '', expiry_date: '', type: '', identification: '',};
+                    var item = {id: this.kyc_items[i].id, name: this.kyc_items[i].name, file: '', expiry_date: '', type: '', identification: '',};
                     this.UserKYCData.kyc_items.push(item);
                 }
             })
@@ -133,9 +132,8 @@ export default {
             });
         },
         updateUserKYCData(){
-            console.log("Tested");
             this.$Progress.start();
-            this.UserKYCData.put('/api/ums/kyc_store/'+ this.UserKYCData.id)
+            this.UserKYCData.put('/api/ums/user_kyc/'+ this.UserKYCData.id)
             .then(response =>{
                 this.$Progress.finish();
                 Fire.$emit('Reload', response);
@@ -182,11 +180,6 @@ export default {
         }
     },
     props:{
-        areas: Array,
-        branches: Array, 
-        departments: Array,
-        staffs: Array, 
-        states: Array,
         user: Object,
         editMode: Boolean,
     }

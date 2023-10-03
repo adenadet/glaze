@@ -7,14 +7,14 @@
                 <tr>
                     <td>
                         <div class="form-control">
-                            <span v-if="UserKYCData.kyc_items[index].type == ''">Not Done</span>
-                            <span v-if="UserKYCData.kyc_items[index].type == 'power'">Power</span>
-                            <span v-if="UserKYCData.kyc_items[index].type == 'sanitation'">Sanitation</span>
-                            <span v-if="UserKYCData.kyc_items[index].type == 'water'">Water</span>
+                            <span v-if="item.kyc_type == ''">Not Done</span>
+                            <span v-if="item.kyc_type == 'power'">Power</span>
+                            <span v-if="item.kyc_type == 'sanitation'">Sanitation</span>
+                            <span v-if="item.kyc_type == 'water'">Water</span>
                         </div>
                     </td>
                     <td>
-                        <input type="file" class="form-control" @change="addFile(index, $event)"><input type="hidden" name="file_name" id="file_name" v-model="UserKYCData.kyc_items[index].file" required>
+                        <div class="form-control"><a :href="'/uploads/kyc/'+item.kyc_file" target="_blank"><i class="fa fa-file mr-1"></i>View Attachment</a></div>
                     </td>
                 </tr>
             </table> 
@@ -23,36 +23,34 @@
                     <td>
                         <label>Type</label>
                         <div class="form-control">
-                            <span v-if="UserKYCData.kyc_items[index].type ==''">--div Card Type--</span>
-                            <span v-if="UserKYCData.kyc_items[index].type =='national_id'">National ID</span>
-                            <span v-if="UserKYCData.kyc_items[index].type =='passport'">International Passport</span>
-                            <span v-if="UserKYCData.kyc_items[index].type =='drivers_license'">Driver's License</span>
+                            <span v-if="item.kyc_type ==''">--div Card kyc_Type--</span>
+                            <span v-if="item.kyc_type =='national_id'">National ID</span>
+                            <span v-if="item.kyc_type =='passport'">International Passport</span>
+                            <span v-if="item.kyc_type =='drivers_license'">Driver's License</span>
                         </div>
                     </td>
                     <td>
                         <label>Number/ID</label>
-                        <input type="text" class="form-control" :placeholder="'ID/Number of '+item.name" v-model="UserKYCData.kyc_items[index].identification" required>
+                        <input type="text" class="form-control" :placeholder="'ID/Number of '+item.name" v-model="item.kyc_identification" required>
                     </td>
                     <td>
                         <label>Expiry Date</label>
-                        <input type="date" class="form-control" v-model="UserKYCData.kyc_items[index].expiry_date" placeholder="expiry_date">
+                        <input type="date" class="form-control" v-model="item.kyc_expiry_date" placeholder="expiry_date">
                     </td>
                     <td>
                         <label>Upload File</label>
-                        <input type="file" class="form-control" @change="addFile(index, $event)" required>
-                        <input type="hidden" name="file_name" id="file_name" v-model="UserKYCData.kyc_items[index].file">
+                        <div class="form-control"><a :href="'/uploads/kyc/'+item.kyc_file" target="_blank"><i class="fa fa-file mr-1"></i>View Attachment</a></div>
                     </td>
                 </tr>
             </table> 
             <div class="col-md-12 mb-3" v-else>
-
                 <hr class="m-0"/> 
                 <div class="row mt-2">
-                    <div class="col-3"><input type="text" class="form-control" required :placeholder="'Type of '+item.name" v-model="UserKYCData.kyc_items[index].type"></div>
-                    <div class="col-2"><input type="text" class="form-control" required :placeholder="'ID/Number of '+item.name" v-model="UserKYCData.kyc_items[index].identification"></div>
-                    <div class="col-2" v-if="kyc_items[index].expires == true"><input type="date" required class="form-control" v-model="UserKYCData.kyc_items[index].expiry_date" placeholder="expiry_date"></div>
+                    <div class="col-3"><input type="text" class="form-control" required :placeholder="'Type of '+item.name" v-model="item.type"></div>
+                    <div class="col-2"><input type="text" class="form-control" required :placeholder="'ID/Number of '+item.name" v-model="item.identification"></div>
+                    <div class="col-2" v-if="kyc_items[index].expires == true"><input type="date" required class="form-control" v-model="item.expiry_date" placeholder="expiry_date"></div>
                     <div class="col-5" v-if="kyc_items[index].file == true"><input type="file" required class="form-control" @change="addFile(index, $event)">
-                        <input type="hidden" name="file_name" id="file_name" v-model="UserKYCData.kyc_items[index].file">
+                        <input type="hidden" name="file_name" id="file_name" v-model="item.file">
                     </div>
                 </div>
             </div>
@@ -72,7 +70,9 @@ export default {
         }
     },
     mounted() {
-        this.getInitials();
+        Fire.$on('BioDataFill', user=> {
+            this.getInitials('/api/ums/user_kyc/'+user.id);
+        });
         Fire.$on('UserKYCDataFill', details =>{
             this.UserKYCData.user_id = details.user_id;
         });
@@ -81,104 +81,18 @@ export default {
         });
     },
     methods:{
-        addFile(fileKey, event) {
-            let file = event.target.files[0];
-            console.log(file);
-            if (file['size'] > 2000000){
-                Swal.fire({icon: 'error', title: 'File is too large'});
-            }
-            else if((file['type'] != 'image/png') && (file['type'] != 'image/jpg') && (file['type'] != 'image/jpeg') && (file['type'] != 'application/pdf')){
-                Swal.fire({icon: 'error', title: 'Invalid File Type'});
-            }
-            else{
-                this.UserKYCData.kyc_items[fileKey].file = file;
-                console.log(this.UserKYCData.kyc_items[fileKey].file);
-            }
-        },
-        createUserKYCData(){
-            this.$Progress.start();
-            this.UserKYCData.post('/api/ums/kyc_store', {
-                transformrequest: [
-                    function (data, headers){return objecttoformdata(data);}
-                ]
-            })
-            .then(response =>{
-                this.$Progress.finish();
-                Fire.$emit('Reload', response);
-                Swal.fire({
-                    icon: 'success',
-                    title: 'The User '+ response.data.user.first_name+' '+  response.data.user.last_name+' has been created',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            })
-            .catch(()=>{
-                Swal.fire({icon: 'error', title: 'Oops...', text: 'Something went wrong!', footer: 'Please try again later!'});
-                this.$Progress.fail();
-            });
-        },
-        getInitials(){
-            axios.get('/api/ums/kyc_items').then(response =>{
-                this.kyc_items = response.data.kyc_items;
-                for (let i=0; i < this.kyc_items.length; i++){
-                    var item = {name: this.kyc_items[i].name, file: '', expiry_date: '', type: '', identification: '',};
-                    this.UserKYCData.kyc_items.push(item);
-                }
+        getInitials(route){
+            axios.get(route).then(response =>{
+                this.kyc_items = response.data.user_kyc_items;
             })
             .catch(()=>{
                 this.$Progress.fail();
                 toast.fire({icon: 'error', title: 'User KYC items not loaded successfully',});
             });
         },
-        updateUserKYCData(){
-            console.log("Tested");
-            this.$Progress.start();
-            this.UserKYCData.put('/api/ums/kyc_store/'+ this.UserKYCData.id)
-            .then(response =>{
-                this.$Progress.finish();
-                Fire.$emit('Reload', response);
-                Swal.fire({
-                    icon: 'success',
-                    title: 'The User'+ response.data.user.first_name+' '+  response.data.user.last_name+' has been updated',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
-            })
-            .catch(()=>{
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Something went wrong!',
-                    footer: 'Please try again later!'
-                });
-                this.$Progress.fail();
-            });            
-        },
-        getProfilePic(){
-            let photo = (this.UserKYCData.image.length >= 150) ? this.UserKYCData.image : "./"+this.UserKYCData.image;
-            return photo;
-            },
-        updateProfilePic(e){
-            let file = e.target.files[0];
-            let reader = new FileReader();
-            if (file['size'] < 2000000){
-                reader.onloadend = (e) => {
-                    this.UserKYCData.image = reader.result;
-                    console.log(reader.result);
-                    }
-                reader.readAsDataURL(file)
-            }
-            else{
-                Swal.fire({
-                    type: 'error',
-                    title: 'File is too large'
-                })
-            }
-        },
-        updateFile(e){
-            alert('Test');
-        }
     },
-    props:{}
+    props:{
+        user: Object,
+    }
 }
 </script>

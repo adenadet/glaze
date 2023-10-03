@@ -27,5 +27,6 @@ Route::group(['prefix'=>'ums'], function () {
         '/roles'        => 'RoleController',
         '/staffs'       => 'StaffController',
         '/users'        => 'UserController',
+        '/user_kyc'     => 'KYCController',
     ]);
 });

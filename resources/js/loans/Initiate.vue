@@ -30,7 +30,7 @@
                             <LoanForm :loan="current_loan" :user="user" :loan_types="loan_types" :banks="banks"/>
                         </div>
                         <div class="tab-pane fade" id="kyc" role="tabpanel" aria-labelledby="kyc">
-                            <UserFormKYC />
+                            <UserFormKYC :user="user"/>
                         </div>
                         <div class="tab-pane fade" id="vert-tabs-profile" role="tabpanel" aria-labelledby="vert-tabs-profile-tab">
                             <GuarantorFormRequest :loan="current_loan" />    

@@ -241,7 +241,7 @@ class UserController extends Controller
         return response()->json([
             'nations' => Country::orderBy('name', 'ASC')->get(),
             'areas' => $areas,
-            'user' => User::where('id', '=', auth('api')->id())->with('next_of_kin', 'customer_accounts', 'customer_address.state', 'social_medias', 'customer_kyc')->with(['area', 'state',])->first(),
+            'user' => User::where('id', '=', auth('api')->id())->with('next_of_kin', 'customer_accounts', 'customer_address.state', 'social_medias', 'kyc_items')->with(['area', 'state',])->first(),
             'nok' => $nok,
             'states' => $states,
             //'patient' => Patient::where('user_id',  auth('api')->id())->first(),       

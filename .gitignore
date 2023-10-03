@@ -15,4 +15,5 @@ yarn-error.log
 /.vscode
 /public/js/app.js
 /public/js/app.js.map
+/public/uploads
 package-lock.json

@@ -53,6 +53,10 @@ class User extends Authenticatable
         return $this->hasMany('App\Models\Ums\KYC', 'user_id', 'id');
     }
 
+    public function kyc_items(){
+        return $this->hasMany('App\Models\Ums\KYC', 'user_id', 'id');
+    }
+
     public function loans(){
         return $this->hasMany('App\Models\Loans\Account', 'user_id', 'id');
     }
