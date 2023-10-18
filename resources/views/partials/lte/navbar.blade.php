@@ -2,7 +2,9 @@
     <ul class="navbar-nav">
         <li class="nav-item"><a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a></li>
         <li class="nav-item d-none d-sm-inline-block"><a href="/dashboard" class="nav-link">Customer Area </a></li>
-        @if(Auth::user()->hasRole('Customers') || Auth::user()->hasRole('Super Admin'))<li class="nav-item d-none d-sm-inline-block"><a href="{{route('staff.dashboard')}}" class="nav-link">Staff Area</a></li>@endif
+        @if(Auth::user()->hasRole('Staff') || Auth::user()->hasRole('Super Admin'))<li class="nav-item d-none d-sm-inline-block"><a href="{{route('staff.dashboard')}}" class="nav-link">Staff Area</a></li>@endif
+        @if(Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Super Admin'))<li class="nav-item d-none d-sm-inline-block"><a href="{{route('admin.dashboard')}}" class="nav-link">Admin Area</a></li>@endif
+        
         <!--@if(Auth::user()->hasRole('Staff') || Auth::user()->hasRole('Super Admin'))<li class="nav-item d-none d-sm-inline-block"><a class="nav-link" href="/hr" class="nav-link">Human Resources</a></li>@endif
         @if(Auth::user()->hasRole('Learning') || Auth::user()->hasRole('Super Admin'))<li class="nav-item d-none d-sm-inline-block"><a class="nav-link" href="/learn" class="nav-link">Learning</a></li>@endif
         <li class="nav-item d-none d-sm-inline-block dropdown">

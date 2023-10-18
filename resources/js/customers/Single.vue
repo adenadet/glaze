@@ -20,6 +20,9 @@
                                 <a class="nav-link" id="next-of-kin-tab" data-toggle="pill" href="#next-of-kin" role="tab" aria-controls="next-of-kin" aria-selected="false">Next of Kin</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link" id="socials-tab" data-toggle="pill" href="#socials" role="tab" aria-controls="socials" aria-selected="false">Social Media</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link" id="kyc-tab" data-toggle="pill" href="#kyc" role="tab" aria-controls="kyc" aria-selected="false">Know Your Customer</a>
                             </li>
                             </ul>
@@ -35,8 +38,11 @@
                                 <div class="tab-pane fade" id="next-of-kin" role="tabpanel" aria-labelledby="next-of-kin-tab">
                                     <UserDetailNOK :user="customer" />
                                 </div>
+                                <div class="tab-pane fade" id="socials" role="tabpanel" aria-labelledby="socials">
+                                    <UserDetailSocial :user="customer" />
+                                </div>
                                 <div class="tab-pane fade" id="kyc" role="tabpanel" aria-labelledby="kyc-tab">
-                                    <UserDetailKYC :user="customer" />
+                                    <UserDetailKYC />
                                 </div>
                             </div>
                         </div>
@@ -54,7 +60,7 @@ export default {
         return {
             customer: {},
             staffs: [],
-            
+            //kyc_items: [],
         }
     },
     methods:{
@@ -69,13 +75,14 @@ export default {
             });
         },
         reloadPage(response){
-            this.customer      = response.data.customer;
-            this.staffs = response.data.staffs;
-
+            this.customer = response.data.customer;
+            this.staffs   = response.data.staffs;
+            //this.kyc_items = response.data.kyc_items;
+ 
             Fire.$emit('BioDataFill', this.customer);
             Fire.$emit('NextOfKinFill', this.customer.next_of_kin);
             Fire.$emit('AddressDataFill', response.data.customer_address);
-            
+            Fire.$emit('KYCDataFIll', response.data.kyc_items);
         }
     },
     mounted() {

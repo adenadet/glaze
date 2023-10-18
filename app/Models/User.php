@@ -50,11 +50,11 @@ class User extends Authenticatable
     }
 
     public function customer_kyc(){
-        return $this->hasMany('App\Models\Ums\KYC', 'user_id', 'id');
+        return $this->hasMany('App\Models\Ums\UserKYC', 'user_id', 'id');
     }
 
     public function kyc_items(){
-        return $this->hasMany('App\Models\Ums\KYC', 'user_id', 'id');
+        return $this->hasMany('App\Models\Ums\UserKYC', 'user_id', 'id');
     }
 
     public function loans(){
@@ -74,7 +74,7 @@ class User extends Authenticatable
     }
 
     public function social_medias(){
-        return $this->belongsTo('App\Models\Ums\SocialMedia', 'user_id', 'id');
+        return $this->hasOne('App\Models\Ums\SocialMedia', 'user_id', 'id');
     }
 
     public function state(){

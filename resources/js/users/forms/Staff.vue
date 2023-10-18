@@ -127,22 +127,30 @@
                 <input type="date" class="form-control" id="joined_at" name="joined_at" placeholder="Enter Email Address *" required v-model="StaffData.joined_at" :class="{'is-invalid' : StaffData.errors.has('joined_at') }">
             </div>
         </div>
-        <div class="col-md-4 col-sm-12">
+        <div class="col-md-6 col-sm-12">
             <div class="form-group">
                 <label>Staff ID</label>
-                <input type="text" class="form-control" id="unique_id" name="unique_id" placeholder="Enter Email Address *" required v-model="StaffData.unique_id" :class="{'is-invalid' : StaffData.errors.has('unique_id') }">
+                <input type="text" class="form-control" id="unique_id" name="unique_id" required v-model="StaffData.unique_id" :class="{'is-invalid' : StaffData.errors.has('unique_id') }">
             </div>
         </div>
-        <div class="col-md-4 col-sm-12">
-            <div class="form-group">
-                <label>Personal Email Address</label>
-                <input type="email" class="form-control" id="personal_email" name="personal_email" placeholder="Enter Email Address *" required v-model="StaffData.personal_email" :class="{'is-invalid' : StaffData.errors.has('personal_email') }">
-            </div>
+        <div class="col-md-3" v-show="editMode">
+            <label>Profile Pic</label><br />
+            <div class="user-block"><img class="img-circle" :src=" user.user | profilePicture" /></div>
         </div>
-        <div class="col-md-4 col-sm-12">
+        <div class="col-md-3" v-show="editMode">
+            <label>Change Profile Pic</label>
+            <input type="file" class="form-control" placeholder="Birth Date" @change="updateProfilePic">
+        </div>
+        <div class="col-md-3 col-sm-12" v-show="!editMode">
             <label>Profile Pic</label>
             <div class="form-group">
                 <input type="file" class="form-control" placeholder="Birth Date" @change="updateProfilePic">
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" class="form-control" id="password" name="password" required v-model="StaffData.password" :class="{'is-invalid' : StaffData.errors.has('password') }">
             </div>
         </div>
         <input type="hidden" name="id" id="id" v-model="StaffData.id">
@@ -155,6 +163,7 @@
 export default {
     data(){
         return  {
+            user: {},
             StaffData: new Form({
                 alt_phone:'', 
                 area_id:'', 
@@ -184,23 +193,40 @@ export default {
     },
     mounted() {
         Fire.$on('StaffDataFill', user =>{
-            this.StaffData.fill(user);
-        });
-        Fire.$on('AfterCreation', ()=>{
-            //axios.get("api/profile").then(({ data }) => (this.StaffData.fill(data)));
+            this.user = user;
+            this.StaffData.alt_phone = user.alt_phone; 
+            this.StaffData.area_id = user.area_id; 
+            this.StaffData.branch_id = user.branch_id; 
+            this.StaffData.city = user.city; 
+            this.StaffData.department_id = user.department_id; 
+            this.StaffData.dob = user.user.dob; 
+            this.StaffData.email = user.user.email;
+            this.StaffData.first_name = user.user.first_name; 
+            this.StaffData.id = user.id; 
+            this.StaffData.image = user.user.image; 
+            this.StaffData.joined_at = user.joined_at;
+            this.StaffData.last_name = user.user.last_name;; 
+            this.StaffData.middle_name = user.user.middle_name; 
+            this.StaffData.password = user.user.password; 
+            this.StaffData.personal_email = user.personal_email; 
+            this.StaffData.phone = user.user.phone; 
+            this.StaffData.sex = user.user.sex;
+            this.StaffData.state_id = user.state_id; 
+            this.StaffData.street = user.street; 
+            this.StaffData.street2 = user.street2;
+            this.StaffData.unique_id = user.user.unique_id;
         });
     },
     methods:{
         createStaffData(){
-            console.log("Working book");
             this.$Progress.start();
-            this.StaffData.post('/api/ums/users')
+            this.StaffData.post('/api/ums/staffs')
             .then(response =>{
                 this.$Progress.finish();
                 Fire.$emit('Reload', response);
                 Swal.fire({
                     icon: 'success',
-                    title: 'The User '+ response.data.user.first_name+' '+  response.data.user.last_name+' has been created',
+                    title: 'The Staff has been created',
                     showConfirmButton: false,
                     timer: 1500
                 });
@@ -216,9 +242,8 @@ export default {
             });
         },
         updateStaffData(){
-            console.log("Tested");
             this.$Progress.start();
-            this.StaffData.put('/api/ums/users/'+ this.StaffData.id)
+            this.StaffData.put('/api/ums/staffs/'+ this.StaffData.id)
             .then(response =>{
                 this.$Progress.finish();
                 Fire.$emit('Reload', response);
@@ -266,7 +291,6 @@ export default {
         branches: Array, 
         departments: Array, 
         states: Array,
-        user: Object,
         editMode: Boolean,
     }
 }

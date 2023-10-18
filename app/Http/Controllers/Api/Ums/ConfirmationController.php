@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 
 use App\Mail\Issues\BVNMail as BVNIssueMail;
+use Illuminate\Support\Facades\Mail;
 
 class ConfirmationController extends Controller
 {
@@ -55,7 +56,7 @@ class ConfirmationController extends Controller
             ]);
         }
 
-        \Mail::to($user->email)->send(new BVNIssueMail($user));
+        Mail::to($user->email)->send(new BVNIssueMail($user));
         
         return response()->json([
             'message' => 'Mail has been resent successfully',

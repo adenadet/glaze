@@ -1,5 +1,5 @@
 <template>
-<section v-if="nokForm.id != '' && nokForm.id != null">
+<section v-if="nokForm.id != null">
     <div class="row">
         <div class="col-sm-9">
             <div class="form-group">
@@ -56,58 +56,12 @@ export default {
             editMode:false,
         }
     },
-    methods:{
-        createNextOfKin(){
-            this.$Progress.start();
-            this.nokForm.post('/api/ums/nok')
-            .then(response =>{
-                this.$Progress.finish();
-                Swal.fire({
-                    icon: 'success',
-                    title: 'The Next of Kin details has been created',
-                    showConfirmButton: false,
-                    timer: 1500
-                    });
-                })
-            .catch(()=>{
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Something went wrong!',
-                    footer: 'Please try again later!'
-                });
-            this.$Progress.fail();
-            });        
-        },
-        updateNextOfKin(){
-            this.$Progress.start();
-            this.nokForm.put('/api/ums/nok/'+this.nokForm.id)
-            .then(response =>{
-                this.$Progress.finish();
-                Swal.fire({
-                    icon: 'success',
-                    title: 'The Next of Kin details has been updated',
-                    showConfirmButton: false,
-                    timer: 1500
-                    });
-                })
-            .catch(()=>{
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: 'Something went wrong!',
-                    footer: 'Please try again later!'
-                });
-            this.$Progress.fail();
-            });  
-                
-        },
-        
-    },
+    methods:{},
     mounted() {
-        this.nokForm.fill(this.nok);
+        //this.nokForm.fill(this.nok);
         Fire.$on('NextOfKinFill', update =>{
-            if(update.id != null){
+
+            if(update != null && update.id != null){
                 this.editMode = true;
                 this.nokForm.fill(update);
             }

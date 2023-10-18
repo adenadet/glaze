@@ -15,6 +15,7 @@ import LoanRequirements     from '../loans/Requirements.vue';
 import LoanSingle           from '../loans/Single.vue';
 import LoanStaff            from '../loans/Staff.vue';
 import LoanStaffSingle      from '../loans/StaffSingle.vue';
+import LoanType             from '../loans/Type.vue';
 import LoanTypes            from '../loans/Types.vue';
 
 Vue.component('LoanAll',            LoanAll);
@@ -33,7 +34,8 @@ Vue.component('LoanStaff',          LoanStaff);
 Vue.component('LoanStaffSingle',    LoanStaffSingle);
 Vue.component('LoanTypes',          LoanTypes);
 
-    import LoanDetailCheckList      from '../loans/details/CheckList.vue';   
+    import LoanDetailCheckList      from '../loans/details/CheckList.vue';  
+    import LoanDetailCreditScore    from '../loans/details/CreditScore.vue';   
     import LoanDetailConfirmations  from '../loans/details/Confirmations.vue';
     import LoanDetailGuarantors     from '../loans/details/Guarantors.vue';
     import LoanDetailRepayments     from '../loans/details/Repayments.vue';
@@ -41,6 +43,7 @@ Vue.component('LoanTypes',          LoanTypes);
     //import LoanDetailSummary        from '../loans/details/Summary.vue';
 
     Vue.component('LoanDetailCheckList', LoanDetailCheckList);
+    Vue.component('LoanDetailCreditScore', LoanDetailCreditScore);
     Vue.component('LoanDetailConfirmations', LoanDetailConfirmations);
     Vue.component('LoanDetailGuarantors', LoanDetailGuarantors);
     Vue.component('LoanDetailRepayments', LoanDetailRepayments);
@@ -49,6 +52,7 @@ Vue.component('LoanTypes',          LoanTypes);
     import LoanClose                from '../loans/forms/Close.vue';
     import LoanForm                 from '../loans/forms/Loan.vue';
     import LoanFormCheckList        from '../loans/forms/CheckList.vue';
+    import LoanFormCreditScore      from '../loans/forms/CreditScore.vue';
     import LoanFormConfirm          from '../loans/forms/Confirm.vue';
     import LoanFormInitial          from '../loans/forms/Initial.vue';
     import LoanFormRepayment        from '../loans/forms/Repayment.vue';
@@ -58,6 +62,7 @@ Vue.component('LoanTypes',          LoanTypes);
     Vue.component('LoanClose',              LoanClose);
     Vue.component('LoanForm',               LoanForm);
     Vue.component('LoanFormCheckList',      LoanFormCheckList);
+    Vue.component('LoanFormCreditScore',    LoanFormCreditScore);
     Vue.component('LoanFormConfirm',        LoanFormConfirm);
     Vue.component('LoanFormInitial',        LoanFormInitial);
     Vue.component('LoanFormRepayment',      LoanFormRepayment);
@@ -67,6 +72,7 @@ Vue.component('LoanTypes',          LoanTypes);
 let routes = [
     {path: '/admin/loan_requirement_items',         component: LoanRequirements},
     {path: '/admin/loan_types',                     component: LoanTypes},
+    {path: '/admin/loan_types/:id',                 component: LoanType},
     
     {path: '/loans',                                component: LoanAll},
     {path: '/loans/new',                            component: LoanInitiate},

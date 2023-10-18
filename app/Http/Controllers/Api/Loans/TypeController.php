@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Loans;
 
 use App\Http\Controllers\Controller;
+use App\Models\Loans\ConfirmationMatrix;
 use Illuminate\Http\Request;
 
 use App\Models\Loans\Requirement;
@@ -21,6 +22,7 @@ class TypeController extends Controller
     public function initials()
     {
         return response()->json([
+            'matrices' => ConfirmationMatrix::orderby('name', 'ASC')->get(),
             'requirements' => Requirement::orderBy('name', 'ASC')->get(),
         ]);
     }

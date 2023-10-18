@@ -7,12 +7,6 @@
 
     @if(($page == 'Customer') || ($page == 'applicant')|| ($page == 'staffs')) @include('partials.asides.home')
     @elseif ($page == 'Staff') @include('partials.asides.staff')
-    @elseif ($page == 'hims') @include('partials.asides.hims')
-    @elseif ($page == 'hr') @include('partials.asides.hr')
-    @elseif ($page == 'learn') @include('partials.asides.learn')
-    @elseif ($page == 'nursing') @include('partials.asides.nursing')
-    @elseif ($page == 'payroll') @include('partials.asides.payroll')
-    @elseif ($page == 'policies') @include('partials.asides.policies')
-    @elseif ($page == 'settings') @include('partials.asides.settings')
+    @elseif($page == 'Admin') @include('partials.asides.admin')
     @endif
 </aside>

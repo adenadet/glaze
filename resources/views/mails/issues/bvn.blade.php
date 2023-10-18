@@ -111,7 +111,6 @@ img.g-img + div {
 	padding:2.5em;
 }
 
-/*BUTTON*/
 .btn{
 	padding: 10px 15px;
 }

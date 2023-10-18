@@ -8,7 +8,7 @@
                         <h3 class="widget-user-username">{{user | FullName}}</h3>
                     </div>
                     <div class="widget-user-image">
-                        <img class="img-circle elevation-2" :src="user | userImage" :alt="user | FullName">
+                        <img class="img-circle elevation-2" :src="user | userImage" :alt="user | FullName" >
                     </div>
                     <div class="p-4 border-bottom border-block-end-dashed"> 
                         <p class="fs-15 mb-2 me-4 fw-semibold">Contact Information :</p>
@@ -22,7 +22,7 @@
                                 {{user.phone}} {{user.alt_phone ? ', '+user.alt_phone: ''}}
                             </p>
                             <p class="mb-0"> <span class="avatar avatar-sm avatar-rounded me-2 bg-light text-muted"> <i class="fa fa-location-dot align-middle fs-14"></i> </span> 
-                                {{user.customer_address ? user.customer_address.street : ''}} {{user.customer_address && user.customer_address.street2 ? ', '+user.customer_address.street2: ''}}, {{user.customer_address ?  user.customer_address.city : ''}}, {{user.customer_address && user.customer_address.state_id ? user.state.name: ''}}. 
+                                {{user.customer_address ? user.customer_address.street : ''}} {{user.customer_address && user.customer_address.street2 ? ', '+user.customer_address.street2: ''}}, {{user.customer_address ?  user.customer_address.city : ''}}, {{user.customer_address && user.customer_address.state_id && user.customer_address.state != null? user.state.name: ''}}. 
                             </p>
                         </div> 
                     </div> 
@@ -70,8 +70,7 @@
                             <PMFormSocials />     
                         </div> 
                         <div class="tab-pane text-muted" id="kyc" role="tabpanel">
-                            <UserDetailKYC  :user="user" v-show="user.kyc_items != null && user.kyc_items.length != 0"/>
-                            <UserFormKYC :user="user" v-show="user.kyc_items.length == null ||  user.kyc_items.length == 0"/>     
+                            <UserFormKYC :user="user" />     
                         </div> 
                     </div> 
                 </div> 
@@ -87,9 +86,11 @@ export default {
         return  {
             areas:[],  
             editMode: true, 
-            nok:{},
-            states:[],
+            kyc_items: {},
             nations: [],  
+            nok:{},
+            socials: {},
+            states:[],
             user:{}, 
         }
     },
@@ -115,10 +116,6 @@ export default {
                 })
             });
         },
-        getProfilePic(){
-            let  photo = (this.form.image.length >= 150) ? this.form.image : "./"+this.form.image;
-            return photo;
-        },
         reloadProfile(response){
             this.user = response.data.user;
             this.areas = response.data.areas;
@@ -127,9 +124,15 @@ export default {
             this.states = response.data.states;
             this.nok = response.data.nok;
             this.nations = response.data.nations;
-            Fire.$emit('BioDataFill', this.user);
+            this.kyc_items = response.data.kyc_items;
+            this.kyc_list = response.data.kyc_list;
+            this.socials = response.data.socials;
+            
+            Fire.$emit('BasicDataFill', this.user);
             Fire.$emit('NextOfKinFill', this.nok); 
             Fire.$emit('AddressDataFill', this.user.customer_address);
+            Fire.$emit('SocialDataFill', {'user': this.user, 'socials': this.socials})
+            Fire.$emit('UserKYCDataFill', {'user_id': this.user.id, 'kyc_items': this.kyc_items,});
         },
         updateProfilePic(e){
             let file = e.target.files[0];

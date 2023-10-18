@@ -1,38 +1,47 @@
 <template>
-<section>
-    <div class="card">
+<section class="row">
+    <div class="col-md-12">
         <form class="form" method="post" @submit.prevent="editMode ? updateLoanType() : createLoanType() ">
             <div class="row">
                 <div class="col-sm-12">
                     <div class="form-group">
                         <label>Loan Type Name *</label>
-                        <input type="text" required class="form-control" id="name" name="name" placeholder="Name *" v-model="LoanTypeData.name" >
+                        <input type="text" required class="form-control" id="name" name="name" placeholder="Name *" v-model="LoanTypeData.name">
                     </div>
                 </div>
                 <div class="col-sm-12">
                     <div class="form-group">
                         <label>Status *</label>
-                        <select class="form-control" id="status" name="status" placeholder="middle Name" v-model="LoanTypeData.status">
+                        <select class="form-control" id="status" name="status" placeholder="middle Name" v-model="LoanTypeData.status" required>
                             <option value="">--Select Status--</option>
                             <option value=1>Active</option>
                             <option value=2>Inactive</option>
                         </select>
                     </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     <div class="form-group">
                         <label>Interest Rate*</label>
-                        <input type="text" class="form-control" id="percentage" name="percentage" placeholder="Interest Rate in Percentage" v-model="LoanTypeData.percentage"/>
+                        <input type="text" class="form-control" id="percentage" name="percentage" placeholder="Interest Rate in Percentage" v-model="LoanTypeData.percentage" required/>
                     </div>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                     <div class="form-group">
                         <label>Category *</label>
-                        <select class="form-control" id="category_id" name="category_id" placeholder="middle Name" v-model="LoanTypeData.category_id">
+                        <select class="form-control" id="category_id" name="category_id" placeholder="middle Name" v-model="LoanTypeData.category_id" required>
                             <option value="">--Select Category--</option>
                             <option value=1>Personal</option>
                             <option value=2>Business</option>
                             <option value=3>Others</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <label>Approval Matrix *</label>
+                        <select class="form-control" id="matrix_id" name="matrix_id" v-model="LoanTypeData.matrix_id" required>
+                            <option value="">--Select Approval Matrix--</option>
+                            <option v-for="matrix in matrices" :value="matrix.id">{{ matrix.name }}</option>
                         </select>
                     </div>
                 </div>
@@ -79,10 +88,12 @@
 export default {
     data(){
         return {
+            matrices: {},
             requirements: {},
             LoanTypeData: new Form({
                 id: '',
                 name: '',
+                matrix_id: '',
                 percentage: '',
                 category_id: '',
                 min_duration: '',
@@ -111,6 +122,7 @@ export default {
         },
         getAllInitials(){           
             axios.get('/api/loans/types/initials').then(response =>{
+                this.matrices = response.data.matrices;
                 this.requirements = response.data.requirements;
             })
             .catch(()=>{

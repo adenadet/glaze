@@ -7,6 +7,9 @@ use App\Models\Loans\Account;
 use App\Models\Loans\Guarantor;
 use App\Models\Loans\GuarantorRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+
+use App\Mail\Guarantor\RequestMail;
 
 class GuarantorController extends Controller
 {
@@ -24,9 +27,10 @@ class GuarantorController extends Controller
     }
 
     public function add(Request $request){
-        
+        $loan = Account::where('id', '=', $request->input('loan_id'))->with('customer')->first();
+
         foreach ($request->input('guarantors') as $guarantor){
-            GuarantorRequest::create([
+            $gr = GuarantorRequest::create([
                 'loan_id' => $request->input('loan_id'),
                 'first_name' => $guarantor['first_name'],
                 'last_name' => $guarantor['last_name'],
@@ -37,7 +41,13 @@ class GuarantorController extends Controller
                 'created_by' => auth('api')->id(),
                 'updated_by' => auth('api')->id(),
             ]);
+
+            Mail::to($guarantor['email'])->send(new RequestMail($loan, $gr));
         }
+
+        return response()->json([
+            'message' => 'Guarantor added successfully',       
+        ]);  
     }
 
 
@@ -57,6 +67,16 @@ class GuarantorController extends Controller
                 'updated_by' => auth('api')->id(),
             ]);
         }
+    }
+
+    public function resend($id)
+    {
+        $gr = GuarantorRequest::where('id', '=', $id)->first();
+        $loan = Account::where('id', '=', $gr->loan_id)->with('customer')->first();
+        
+        return response()->json([
+            'message' => 'Guarantor added successfully',       
+        ]);  
     }
 
 

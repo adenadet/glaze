@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\Api\Ums;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
+
 use App\Http\Controllers\Controller;
 use App\Models\Hrms\Employee;
 use App\Models\Loans\Account;
+use App\Models\Settings\KYCItem;
 use App\Models\Ums\Customer;
-use Illuminate\Http\Request;
 use App\Models\Ums\CustomerAddress;
 use App\Models\User;
 
@@ -54,13 +57,18 @@ class CustomerController extends Controller
 
     public function show($id)
     {
-        //$staffs = Employee::select('user_id')->get();
+        $kyc_items = KYCItem::select( 'setting_kyc_items.*', 
+            DB::raw('(select file from `user_kyc_items` where setting_kyc_items.id = user_kyc_items.item_id and user_kyc_items.user_id = '.$id.' order by id asc limit 1) as kyc_file'),
+            DB::raw('(select identification from `user_kyc_items` where setting_kyc_items.id = user_kyc_items.item_id and user_kyc_items.user_id = '.$id.' order by id asc limit 1) as kyc_identification'),
+            DB::raw('(select expiry_date from `user_kyc_items` where setting_kyc_items.id = user_kyc_items.item_id and user_kyc_items.user_id = '.$id.' order by id asc limit 1) as kyc_expiry_date'),
+            DB::raw('(select type from `user_kyc_items` where setting_kyc_items.id = user_kyc_items.item_id and user_kyc_items.user_id = '.$id.' order by id asc limit 1) as kyc_type'),
+        )->get();
         return response()->json([
-            'customer' => User::where('id', '=', $id)->with('next_of_kin', 'customer_accounts', 'customer_address', 'social_medias', 'customer_kyc')->first(),
-            'customer_address' => CustomerAddress::where('user_id', '=', $id)->with(['area', 'state', 'verifier'])->first(),
             'all_loans_cnt' => Account::where('user_id', '=', $id)->where('status', '>=', '5')->count(),
             'completed_loans_cnt' => Account::where('user_id', '=', $id)->where('status', '=', '10')->count(),
-            //'staffs' => User::whereIn('id', $staffs)->orderBy('last_name', 'ASC')->get(),
+            'customer' => User::where('id', '=', $id)->with('next_of_kin', 'customer_accounts', 'customer_address', 'social_medias', 'customer_kyc')->first(),
+            'customer_address' => CustomerAddress::where('user_id', '=', $id)->with(['area', 'state', 'verifier'])->first(),
+            'kyc_items' => $kyc_items,
         ]);
     }
 

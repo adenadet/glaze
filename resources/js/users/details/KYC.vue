@@ -1,20 +1,26 @@
 <template>
 <section>
-    <div>
-        <div class="row" v-for="(item, index) in kyc_items" :key="item.id">
+    <!--{{ kyc_items}} 
+    -->
+    <div v-for="(item, index) in kyc_items" :key="item.id">
+        <div class="row">
             <div class="col-12"><label>{{index | addOne}} {{ item.name }}</label></div>
             <table class="table table-sm" v-if="item.name == 'Address'">
                 <tr>
                     <td>
                         <div class="form-control">
                             <span v-if="item.kyc_type == ''">Not Done</span>
-                            <span v-if="item.kyc_type == 'power'">Power</span>
-                            <span v-if="item.kyc_type == 'sanitation'">Sanitation</span>
-                            <span v-if="item.kyc_type == 'water'">Water</span>
+                            <span v-else-if="item.kyc_type == 'power'">Power</span>
+                            <span v-else-if="item.kyc_type == 'sanitation'">Sanitation</span>
+                            <span v-else-if="item.kyc_type == 'water'">Water</span>
+                            <span v-else>Not Done</span>
                         </div>
                     </td>
                     <td>
-                        <div class="form-control"><a :href="'/uploads/kyc/'+item.kyc_file" target="_blank"><i class="fa fa-file mr-1"></i>View Attachment</a></div>
+                        <div class="form-control">
+                            <a v-show="item.kyc_file != null" :href="'/uploads/kyc/'+item.kyc_file" target="_blank"><i class="fa fa-file mr-1"></i>View Attachment</a>
+                            <span v-show="item.kyc_file == null">No Attachment</span>
+                        </div>
                     </td>
                 </tr>
             </table> 
@@ -23,23 +29,26 @@
                     <td>
                         <label>Type</label>
                         <div class="form-control">
-                            <span v-if="item.kyc_type ==''">--div Card kyc_Type--</span>
                             <span v-if="item.kyc_type =='national_id'">National ID</span>
-                            <span v-if="item.kyc_type =='passport'">International Passport</span>
-                            <span v-if="item.kyc_type =='drivers_license'">Driver's License</span>
+                            <span v-else-if="item.kyc_type =='passport'">International Passport</span>
+                            <span v-else-if="item.kyc_type =='drivers_license'">Driver's License</span>
+                            <span v-else>Not Done</span>
                         </div>
                     </td>
                     <td>
                         <label>Number/ID</label>
-                        <input type="text" class="form-control" :placeholder="'ID/Number of '+item.name" v-model="item.kyc_identification" required>
+                        <div class="form-control" :placeholder="'ID/Number of '+item.name" v-html="item.kyc_identification"></div>
                     </td>
                     <td>
                         <label>Expiry Date</label>
-                        <input type="date" class="form-control" v-model="item.kyc_expiry_date" placeholder="expiry_date">
+                        <div class="form-control" v-html="item.kyc_expiry_date" placeholder="expiry_date"></div>
                     </td>
                     <td>
-                        <label>Upload File</label>
-                        <div class="form-control"><a :href="'/uploads/kyc/'+item.kyc_file" target="_blank"><i class="fa fa-file mr-1"></i>View Attachment</a></div>
+                        <label>Uploaded File</label>
+                        <div class="form-control">
+                            <a v-show="item.kyc_file != null" :href="'/uploads/kyc/'+item.kyc_file" target="_blank"><i class="fa fa-file mr-1"></i>View Attachment</a>
+                            <span v-show="item.kyc_file == null">No Attachment</span>
+                        </div>
                     </td>
                 </tr>
             </table> 
@@ -63,33 +72,14 @@ export default {
     data(){
         return  {
             kyc_items: [],
-            UserKYCData: new Form({
-                kyc_items:[], 
-                user_id: '',
-            }),
         }
     },
     mounted() {
-        Fire.$on('BioDataFill', user=> {
-            this.getInitials('/api/ums/user_kyc/'+user.id);
-        });
-        Fire.$on('UserKYCDataFill', details =>{
-            this.UserKYCData.user_id = details.user_id;
-        });
-        Fire.$on('AfterCreation', ()=>{
-            //axios.get("api/profile").then(({ data }) => (this.UserKYCData.fill(data)));
+        Fire.$on('KYCDataFIll', kyc_items => {
+            this.kyc_items = kyc_items;
         });
     },
     methods:{
-        getInitials(route){
-            axios.get(route).then(response =>{
-                this.kyc_items = response.data.user_kyc_items;
-            })
-            .catch(()=>{
-                this.$Progress.fail();
-                toast.fire({icon: 'error', title: 'User KYC items not loaded successfully',});
-            });
-        },
     },
     props:{
         user: Object,

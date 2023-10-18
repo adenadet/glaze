@@ -28,19 +28,18 @@ class KYCController extends Controller
         $file_name = ''; 
         
         foreach ($request->input('kyc_items') as $kyc){
-            print_r($kyc);
-            if ($kyc['file_type'] == "Image"){
-                $name = $request->input('user_id')."-".$kyc['name'].time().".".explode('/',explode(':', substr( $kyc['file'], 0, strpos($kyc['file'], ';')))[1])[1];
-                \Image::make($kyc['file'])->save(public_path($folder).$name);
+            if ($kyc['kyc_file_type'] == "Image"){
+                $name = $request->input('user_id')."-".$kyc['name'].time().".".explode('/',explode(':', substr( $kyc['kyc_file'], 0, strpos($kyc['kyc_file'], ';')))[1])[1];
+                \Image::make($kyc['kyc_file'])->save(public_path($folder).$name);
                 $file_name = 'uploads/kyc/'.$name;
             }
-            else if($kyc['file_type'] == "PDF"){
-                if (strpos($kyc['file'], ',') !== false) {
-                    @list($encode, $kyc['file']) = explode(',', $kyc['file']);
+            else if($kyc['kyc_file_type'] == "PDF"){
+                if (strpos($kyc['kyc_file'], ',') !== false) {
+                    @list($encode, $kyc['kyc_file']) = explode(',', $kyc['kyc_file']);
                 }
         
-                $base64data = base64_decode($kyc['file'], true);
-                $file_name = $request->input('user_id')."-".$kyc['name'].time().".".strtolower($kyc['file_type']);
+                $base64data = base64_decode($kyc['kyc_file'], true);
+                $file_name = $request->input('user_id')."-".$kyc['name'].time().".".strtolower($kyc['kyc_file_type']);
                 
                 $file_path  = "{$folder}{$file_name}";
         

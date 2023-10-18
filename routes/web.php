@@ -48,7 +48,16 @@ Route::group(['prefix' => '/staff', 'middleware' => ['auth', 'role:Staff'],'name
 
 });
 
-Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'role:Staff'],'namespace' => 'App\Http\Controllers',],function(){
+Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'role:Admin'],'namespace' => 'App\Http\Controllers',],function(){
+
+    Route::get('/branches',                         'AdminController@branches')->name('admin.branches');
+    Route::get('/branches/{any}',                   'AdminController@branches')->where('any', '.*')->name('branches.others');
+
+    Route::get('/departments',                      'AdminController@departments')->name('admin.departments');
+    Route::get('/departments/{any}',                'AdminController@departments')->where('any', '.*')->name('departments.others');
+    
+    Route::get('/settings',                         'AdminController@settings')->name('settings');
+    Route::get('/settings/{any}',                   'AdminController@settings')->where('any', '.*')->name('settings.others');
 
     Route::get('/dashboard',                        'AdminController@dashboard')->name('admin.dashboard');
 
@@ -58,10 +67,14 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'role:Staff'],'name
     Route::get('/loan_types',                       'AdminController@loan_types')->name('admin.loan_types');
     Route::get('/loan_types/{any}',                 'AdminController@loan_types')->where('any', '.*')->name('admin.loan_types.others');
 
+    Route::get('/staffs',                           'AdminController@staffs')->name('admin.staffs');
+    Route::get('/staffs/{any}',                     'AdminController@staffs')->where('any', '.*')->name('admin.staffs.others');
+
     Route::get('/users',                            'AdminController@users')->name('admin.users');
     Route::get('/users/{any}',                      'AdminController@users')->where('any', '.*')->name('admin.users.others');
 });
-Route::group(['middleware' => ['auth', 'role:Staff',],'namespace' => 'App\Http\Controllers',],function(){
-    Route::get('/settings',                'AdminController@settings')->name('settings');
-    Route::get('/settings/{any}',          'AdminController@settings')->where('any', '.*')->name('settings.others');
+
+Route::group(['prefix' => '/requests', 'namespace' => 'App\Http\Controllers',],function(){
+    Route::get('/guarantors/{id}/confirm',                'GuarantorController@show')->name('requests.guarantors');
+    Route::get('/guarantors/{any}',          'GuarantorController@settings')->where('any', '.*')->name('settings.others');
 });

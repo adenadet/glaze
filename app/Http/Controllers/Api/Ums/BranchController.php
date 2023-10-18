@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Models\Branch;
+use App\Models\Ums\Staff;
 use App\Models\User;
 
 use Spatie\Permission\Models\Role;
@@ -16,7 +17,7 @@ class BranchController extends Controller
     public function index()
     {
         return response()->json([
-            'branches'    => Branch::with('users')->with('chief_consultant')->with('head_nurse')->with('practice_manager')->orderBy('name', 'ASC')->paginate(10),       
+            'branches'    => Branch::with('staffs')->orderBy('name', 'ASC')->paginate(10),       
             'users'       => User::orderBy('first_name', 'ASC')->get(),       
         ]);        
     }
@@ -52,8 +53,8 @@ class BranchController extends Controller
     public function show($id)
     {
         return response()->json([
-            'branch'    => Branch::where('id', '=', $id)->with('users')->with('hod')->orderBy('name', 'ASC')->first(),       
-            'users'       => User::all(),       
+            'branch'    => Branch::where('id', '=', $id)->orderBy('name', 'ASC')->first(),       
+            'staffs'    => Staff::where('branch_id', '=', $id)->with(['user.roles', 'department', ])->paginate(12),       
         ]);
     }
 

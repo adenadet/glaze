@@ -21,8 +21,8 @@ class Branch extends Structure {
 		return $this->belongsTo('App\Models\User', 'pm_id', 'id');
 	}
 
-	public function users(){
-    	return $this->hasMany('App\Models\User', 'branch_id', 'id');
+	public function staffs(){
+    	return $this->hasMany('App\Models\Ums\Staff', 'branch_id', 'id');
 	}
 	
 	

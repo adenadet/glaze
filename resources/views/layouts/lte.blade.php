@@ -14,7 +14,8 @@
     @include('partials.lte.navbar')
     @include('partials.lte.aside')
     <div class="content-wrapper">
-        @include('partials.lte.breadcrumb')
+        @if ($page != 'Admin') @include('partials.lte.breadcrumb')
+        @endif
         @yield('content')
     </div>
     <aside class="control-sidebar control-sidebar-dark">

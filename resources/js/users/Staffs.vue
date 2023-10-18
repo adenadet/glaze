@@ -1,84 +1,86 @@
 <template>
-<div class="row clearfix">
-    <div class="modal fade" id="userModal">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" v-show="editMode">Edit Staff: {{staff.unique_id}}</h4>
-                    <h4 class="modal-title" v-show="!editMode">New Staff</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                </div>
-                <div class="modal-body">
-                    <UserFormStaff :editMode="editMode" />
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="roleModal">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" v-show="!editMode">Assign User Roles</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                </div>
-                <div class="modal-body">
-                    <UserFormAssignRole :user="user"/>
+<section class="container-fluid">
+    <div class="row clearfix mt-3">
+        <div class="modal fade" id="userModal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" v-show="editMode">Edit Staff: {{staff.unique_id}}</h4>
+                        <h4 class="modal-title" v-show="!editMode">New Staff</h4>
+                        <button type="button" class="close" @click="closeModal" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <UserFormStaff :areas="areas" :branches="branches" :departments="departments" :editMode="editMode" :states="states" />
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-12">
-        <div class="card custom-card"> 
-            <div class="card-header justify-content-between"> 
-                <div class="card-title">Staffs</div>
-                <div class="card-tools">
-                    <button class="btn btn-sm btn-primary float-sm-right" @click="addUser()">Add New Staff <i class="fa fa-user-add"></i></button>
+        <div class="modal fade" id="roleModal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Assign User Roles</h4>
+                        <button type="button" class="close" @click="closeModal" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <UserFormAssignRole :user="user"/>
+                    </div>
                 </div>
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="col-lg-4 col-md-4 col-sm-6 d-flex align-items-stretch" v-for="user in users.data" :key="user.id">
-                        <div class="card bg-light">
-                            <div class="card-header text-muted border-bottom-0">&nbsp;</div>
-                            <div class="card-body pt-0">
-                                <div class="row">
-                                    <div class="col-7">
-                                        <h2 class="lead"><b>{{user.first_name}} {{user.middle_name}} {{user.last_name}}</b></h2>
-                                    </div>
-                                    <div class="col-5 text-center">
-                                        <img style="height: 100px;" :src="(user.image) ? '/img/profile/'+user.image : '/img/profile/default.png'" alt="" class="img-circle img-fluid">
-                                    </div>
-                                    <div class="col-12">
-                                        <ul class="ml-4 mb-0 fa-ul text-muted">
-                                            <li class="small"><span class="fa-li"><i class="fas fa-lg fa-envelope"></i></span> Email: {{user.email}}</li>
-                                            <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Dept: {{((typeof user.department != 'undefined') && (user.department !== null))? user.department.name: ''}}</li>
-                                            <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Phone #: {{user.phone}}</li>
-                                        </ul>
+        </div>
+        <div class="col-md-12">
+            <div class="card custom-card"> 
+                <div class="card-header justify-content-between"> 
+                    <div class="card-title">Staffs</div>
+                    <div class="card-tools">
+                        <button class="btn btn-sm btn-primary float-sm-right" @click="addUser()">Add New Staff <i class="fa fa-user-add"></i></button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-6 d-flex align-items-stretch" v-for="user in users.data" :key="user.id">
+                            <div class="card bg-light">
+                                <div class="card-body pt-0">
+                                    <div class="row">
+                                        <div class="col-7">
+                                            <h2 class="lead"><b>{{user.user | FullName}}</b></h2>
+                                        </div>
+                                        <div class="col-5 text-center">
+                                            <img style="height: 100px;" :src="(user.user.image) ? '/img/profile/'+user.image : '/img/profile/default.png'" alt="" class="img-circle img-fluid">
+                                        </div>
+                                        <div class="col-12">
+                                            <ul class="ml-4 mb-0 fa-ul text-muted">
+                                                <li class="small"><span class="fa-li"><i class="fas fa-lg fa-envelope"></i></span> Email: {{user.user.email}}</li>
+                                                <li class="small"><span class="fa-li"><i class="fas fa-lg fa-building"></i></span> Dept: {{((typeof user.department != 'undefined') && (user.department !== null))? user.department.name: ''}}</li>
+                                                <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Phone #: {{user.user.phone}} {{user.alt_phone != null ? ', '+staff.alt_phone : ''}} </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="card-footer">
-                                <div class="text-right">
-                                    <button class="btn btn-sm btn-success" @click="setUserRole(user)" title="Set Staff Role"><i class="fa fa-user-cog"></i></button>
-                                    <button class="btn btn-sm btn-primary" @click="editUser(user)" title="Edit Staff"><i class="fa fa-edit"></i></button>
-                                    <button class="btn btn-sm btn-danger" @click="deleteUser(user.id)" title="Delete Staff"><i class="fa fa-trash"></i></button>
+                                <div class="card-footer">
+                                    <div class="text-right">
+                                        <router-link class="btn btn-sm btn-default" :to="'/admin/staffs/'+user.id" title="View Staff"><i class="fa fa-eye"></i></router-link>
+                                        <button class="btn btn-sm btn-success" @click="setUserRole(user.user)" title="Set Staff Role"><i class="fa fa-user-cog"></i></button>
+                                        <button class="btn btn-sm btn-primary" @click="editUser(user)" title="Edit Staff"><i class="fa fa-edit"></i></button>
+                                        <button class="btn btn-sm btn-danger" @click="deleteUser(user.id)" title="Delete Staff"><i class="fa fa-trash"></i></button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-12">
-                <div class="card-footer">
-                    <pagination :data="users" @pagination-change-page="getUser">
-                        <span slot="prev-nav">&lt; Previous </span>
-                        <span slot="next-nav">Next &gt;</span>
-                    </pagination>
+                <div class="col-12">
+                    <div class="card-footer">
+                        <pagination :data="users" @pagination-change-page="getUser">
+                            <span slot="prev-nav">&lt; Previous </span>
+                            <span slot="next-nav">Next &gt;</span>
+                        </pagination>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>
 </template>
 <script>
 export default {
@@ -91,6 +93,7 @@ export default {
             savings:{},
             states:[],
             staff:{},
+            user: {},
             users:{},
             form: new Form({}),
         }
@@ -104,7 +107,11 @@ export default {
 
             this.$Progress.finish();
         },
-        deleteUser(id){
+        closeModal(){
+            $('#roleModal').modal('hide');
+            $('#userModal').modal('hide');
+        },
+        /*deleteUser(id){
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
@@ -127,12 +134,12 @@ export default {
                     });
                 }
             });  
-        },
+        },*/
         editUser(user){
             this.$Progress.start();
             this.editMode = true;
-            this.user = user;
-            Fire.$emit('BioDataFill', user);
+            this.staff = user;
+            Fire.$emit('StaffDataFill', user); 
             $('#userModal').modal('show');
 
             this.$Progress.finish();
@@ -156,7 +163,7 @@ export default {
             });
         },
         getUser(page=1){
-            axios.get('/api/ums/users?page='+page)
+            axios.get('/api/ums/staffs?page='+page)
             .then(response=>{
                 this.users = response.data.users;   
             });

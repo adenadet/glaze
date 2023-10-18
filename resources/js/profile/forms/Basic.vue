@@ -97,12 +97,9 @@ export default {
         }
     },
     mounted() {
-        Fire.$on('BioDataFill', user =>{
+        Fire.$on('BasicDataFill', user =>{
             this.BioData.fill(user);
             console.log("Get Here");
-        });
-        Fire.$on('AfterCreation', ()=>{
-            //axios.get("api/profile").then(({ data }) => (this.BioData.fill(data)));
         });
     },
     methods:{

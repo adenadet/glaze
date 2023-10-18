@@ -8,12 +8,15 @@ use Illuminate\Http\Request;
 use App\Models\Branch;
 use App\Models\Finance\AllBank;
 use App\Models\Finance\Bank;
+use App\Models\Finance\Bureau;
+use App\Models\Finance\BureauProduct;
 use App\Models\Loans\Account;
 use App\Models\Loans\Guarantor;
 use App\Models\Loans\Type;
 use App\Models\Loans\Repayment;
 use App\Models\User;
 use App\Models\Area;
+use App\Models\Loans\CreditScore;
 use App\Models\Loans\CheckListItem;
 use App\Models\Loans\TypeRequirement;
 use App\Models\State;
@@ -22,6 +25,16 @@ use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 
 class AccountController extends Controller{
+    public function credit_scores($id)
+    {
+        return response()->json([
+            'account' => Account::where('id', '=', $id)->with(['repayments', 'user'])->first(),
+            'bureaus' => Bureau::select('id', 'name', 'link')->orderBy('name', 'ASC')->get(),
+            'bureau_products' => BureauProduct::orderBy('name', 'ASC')->get(),
+            'credit_score' => CreditScore::where('loan_id', '=', $id)->first(),
+        ]);
+    }
+    
     public function customer($id)
     {
         return response()->json([
@@ -35,9 +48,7 @@ class AccountController extends Controller{
     {
         return response()->json([
             'all_banks' => AllBank::select('id', 'bank_name')->orderBy('bank_name', 'ASC')->get(),
-            'areas' => Area::select('id', 'name')->orderBy('name', 'ASC')->get(),
             'accounts' => Account::where('user_id', auth('api')->id())->with(['repayments', 'guarantor_requests', 'guarantors'])->get(),
-            'states' => State::select('id', 'name')->with('areas')->orderBy('name', 'ASC')->get(),
             'user'=> User::where('id', '=', auth('api')->id())->with(['customer_address', 'customer_accounts', 'next_of_kin'])->first(),
             'current_loan' => Account::where('user_id', auth('api')->id())->where('status', '<', 5)->with(['guarantor_requests', 'guarantors', 'repayments'])->first(),
             'loan_types' => Type::where('status', '1')->with('requirements')->get(),

@@ -6,7 +6,7 @@ Route::group(['prefix'=>'ums'], function () {
     Route::get('/bvn_verifications/send_mail/{id}', 'ConfirmationController@send_mail')->name('ums.bvn_verifications.send_mail');
     Route::get('/kyc_items', 'UserController@kyc')->name('ums.kyc');
     Route::post('/kyc_store', 'UserController@kyc_store')->name('ums.kyc_store');
-    Route::get('/profile', 'UserController@profile')->name('profile.initials');
+    //Route::get('/profile', 'UserController@profile')->name('profile.initials');
     Route::post('/password', 'UserController@password')->name('profile.password');
     Route::post('/details', 'UserController@details')->name('user.details');
     Route::get('/roles/initials', 'RoleController@initials')->name('roles.initials');
@@ -22,9 +22,10 @@ Route::group(['prefix'=>'ums'], function () {
         '/bios'         => 'BioController',
         '/customers'    => 'CustomerController',
         '/departments'  => 'DepartmentController',
-        //'/initials'     => 'InitialController',
+        '/profile'      => 'ProfileController',
         '/nok'          => 'NOKController',
         '/roles'        => 'RoleController',
+        '/socials'      => 'SocialController',
         '/staffs'       => 'StaffController',
         '/users'        => 'UserController',
         '/user_kyc'     => 'KYCController',

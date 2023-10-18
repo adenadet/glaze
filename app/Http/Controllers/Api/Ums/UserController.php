@@ -22,50 +22,6 @@ use App\Models\Ums\UserKYC;
 
 class UserController extends Controller
 {
-    public function kyc()
-    {
-        return response()->json(['kyc_items' => KYCItem::orderBy('name', 'ASC')->get()]);
-    }
-
-    public function kyc_store(Request $request)
-    {
-        $this->validate($request, [
-            'user_id' => 'required|numeric',
-            'kyc_items' => 'required|array',
-        ]);
-
-        print_r($request->input('kyc_items'));
-        foreach ($request->input('kyc_items') as $kyc){
-            if (isset($kyc['file'])){
-                print_r($kyc['file']);
-                $file_name = $request->input('user_id')."-".time().$kyc['file']['name'];
-                //$file_size =$kyc['file']['size'];
-                $file_tmp =$kyc['file']['tmp_name'];
-                //$file_type=$kyc['file']['type'];
-                $file_ext=strtolower(end(explode('.',$kyc['file']['name'])));
-
-                move_uploaded_file($file_tmp, "uploads/kyc/".$file_name);
-            }
-            else{
-                $file_name = NULL;
-            }
-
-            UserKYC::create([
-                'user_id' => $request->input('user_id'),
-                'item_id' => $kyc['item_id'],
-                'file' => $file_name,
-                'identification' => $request->input('identification') ?? NULL,
-                'expiry_date' => $request->input('expiry_date') ?? NULL,
-                'created_by' => auth('api')->id(),
-                'updated_by' => auth('api')->id(),
-            ]);
-        }
-
-        return response()->json([
-            
-        ]);
-    }
-
     public function initials()
     {
         $users = User::where('branch_id', auth('api')->user()->branch_id)->paginate(52);
@@ -239,7 +195,6 @@ class UserController extends Controller
         $states = State::orderBy('name', 'ASC')->get();
         
         return response()->json([
-            'nations' => Country::orderBy('name', 'ASC')->get(),
             'areas' => $areas,
             'user' => User::where('id', '=', auth('api')->id())->with('next_of_kin', 'customer_accounts', 'customer_address.state', 'social_medias', 'kyc_items')->with(['area', 'state',])->first(),
             'nok' => $nok,

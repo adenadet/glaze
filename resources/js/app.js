@@ -1,5 +1,7 @@
 require('./bootstrap');
 import router from './routes';
+import store from './stores';
+
 
 window.Vue = require('vue');
 import Vue from 'vue';
@@ -83,6 +85,10 @@ Vue.use(VueYoutube);
 import VueSignature from 'vue-signature-pad';
 Vue.use(VueSignature);
 
+
+import Vuex from 'vuex';
+ Vue.use(Vuex);
+
 //Special Created Filters
 Vue.filter('addOne', function(value) {
     if (isNaN(value)){ return '0';}
@@ -160,7 +166,7 @@ Vue.filter('shortDate', function(text){
 
 Vue.filter('profilePicture', function (text){
     if (text == null){return '/img/profile/default.png';}
-    else{ return '/img/profile/'+text ;}
+    else{ return '/img/profile/'+text.image ;}
 });
 
 Vue.filter('userAddress', function(user){
@@ -187,6 +193,7 @@ Vue.filter('userImage', function(user){
 const app = new Vue({
     el: '#corner',
     router,
+    store,
     data:{ search: '',},
     methods:{searchIt: _.debounce(()=>{Fire.$emit('searchInstance');}, 1000)},
 
