@@ -1,18 +1,6 @@
 <template>
 <section>
     <div class="card">
-        <div class="card-header">
-            <h3 class="card-title"><i class="fa fa-comments mr-1"></i>To Do List</h3>
-            <div class="card-tools">
-                <ul class="pagination pagination-sm">
-                    <li class="page-item"><a href="#" class="page-link">&laquo;</a></li>
-                    <li class="page-item"><a href="#" class="page-link">1</a></li>
-                    <li class="page-item"><a href="#" class="page-link">2</a></li>
-                    <li class="page-item"><a href="#" class="page-link">3</a></li>
-                    <li class="page-item"><a href="#" class="page-link">&raquo;</a></li>
-                </ul>
-            </div>
-        </div>
         <div class="card-body">
             <div class=""><input type="text" class="form-control" name="search" id="search" placeholder="Search" v-model="search" @change="searchUser"></div>
             <form action="#" method="post">
@@ -24,7 +12,7 @@
                         <div class="input-group-append"><span class="input-group-text" id="">{{roomData.members.count}} Members</span></div>
                     </div>
                 </div>
-                <div class="col-sm-4" v-for="user in users.data" :key="user.id">
+                <div class="col-sm-4" v-for="user in users" :key="user.id">
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" name="departments[]" id="departments[]" v-model="roomData.members" :value="user.id" :checked="roomData.members.includes(user.id)">
                         <label class="form-check-label" style="color: #111;">{{user.unique_id+' | '+user.first_name+' '+user.last_name}}</label>
@@ -34,12 +22,6 @@
             </div>
             <button type="button" class="btn btn-info float-right" @click="addNew"><i class="fas fa-plus"></i> Add item</button>
             </form>
-        </div>
-        <div class="card-footer">
-            <pagination :data="users" @pagination-change-page="getUser">
-                <span slot="prev-nav">&lt; Previous </span>
-                <span slot="next-nav">Next &gt;</span>
-            </pagination>
         </div>
     </div>
 </section>
@@ -89,7 +71,7 @@ export default {
             });
         },
         getInitials(){
-            axios.get('/api/ums/users').then(response =>{
+            axios.get('/api/ums/staffs/full_list').then(response =>{
                 this.users = response.data.users;
             })
             .catch(()=>{
@@ -107,7 +89,7 @@ export default {
             });
         },
         searchUser(){
-            axios.get('/api/ums/users/search?q='+this.search)
+            axios.get('/api/ums/staffs/full_list?q='+this.search)
             .then(response=>{this.users = response.data.users;})
             .catch(()=>{
                 this.$Progress.fail();

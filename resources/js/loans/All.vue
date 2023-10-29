@@ -65,7 +65,10 @@ export default {
     },
     created() {
         this.getInitials();
-        
+        Fire.$on('reloadLoans', response =>{
+            this.reloadPage(response);
+            this.closeModals();
+        })
     },
     methods:{
         addNew(){
@@ -75,6 +78,9 @@ export default {
             Fire.$emit('LoanDataFill', {});
             $('#loanModal').modal('show');
             this.$Progress.finish();
+        },
+        assignLoan(loan){
+
         },
         closeLoan(){
 

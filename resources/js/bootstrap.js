@@ -11,6 +11,9 @@ try {
 window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+window.axios.defaults.headers.common['Access-Control-Allow-Methods'] = "delete, post, get, options";
+window.axios.defaults.headers.common['Access-Control-Allow-Headers'] = "content-type, access-control-allow-headers, authorization, x-requested-with";
 
 // import Echo from 'laravel-echo';
 

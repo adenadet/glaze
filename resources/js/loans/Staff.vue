@@ -1,5 +1,20 @@
 <template>
 <section class="col-md-12">
+    <div class="modal fade" id="loanAssignModal"  aria-labelledby="myExtraLargeModalLabel" aria-hidden="true"> 
+        <div class="modal-xl modal-dialog"> 
+            <div class="modal-content"> 
+                <div class="modal-header"> 
+                    <h6 class="modal-title">Assign Loan Officer</h6> 
+                    <button type="button" class="btn-default btn btn-sm" data-bs-dismiss="modal" aria-label="Close" @click="closeModal()">
+                        <i class="text-danger fa fa-times"></i>
+                    </button> 
+                </div> 
+                <div class="modal-body p-3"> 
+                    <LoanFormAssign :loan="loan"/>
+                </div> 
+            </div>
+        </div> 
+    </div>
     <div class="card custom-card"> 
         <div class="card-header justify-content-between"> 
             <div class="card-title">All Loans </div> 
@@ -64,15 +79,14 @@ export default {
             loan: {},
         }
     },
-    mounted() {},
+    mounted() {},assignLoan(loan){
+
+},
     created() {
         this.getInitials();
         Fire.$on('Reload', response =>{
-            this.chats = response.data.chats;
-            this.user = response.data.user;
-        });
-        Fire.$on('chatReload', chat =>{
-            this.chat = chat;
+            this.loans = response.data.accounts;
+            this.closeModal();
         });
     },
     methods:{
@@ -84,9 +98,8 @@ export default {
             this.$Progress.finish();
         },
         assignLoan(loan){
-            if (loan.account_officer == null){this.editMode = false;}
-            else{this.editMode = true;}
             this.loan = loan;
+            alert(loan.id);
             Fire.$emit('LoanAssignDataFill', loan);
             $('#loanAssignModal').modal('show');
             this.$Progress.finish();
@@ -96,6 +109,7 @@ export default {
         },
         closeModal(){
             $('#loanModal').modal('hide');
+            $('#loanAssignModal').modal('hide');
         },
         deleteLoan(id){
             Swal.fire({

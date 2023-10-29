@@ -15,6 +15,15 @@ Vue.component('BranchAll',              BranchAll);
 Vue.component('BranchForm',             BranchForm);
 Vue.component('BranchSingle',           BranchSingle);
 
+import AdminCPMModuleAll        from '../admin/CPMModules.vue';
+import AdminCPMModuleSingle     from '../admin/CPMModuleSingle.vue';
+
+Vue.component('AdminCPMModuleAll',            AdminCPMModuleAll);
+Vue.component('AdminCPMModuleSingle',         AdminCPMModuleSingle);
+
+    import AdminFormCPMModule from '../admin/forms/CPMModule.vue'
+    import AdminFormCPMTemplate from '../admin/forms/CPMTemplate.vue';
+
 import DepartmentAdmin     from '../admin/departments/Admin.vue';
 import DepartmentAll       from '../admin/departments/All.vue';
 import DepartmentForm      from '../admin/departments/Form.vue';
@@ -45,6 +54,9 @@ let routes = [
 
     {path: '/admin/branches',               component: BranchAll},
     {path: '/admin/branches/:id',           component: BranchSingle},
+
+    {path: '/admin/cpm_modules',            component: AdminCPMModuleAll},
+    {path: '/admin/cpm_modules/:id',        component: AdminCPMModuleSingle},
 
     {path: '/admin/departments',            component:DepartmentAll},
     {path: '/admin/departments/:id',        component:DepartmentSingle},

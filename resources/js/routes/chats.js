@@ -24,8 +24,8 @@ Vue.component('ChatPrivate', ChatPrivate);
     Vue.component('ChatFormContactList', ChatFormContactList);
 
 let routes = [
-    {path: '/chats',            component: ChatMain},
-    {path: '/chats/private',    component: ChatMain},
+    {path: '/staff/chats',            component: ChatMain},
+    {path: '/staff/chats/private',    component: ChatMain},
 ];
 
 export default routes

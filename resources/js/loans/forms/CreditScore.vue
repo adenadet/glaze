@@ -1,6 +1,6 @@
 <template>
 <section>
-    <form @submit.prevent="createConfirmation() ">
+    <form @submit.prevent="createConfirmation()">
         <alert-error :form="ScoreRequestData"></alert-error>
         <div class="row">
             <div class="col-8">
@@ -60,12 +60,9 @@ export default{
     methods: {
         createConfirmation(){
             this.$Progress.start();
-            //this.ScoreRequestData.DataTicket = this.$store.state.DataTicket;
             this.ScoreRequestData.DataTicket = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRlbW8iLCJwYXNzd29yZCI6ImRlbW9AMTIzIiwiaWF0IjoxNjk3NTc3NzM1LCJleHAiOjE3MTU1Nzc3MzV9.hp4Kh6e2Yu00fqY5clP0A7NTJARbF-sgvtSpUDxsN8U"
             this.ScoreRequestData.Identification = this.account.user.bvn;
             this.ScoreRequestData.ProductID = this.bureau_products[this.ScoreRequestData.product_id].id;
-            var route = "https://uat.firstcentralcreditbureau.com/firstcentralrestv2/ConnectConsumerMatch";
-            //this.ScoreRequestData.post(this.bureaus[this.ScoreRequestData.bureau_id].link+'/'+this.bureau_products[this.ScoreRequestData.product_id].link)
             this.ScoreRequestData.post("https://uat.firstcentralcreditbureau.com/firstcentralrestv2/ConnectConsumerMatch")
             .then(response =>{
                 this.$Progress.finish();
@@ -74,8 +71,15 @@ export default{
                 this.RescheduleData.reset();
                 Swal.fire({icon: 'success', title: 'The Checklist has been saved', showConfirmButton: false, timer: 1500});
             })
-            .close();
-
+            .catch(()=>{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: 'Please try again later!'
+                });
+            this.$Progress.fail();
+            });
         },
         createCheckList(){
             this.$Progress.start();
@@ -87,7 +91,15 @@ export default{
                 this.RescheduleData.reset();
                 Swal.fire({icon: 'success', title: 'The Checklist has been saved', showConfirmButton: false, timer: 1500});
             })
-            .close();
+            .catch(()=>{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: 'Please try again later!'
+                });
+            this.$Progress.fail();
+            });
         },
 		updateProfilePic(){
 

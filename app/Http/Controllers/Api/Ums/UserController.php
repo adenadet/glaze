@@ -24,7 +24,7 @@ class UserController extends Controller
 {
     public function initials()
     {
-        $users = User::where('branch_id', auth('api')->user()->branch_id)->paginate(52);
+        $users = User::where('branch_id', '=', auth('api')->user()->branch_id)->paginate(52);
         return response()->json(['users' => $users]);
     }
       

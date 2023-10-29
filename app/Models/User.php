@@ -81,6 +81,10 @@ class User extends Authenticatable
         return $this->belongsTo('App\Models\State', 'state_id', 'id');        
     }
 
+    public function staff(){
+        return $this->belongsTo('App\Models\Ums\Staff', 'id', 'user_id');
+    }
+    
     public function scopeBirthDayBetween($query, Carbon $from, Carbon $till) {
         $fromMonthDay = $from->format('m-d');
         $tillMonthDay = $till->format('m-d');

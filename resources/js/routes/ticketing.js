@@ -9,6 +9,9 @@ import TicketPersonalSummary    from '../ticketing/PersonalSummary.vue';
 import TicketSetting            from '../ticketing/Setting.vue';
 import TicketSingle             from '../ticketing/Single.vue';
 
+import TicketStaff              from '../ticketing/Staff.vue';
+import TicketStaffSingle        from '../ticketing/StaffSingle.vue';
+
     import TicketFormAssign     from '../ticketing/forms/Assign.vue';
     import TicketFormAccept     from '../ticketing/forms/Accept.vue';
     import TicketFormComplete   from '../ticketing/forms/Complete.vue';
@@ -21,6 +24,9 @@ Vue.component('TicketPersonal',         TicketPersonal);
 Vue.component('TicketPersonalSummary',  TicketPersonalSummary);
 Vue.component('TicketSingle',           TicketSingle);
 
+Vue.component('TicketStaff',            TicketStaff);
+Vue.component('TicketStaffSingle',      TicketStaffSingle);
+
     Vue.component('TicketFormAccept',   TicketFormAccept);
     Vue.component('TicketFormAssign',   TicketFormAssign);
     Vue.component('TicketFormComplete', TicketFormComplete);
@@ -28,11 +34,13 @@ Vue.component('TicketSingle',           TicketSingle);
     Vue.component('TicketFormReply',    TicketFormReply);
 
 let routes = [
-    {path: '/ticketing',                component: TicketPersonal},
-    {path: '/ticketing/admin',          component: TicketAdmin},
-    {path: '/ticketing/settings',       component: TicketSetting},
-    {path: '/ticketing/department',     component: TicketDepartment},
-    {path: '/ticketing/:id',            component: TicketSingle},
+    {path: '/staff/tickets',          component: TicketStaff},
+    {path: '/staff/tickets/:id',      component: TicketStaffSingle},
+    {path: '/tickets',                component: TicketPersonal},
+    {path: '/tickets/admin',          component: TicketAdmin},
+    {path: '/tickets/settings',       component: TicketSetting},
+    {path: '/tickets/department',     component: TicketDepartment},
+    {path: '/tickets/:id',            component: TicketSingle},
 ];
 
 export default routes

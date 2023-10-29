@@ -20,6 +20,25 @@ use Spatie\Permission\Models\Role;
 
 class StaffController extends Controller
 {
+    public function full_list()
+    {
+        $all_staffs = Staff::pluck('user_id');
+        if ($search = \Request::get('q')){
+            $users = User::orderBy('first_name', 'ASC')->with(['staff.department'])->where(function($query) use ($search){
+                $query->where('first_name', 'LIKE', "%$search%")
+                ->orWhere('middle_name', 'LIKE', "%$search%")
+                ->orWhere('last_name', 'LIKE', "%$search%")
+                ->orWhere('email', 'LIKE', "%$search%");
+                })->whereIn('id', $all_staffs)->get();
+            }
+        else{
+            $users = User::orderBy('first_name', 'ASC')->with(['staff.department'])->whereIn('id', $all_staffs)->get();
+        }
+        return response()->json([
+            'users' => $users,
+        ]);
+    }
+
     public function index($page = 1)
     {        
         return response()->json([
@@ -169,4 +188,5 @@ class StaffController extends Controller
     {
         //
     }
+
 }

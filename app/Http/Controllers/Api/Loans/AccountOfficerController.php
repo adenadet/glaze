@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Loans;
 
 use App\Http\Controllers\Controller;
+use App\Models\Loans\Account;
 use App\Models\Loans\AccountOfficer;
 use Illuminate\Http\Request;
 
@@ -10,10 +11,12 @@ class AccountOfficerController extends Controller
 {
     public function index()
     {
-        $accounts = AccountOfficer::select('id')->where('status', '=', 1)->where('staff_id', '=', auth('api')->id())->get();
+        $account_list = AccountOfficer::where([['status', '=', 1], ['staff_id', '=', auth('api')->id()]])->pluck('account_id');
+        $accounts = Account::whereIn('id', $account_list)->with(['repayments', 'user', 'type'])->paginate(20);
 
         return response()->json([
-            '' => 'Loan Account has been assigned successfully'
+            'account_list' => $account_list, 
+            'accounts' => $accounts,
         ]);
     }
 
@@ -24,16 +27,24 @@ class AccountOfficerController extends Controller
             'staff_id' => 'required|numeric',
         ]);
 
-        $account_officer = AccountOfficer::create([
+        $accounts = AccountOfficer::where('account_id', '=', $request->input('account_id'))->get();
+
+        foreach ($accounts as $account){
+            $account->status = 2;
+            $account->save();
+        }
+
+        AccountOfficer::create([
             'account_id' => $request->input('account_id'),
             'staff_id' => $request->input('staff_id'),
-            'status' => $request->input('status') ?? 0,
+            'status' => $request->input('status') ?? 1,
             'created_by' => auth('api')->id(),
             'updated_by' => auth('api')->id(),
         ]);
 
         return response()->json([
-            'message' => 'Loan Account has been assigned successfully'
+            'accounts' => Account::where('user_id', auth('api')->id())->with(['repayments', 'user', 'type'])->paginate(20),
+            'account' => Account::where('id', '=',  $request->input('account_id'))->first(),
         ]);
     }
 

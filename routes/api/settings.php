@@ -6,6 +6,8 @@ Route::group(['prefix'=>'settings'], function () {
     //Route::get('/nominations/open/{id}', 'NominationController@open')->name('nominations.open');
     //Route::put('/votes/close/{id}', 'VoteController@close')->name('votes.close');
     Route::apiResources([
-        '/kyc_items' => 'KYCItemController',
+        '/cpm_modules'                  => 'CPMModuleController',
+        '/cpm_module_templates'         => 'CPMModuleTemplateController',
+        '/kyc_items'                    => 'KYCItemController',
     ]);
 });

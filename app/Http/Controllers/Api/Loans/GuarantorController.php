@@ -23,7 +23,12 @@ class GuarantorController extends Controller
 
     public function index()
     {
-        
+        $loans = Account::where([['status', '<', 10],['user_id', '=', auth('api')->id()]])->pluck('id');
+
+        return response()->json([
+            'requests' => GuarantorRequest::whereIN('loan_id',$loans)->with(['account', 'guarantor'])->latest()->paginate(10),
+            //'loans' => $loans,
+        ]);
     }
 
     public function add(Request $request){

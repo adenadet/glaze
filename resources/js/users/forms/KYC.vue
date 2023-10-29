@@ -36,6 +36,7 @@
                         <option value="national_id">National ID</option>
                         <option value="passport">International Passport</option>
                         <option value="drivers_license">Driver's License</option>
+                        <option value="pvc">Permanent Voter's Card</option>
                     </select>
                 </td>
                 <td>
@@ -44,7 +45,7 @@
                 </td>
                 <td>
                     <label>Expiry Date</label>
-                    <input type="date" class="form-control" v-model="UserKYCData.kyc_items[index].kyc_expiry_date" placeholder="expiry_date">
+                    <input type="date" class="form-control" v-model="UserKYCData.kyc_items[index].kyc_expiry_date" placeholder="expiry_date" v-show="UserKYCData.kyc_items[index].kyc_type == 'drivers_license' ||UserKYCData.kyc_items[index].kyc_type == 'passport'">
                 </td>
                 <td v-if="item.kyc_file != null">
                     <label>Attachment</label>

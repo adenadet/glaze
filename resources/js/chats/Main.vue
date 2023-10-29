@@ -40,37 +40,16 @@ export default {
         getInitials(){
             axios.get('/api/chats/messenger/private').then(response =>{
                 this.chats = response.data.chats;
-                Fire.$emit('chatsReload', this.chats);
                 this.user = response.data.user; 
-                this.chat = response.data.chats.data[0];
+                this.chat = response.data.chats.data[0];                
+                Fire.$emit('chatsReload', this.chats);
                 Fire.$emit('chatReload', this.chat);
                 this.$Progress.finish();
-                toast.fire({icon: 'success', title: 'Chat loaded successfully',});
             })
             .catch(()=>{
                 this.$Progress.fail();
                 toast.fire({icon: 'error', title: 'Chat not loaded successfully',});
             });
-        },
-        getProfilePic(){
-            let  photo = (this.form.image.length >= 150) ? this.form.image : "./"+this.form.image;
-            return photo;
-        },
-        updateProfilePic(e){
-            let file = e.target.files[0];
-            let reader = new FileReader();
-            if (file['size'] < 2000000){
-                reader.onloadend = (e) => {
-                    this.form.image = reader.result
-                    }
-                reader.readAsDataURL(file)
-            }
-            else{
-                swal.fire({
-                        type: 'error',
-                        title: 'File is too large'
-                    })
-            }
         },
     },
     props:{

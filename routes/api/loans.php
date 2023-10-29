@@ -17,6 +17,7 @@ Route::group(['prefix'=>'loans'], function () {
 
     Route::apiResources([
         '/accounts'         => 'AccountController',
+        '/account_officers' => 'AccountOfficerController',
         '/confirms'         => 'ConfirmationController',
         '/checklists'       => 'CheckListController',
         '/guarantors'       => 'GuarantorController',

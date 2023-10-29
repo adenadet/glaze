@@ -15,6 +15,15 @@ class AdminController extends Controller
         return view('home')->with($params);
     }
 
+    public function cpm_modules()
+    {
+        $params = [
+            'page_title' => 'Admin / CPM Modules',
+            'page' => 'Admin',
+        ];
+        return view('home')->with($params);
+    }
+
     public function dashboard()
     {
         $params = [

@@ -30,6 +30,7 @@
                         <li class="nav-item"><router-link to="/admin/departments" class="nav-link"><i class="nav-icon fas fa-file"></i><p>Departments</p></router-link></li>
                         <li class="nav-item"><router-link to="/admin/loan_requirements" class="nav-link"><i class="nav-icon fas fa-file"></i><p>Loan Requirements</p></router-link></li>
                         <li class="nav-item"><router-link to="/admin/loan_types" class="nav-link"><i class="nav-icon fas fa-file"></i><p>Loan Types</p></router-link></li>
+                        <li class="nav-item"><router-link to="/admin/cpm_modules" class="nav-link"><i class="nav-icon fas fa-file"></i><p>CPM Modules</p></router-link></li>
                     </ul>
                 </li>
             </ul>

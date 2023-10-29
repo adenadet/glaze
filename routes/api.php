@@ -14,22 +14,23 @@ Route::namespace('App\Http\Controllers\Api\Settings')->middleware(['auth:api', '
 Route::namespace('App\Http\Controllers\Api\Ticketing')->middleware('auth:api')->name('api.tickets.')->group(base_path('routes/api/ticket.php'));
 Route::namespace('App\Http\Controllers\Api\ToDo')->name('api.todos.')->group(base_path('routes/api/todo.php'));
 
-Route::namespace('App\Http\Controllers\Api\Ums')->middleware('auth:api')->name('api.ums.')->group(base_path('routes/api/ums.php'));
+Route::namespace('App\Http\Controllers\Api\Ums')//->middleware('auth:api')
+->name('api.ums.')->group(base_path('routes/api/ums.php'));
 
-Route::get('dashboard/applicant',  'App\Http\Controllers\Api\DashboardController@applicant')->name('api.dashboard.applicant');
-Route::get('schedules', 'App\Http\Controllers\Api\EMR\RegistrationController@schedules')->name('appointments.schedules');
+/* Route::get('dashboard/applicant',  'App\Http\Controllers\Api\DashboardController@applicant')->name('api.dashboard.applicant');
+
 Route::post('notices/modify',    'App\Http\Controllers\Api\NoticeController@modify')->name('api.notices.modify');
 Route::get('policies/all/{id}',  'App\Http\Controllers\Api\PolicyController@all')->name('api.policies.all');
 Route::post('policies/assign',   'App\Http\Controllers\Api\PolicyController@assign')->name('api.policies.assign');
 
 Route::get('/schedulers/cancel', 'App\Http\Controllers\Api\EMR\RegistrationController@cancel')->name('schedulers.cancel');
 Route::post('/schedulers/cancelled', 'App\Http\Controllers\Api\EMR\RegistrationController@cancelled')->name('schedulers.cancelled');
-
+*/
 Route::apiResources([
-    'certificates'  => 'App\Http\Controllers\Api\EMR\CertificateController',
-    'emr/cancellations' => 'App\Http\Controllers\Api\EMR\CancellationController',
+    //'certificates'  => 'App\Http\Controllers\Api\EMR\CertificateController',
+    //'emr/cancellations' => 'App\Http\Controllers\Api\EMR\CancellationController',
     'dashboard'     => 'App\Http\Controllers\Api\DashboardController',
-    'member'        => 'App\Http\Controllers\Api\MemberController',
+    //'member'        => 'App\Http\Controllers\Api\MemberController',
     'notices'       => 'App\Http\Controllers\Api\NoticeController',
     'policies'      => 'App\Http\Controllers\Api\PolicyController',
     'scheduler'     => 'App\Http\Controllers\Api\EMR\RegistrationController',

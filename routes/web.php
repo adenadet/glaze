@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Auth::routes();
@@ -11,21 +12,24 @@ Route::get('/test', [App\Http\Controllers\ModulesController::class, 'test'])->na
 //Main Area Link
 
 Route::group(['middleware' => 'auth','namespace' => 'App\Http\Controllers',],function(){
-    Route::get('/dashboard',    'ModulesController@dashboard')->name('dashboard');
+    Route::get('/dashboard',                'ModulesController@dashboard')->name('dashboard');
 
-    Route::get('/loans',        'ModulesController@loans')->name('loans');
-    Route::get('/loans/{any}',        'ModulesController@loans')->where('any', '.*')->name('loans.others');
+    Route::get('/guarantors',               'ModulesController@guarantors')->name('guarantors');
+    Route::get('/guarantors/{any}',         'ModulesController@guarantors')->where('any', '.*')->name('guarantors.others');
 
-    Route::get('/notifications',        'ModulesController@notifications')->name('notifications');
-    Route::get('/notifications/{any}',        'ModulesController@notifications')->where('any', '.*')->name('notifications.others');
+    Route::get('/loans',                    'ModulesController@loans')->name('loans');
+    Route::get('/loans/{any}',              'ModulesController@loans')->where('any', '.*')->name('loans.others');
+
+    Route::get('/notifications',            'ModulesController@notifications')->name('notifications');
+    Route::get('/notifications/{any}',      'ModulesController@notifications')->where('any', '.*')->name('notifications.others');
     
     Route::get('/profile',                  'ModulesController@profile')->name('profile');
     
-    Route::get('/ticketing',                'ModulesController@tickets')->name('tickets');
-    Route::get('/ticketing/{any}',          'ModulesController@tickets')->where('any', '.*')->name('tickets.others');
+    Route::get('/tickets',                  'ModulesController@tickets')->name('tickets');
+    Route::get('/tickets/{any}',            'ModulesController@tickets')->where('any', '.*')->name('tickets.others');
 
-    Route::get('/wallet',                'ModulesController@wallet')->name('wallet');
-    Route::get('/wallet/{any}',          'ModulesController@wallet')->where('any', '.*')->name('wallet.others');
+    Route::get('/wallet',                   'ModulesController@wallet')->name('wallet');
+    Route::get('/wallet/{any}',             'ModulesController@wallet')->where('any', '.*')->name('wallet.others');
     
 });
 
@@ -33,12 +37,14 @@ Route::group(['prefix' => '/staff', 'middleware' => ['auth', 'role:Staff'],'name
 
     Route::get('/dashboard',                        'StaffController@dashboard')->name('staff.dashboard');
 
-    Route::get('/accounts',                        'StaffController@accounts')->name('staff.accounts');
-    Route::get('/accounts/{any}',                  'StaffController@accounts')->where('any', '.*')->name('staff.accounts.others');
+    Route::get('/accounts',                         'StaffController@accounts')->name('staff.accounts');
+    Route::get('/accounts/{any}',                   'StaffController@accounts')->where('any', '.*')->name('staff.accounts.others');
 
+    Route::get('/chats',                            'StaffController@chats')->name('staff.chats');
+    Route::get('/chats/{any}',                      'StaffController@chats')->where('any', '.*')->name('staff.chats.others');
 
-    Route::get('/confirm',                        'StaffController@confirmations')->name('staff.confirm');
-    Route::get('/confirm/{any}',                  'StaffController@confirmations')->where('any', '.*')->name('staff.confirmations.others');
+    Route::get('/confirm',                          'StaffController@confirmations')->name('staff.confirm');
+    Route::get('/confirm/{any}',                    'StaffController@confirmations')->where('any', '.*')->name('staff.confirmations.others');
 
     Route::get('/customers',                        'StaffController@customers')->name('staff.customers');
     Route::get('/customers/{any}',                  'StaffController@customers')->where('any', '.*')->name('staff.customers.others');
@@ -46,13 +52,21 @@ Route::group(['prefix' => '/staff', 'middleware' => ['auth', 'role:Staff'],'name
     Route::get('/loans',                            'StaffController@loans')->name('staff.loans');
     Route::get('/loans/{any}',                      'StaffController@loans')->where('any', '.*')->name('staff.loans.others');
 
+        
+    Route::get('/tickets',                          'StaffController@tickets')->name('tickets');
+    Route::get('/tickets/{any}',                    'StaffController@tickets')->where('any', '.*')->name('tickets.others');
+
 });
 
 Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'role:Admin'],'namespace' => 'App\Http\Controllers',],function(){
 
     Route::get('/branches',                         'AdminController@branches')->name('admin.branches');
     Route::get('/branches/{any}',                   'AdminController@branches')->where('any', '.*')->name('branches.others');
+ 
+    Route::get('/cpm_modules',                      'AdminController@cpm_modules')->name('cpm_modules');
+    Route::get('/cpm_modules/{any}',                'AdminController@cpm_modules')->where('any', '.*')->name('cpm_modules');
 
+ 
     Route::get('/departments',                      'AdminController@departments')->name('admin.departments');
     Route::get('/departments/{any}',                'AdminController@departments')->where('any', '.*')->name('departments.others');
     
@@ -70,11 +84,15 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'role:Admin'],'name
     Route::get('/staffs',                           'AdminController@staffs')->name('admin.staffs');
     Route::get('/staffs/{any}',                     'AdminController@staffs')->where('any', '.*')->name('admin.staffs.others');
 
+        
+    Route::get('/tickets',                          'AdminController@tickets')->name('tickets');
+    Route::get('/tickets/{any}',                    'AdminController@tickets')->where('any', '.*')->name('tickets.others');
+
     Route::get('/users',                            'AdminController@users')->name('admin.users');
     Route::get('/users/{any}',                      'AdminController@users')->where('any', '.*')->name('admin.users.others');
 });
 
 Route::group(['prefix' => '/requests', 'namespace' => 'App\Http\Controllers',],function(){
-    Route::get('/guarantors/{id}/confirm',                'GuarantorController@show')->name('requests.guarantors');
-    Route::get('/guarantors/{any}',          'GuarantorController@settings')->where('any', '.*')->name('settings.others');
+    Route::get('/guarantors/{id}/confirm',          'GuarantorController@show')->name('requests.guarantors');
+    Route::get('/guarantors/{any}',                 'GuarantorController@settings')->where('any', '.*')->name('settings.others');
 });

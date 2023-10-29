@@ -108,11 +108,13 @@ export default {
                 verified_at: '',
                 unique_id: '', 
             }),
+            user: {}
         }
     },
     mounted() {
         Fire.$on('BioDataFill', user =>{
             this.BioData.fill(user);
+            this.user = user
         });
         Fire.$on('AfterCreation', ()=>{
             //axios.get("api/profile").then(({ data }) => (this.BioData.fill(data)));

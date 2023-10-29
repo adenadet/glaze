@@ -49,7 +49,8 @@ Vue.component('LoanTypes',          LoanTypes);
     Vue.component('LoanDetailRepayments', LoanDetailRepayments);
     Vue.component('LoanDetailSummary', LoanDetailSummary);
 
-    import LoanClose                from '../loans/forms/Close.vue';
+    import LoanFormAssign           from '../loans/forms/Assign.vue';
+    import LoanFormClose            from '../loans/forms/Close.vue';
     import LoanForm                 from '../loans/forms/Loan.vue';
     import LoanFormCheckList        from '../loans/forms/CheckList.vue';
     import LoanFormCreditScore      from '../loans/forms/CreditScore.vue';
@@ -59,7 +60,8 @@ Vue.component('LoanTypes',          LoanTypes);
     import LoanFormRequirement      from '../loans/forms/Requirement.vue';
     import LoanFormType             from '../loans/forms/Type.vue';
 
-    Vue.component('LoanClose',              LoanClose);
+    Vue.component('LoanFormAssign',         LoanFormAssign);
+    Vue.component('LoanFormClose',          LoanFormClose);
     Vue.component('LoanForm',               LoanForm);
     Vue.component('LoanFormCheckList',      LoanFormCheckList);
     Vue.component('LoanFormCreditScore',    LoanFormCreditScore);

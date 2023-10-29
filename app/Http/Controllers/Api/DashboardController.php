@@ -11,7 +11,7 @@ use App\Models\SOM\Winner;
 use App\Models\Notice;
 use App\Models\Area;
 use App\Models\State;
-use App\Models\Staff;
+//use App\Models\Staff;
 use App\Models\Country;
 use App\Models\User;
 use App\Models\Loans\Account;
@@ -20,6 +20,7 @@ use App\Models\EMR\Payment;
 use App\Models\EMR\Wallet;
 use App\Models\Ticket\Ticket;
 use App\Models\Log\Activity;
+use App\Models\Ums\Staff as Staff;
 use Illuminate\Http\Request;
 
 //use Kordy\Ticketit\Models\Ticket;
@@ -31,13 +32,13 @@ class DashboardController extends Controller
     {
         $membership = Member::select('room_id')->where('user_id', '=', auth('api')->id())->where('status', '=', 1);
         $chats = Room::whereIn('id', $membership)->with('messages.user')->with('members.user')->orderBy('updated_at', 'DESC')->paginate(10);
-        
+        $staffs = Staff::pluck('user_id');
         return response()->json([
-            'birthdays'     => User::birthDayBetween(Carbon::now(), Carbon::now()->addWeek())->limit(8)->get(),
+            'birthdays'     => User::birthDayBetween(Carbon::now(), Carbon::now()->addWeek())->whereIn('id', $staffs)->limit(8)->get(),
             'chats'         => $chats,
             'loans'         => Account::where('user_id', '=', auth('api')->id())->paginate(5),
             'message_rooms' => Member::where('user_id', '=', auth('api')->id())->with('room.messages')->get(),
-            'new_staffs'    => User::where('user_type', '!=', 'Applicant')->orderBy('created_at', 'DESC')->limit(8)->get(),
+            'new_staffs'    => User::where('user_type', '!=', 'Applicant')->whereIn('id', $staffs)->orderBy('created_at', 'DESC')->limit(8)->get(),
             'tickets'       => Ticket::where('agent_id', '=', auth('api')->id())->orWhere('category_id', '=', auth('api')->user()->department_id)->with(['creator', 'category', 'status', 'priority'])->latest()->paginate(5),
             //'staff_months'  => Winner::where('month_id', '=', $staff_month)->with('user.department')->with('branch')->get(),
             //'notices'       => Notice::orderBy('created_at', 'DESC')->paginate(3),
@@ -48,13 +49,13 @@ class DashboardController extends Controller
     {
         $membership = Member::select('room_id')->where('user_id', '=', auth('api')->id())->where('status', '=', 1);
         $chats = Room::whereIn('id', $membership)->with('messages.user')->with('members.user')->orderBy('updated_at', 'DESC')->paginate(10);
+        $staffs = Staff::pluck('user_id');
         
         return response()->json([
-            'loans'         => Account::where('user_id', '=', auth('api')->id())->paginate(5),
-            'tickets'       => Ticket::where('agent_id', '=', auth('api')->id())->orWhere('category_id', '=', auth('api')->user()->department_id)->with(['creator', 'category', 'status', 'priority'])->latest()->paginate(5),
             'activities'    => Activity::where('user_id', '=', auth('api')->id())->with('user')->limit(10)->latest()->get(),
-            //'staff_months'  => Winner::where('month_id', '=', $staff_month)->with('user.department')->with('branch')->get(),
-            //'notices'       => Notice::orderBy('created_at', 'DESC')->paginate(3),
+            'birthdays'     => User::birthDayBetween(Carbon::now(), Carbon::now()->addWeek())->whereIn('id', $staffs)->limit(8)->get(),
+            'new_staffs'    => User::whereIn('id', $staffs)->orderBy('created_at', 'DESC')->limit(8)->get(),
+            'tickets'       => Ticket::where('agent_id', '=', auth('api')->id())->orWhere('category_id', '=', auth('api')->user()->department_id)->with(['creator', 'category', 'status', 'priority'])->latest()->paginate(5),
         ]);
     }
 

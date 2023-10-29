@@ -30,19 +30,14 @@ export default {
     data(){
         return {  
             updateData: new Form({
-                department_id: '', 
                 agent_id:'', 
-                ticket_id:'', 
+                close: false,
                 content: '',
-            }), 
-            course:{},
-            updateData: new Form({
+                department_id: '',     
                 status_id: '',
+                ticket_status: '',
                 ticket_id: '',
                 user_id: '',
-                content: '',
-                close: false,
-                ticket_status: '',
             }),
             departments: [],
             route: '',
@@ -52,11 +47,6 @@ export default {
     methods:{
         submitUpdate(){
             
-        },
-        closeTicket(){
-            this.$Progress.start();
-            this.submitUpdate();
-            Swal.fire({icon: 'success',title: 'Ticket has been updated',});
         },
         updateTicket(){
             this.$Progress.start();
@@ -74,70 +64,15 @@ export default {
             })
             
             this.$Progress.finish();
-        },    
-        assignUsers(){
-            this.$Progress.start();
-            this.AssignData.post('/api/lms/assign_users')
-            .then(response=>{
-                Fire.$emit('AssignUsers', response.data.assignees);
-                Fire.$emit('CourseUpdate', response.data.course );
-                this.$Progress.finish();
-            })
-            .catch(()=>{
-                this.$Progress.fail();
-                Swal.fire({icon: 'error',title: 'Your form was not sent try again later!',});
-            })
-        },
-        getInitials(){
-            axios.get('/api/lms/assign_users').then(response =>{
-                this.departments = response.data.departments;
-                this.users = response.data.users;
-            })
-            .catch(()=>{
-                toast.fire({
-                    icon: 'error',
-                    title: 'Departments were not loaded successfully',
-                })
-            });
-        },
-        updateList(){
-            if (in_array(-1, this.AssignData.user_id)){
-                console.log('Yue');
-
-            }
-            else{
-
-            }
-            console.log(this.AssignData.user_id);
-            
-        },
-        updateUsers(){
-            this.AssignData.dept_id = this.departments[this.AssignData.department_id].id;
-            if (this.AssignData.department_id != 1000){
-                this.AssignData.user_id = [];
-                this.users = this.departments[this.AssignData.department_id].users;
-            }
-            console.log(this.AssignData.department_id); 
-        },
-         
+        },       
     },
     mounted() {
-        this.getInitials();
-        Fire.$on('AssignData', () =>{
-            this.AssignData.type = this.aspire;
-            this.AssignData.ref_id = this.reference.id;        
-            });
-        Fire.$on('CourseRefresh', course =>{this.course = course;});
-        Fire.$on('ExamDataFill', exam =>{
-            this.ExamData.reset();
-            this.ExamData.fill(exam)
-            //this.examData.course_id = typeof exam.course != 'undefined' ? exam.course.id : this.course.id;
-        });
     },
     props: {
         'editMode': Boolean,
         'statuses': Array,
         'ticket': Object,
+        'source': String,
     },
 }
 </script>

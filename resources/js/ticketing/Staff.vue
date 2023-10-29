@@ -7,6 +7,7 @@
                 <div class="card-header p-2">
                     <ul class="nav nav-pills">
                         <li class="nav-item"><a class="nav-link active" href="#created" data-toggle="tab">Created Tickets</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#assigned" data-toggle="tab">Assigned Tickets</a></li>
                         <li class="nav-item"><a class="nav-link" href="#newTicket" data-toggle="tab">Create New Tickets</a></li>
                     </ul>
                 </div>
@@ -14,7 +15,6 @@
                     <div class="tab-content">
                         <div class="tab-pane active" id="created">
                             <div class="card">
-                                <div class="card-header"><h3 class="card-title">My Created Tickets</h3></div>
                                 <div class="card-body pt-0">
                                     <div class="table-responsive">
                                         <table class="table m-b-0">
@@ -35,6 +35,44 @@
                                                     <td>
                                                         <div class="btn-group">
                                                             <router-link :to="'/tickets/'+ticket.id" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></router-link>
+                                                            <button class="btn btn-sm btn-danger" @click="closeTicket(ticket.id)"><i class="fa fa-trash"></i></button>
+                                                        </div>         
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="card-footer">
+                                    <pagination :data="by_tickets" @pagination-change-page="getByTickets">
+                                        <span slot="prev-nav">&lt; Previous </span>
+                                        <span slot="next-nav">Next &gt;</span>
+                                    </pagination>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="assigned">
+                            <div class="card">
+                                <div class="card-body pt-0">
+                                    <div class="table-responsive">
+                                        <table class="table m-b-0">
+                                            <thead class="thead-dark">
+                                                <tr>
+                                                    <th>S/N</th><th>Subject</th><th>Created By</th><th>Priority</th><th>Category</th><th>Assigned To</th><th>Status</th><th></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr v-for="(ticket, index) in my_tickets.data" :key="ticket.id">
+                                                    <td>{{index | addOne}}</td>
+                                                    <td :title="ticket.subject">{{ticket.subject | readMore(40, '...')}}</td>
+                                                    <td>{{ticket.creator.first_name}} {{ticket.creator.last_name}}</td>
+                                                    <td>{{ticket.priority !== null ? ticket.priority.name : 'No Priority Chosen'}}</td>
+                                                    <td>{{ticket.category !== null ? ticket.category.name : 'No Priority Chosen'}}</td>
+                                                    <td>{{ticket.agent != null ? ticket.agent.first_name+' '+ticket.agent.last_name : 'Not Yet Assigned'}}</td>
+                                                    <td>{{ticket.status != null ? ticket.status.name : 'No Status Assigned'}}</td>
+                                                    <td>
+                                                        <div class="btn-group">
+                                                            <router-link :to="'/staff/tickets/'+ticket.id" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></router-link>
                                                             <button class="btn btn-sm btn-danger" @click="closeTicket(ticket.id)"><i class="fa fa-trash"></i></button>
                                                         </div>         
                                                     </td>
@@ -92,9 +130,7 @@
                         .then(response=>{
                             this.ticketReload(response);
                             this.$Progress.finish();
-                            Swal.fire('Deleted!', 'Ticket has been closed.', 'success');
-                            //this.branches = response.data.branches
-                            //Fire.$emit('BranchRefresh', response);   
+                            Swal.fire('Deleted!', 'Ticket has been closed.', 'success'); 
                         })
                         .catch(()=>{
                             Swal.fire({icon: 'error', title: 'Oops...', text: 'Something went wrong!', footer: '<a href>Why do I have this issue?</a>'});

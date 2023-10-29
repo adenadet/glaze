@@ -2,7 +2,7 @@
 <div class="card custom-card">
     <div class="card-header justify-content-between"><div class="card-title">Birthdays</div></div>
     <div class="card-body p-0">
-        <div class="card custom-card"> 
+        <div class="card custom-card" v-if="birthdays.length != 0"> 
             <div class="card-body contact-action" v-for="user in birthdays" :key="user.id"> 
                 <div class="contact-overlay"></div> 
                 <div class="d-flex align-items-top "> 
@@ -38,6 +38,11 @@
                         <i class="ri-heart-3-fill text-danger"></i> 
                     </button> 
                 </div> 
+            </div>
+        </div>
+        <div class="card" v-else>
+            <div class="card-body">
+                No Birthdays this week        
             </div> 
         </div>
     </div>
@@ -49,7 +54,6 @@ export default {
         return {}
     },
     methods:{
-        scrollHanle(evt) {},
     },
     mounted() {
         //this.getAllInitials();

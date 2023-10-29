@@ -22,21 +22,31 @@
                                 {{user.phone}} {{user.alt_phone ? ', '+user.alt_phone: ''}}
                             </p>
                             <p class="mb-0"> <span class="avatar avatar-sm avatar-rounded me-2 bg-light text-muted"> <i class="fa fa-location-dot align-middle fs-14"></i> </span> 
-                                {{user.customer_address ? user.customer_address.street : ''}} {{user.customer_address && user.customer_address.street2 ? ', '+user.customer_address.street2: ''}}, {{user.customer_address ?  user.customer_address.city : ''}}, {{user.customer_address && user.customer_address.state_id && user.customer_address.state != null? user.state.name: ''}}. 
+                                {{user.customer_address ? user.customer_address.street : ''}} {{user.customer_address && user.customer_address.street2 ? ', '+user.customer_address.street2: ''}}, {{user.customer_address ?  user.customer_address.city : ''}}, {{user.customer_address && user.customer_address.state_id && user.customer_address.state != null? user.customer_address.state.name: ''}}. 
                             </p>
                         </div> 
                     </div> 
                     <div class="p-4 border-bottom border-block-end-dashed d-flex align-items-center"> 
-                        <p class="fs-15 mb-2 me-4 fw-semibold">Social Networks :</p>
-                        <div class="btn-list mb-0"> 
-                            <button class="btn btn-sm btn-icon btn-primary-light btn-wave waves-effect waves-light"> <i class="fa-brands fa-facebook-f fw-semibold"></i> </button> 
-                            <button class="btn btn-sm btn-icon btn-secondary-light btn-wave waves-effect waves-light"> <i class="fa-brands fa-twitter fw-semibold"></i> </button> 
-                            <button class="btn btn-sm btn-icon btn-warning-light btn-wave waves-effect waves-light"> <i class="fa-brands fa-instagram fw-semibold"></i> </button> 
-                            <button class="btn btn-sm btn-icon btn-success-light btn-wave waves-effect waves-light"> <i class="fa-brands fa-github fw-semibold"></i> </button> 
-                            <button class="btn btn-sm btn-icon btn-danger-light btn-wave waves-effect waves-light"> <i class="fa-brands fa-youtube fw-semibold"></i> </button> 
-                        </div> 
+                        <p class="fs-15 mb-2 me-4 fw-semibold">Social Networks <i class="fab fa-facebook text-warning"></i> :</p><br />
+                        
                     </div> 
                 </div> 
+                <div class="card-footer p-0">
+                    <ul class="nav flex-column" v-if="user.social_medias != null">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link"><i class="fab fa-facebook-square text-primary"></i>Facebook: <span class="float-right badge bg-primary">{{ user.social_medias.facebook_url }}</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link"><i class="fab fa-twitter-square text-primary"></i>Twitter: <span class="float-right badge bg-primary">{{ user.social_medias.twitter_url }}</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link"><i class="fab fa-instagram-square text-primary"></i>Instagram: <span class="float-right badge bg-primary">{{ user.social_medias.instagram_url }}</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" class="nav-link"><i class="fab fa-linkedin-square text-primary"></i>LinkedIn: <span class="float-right badge bg-primary">{{ user.social_medias.linkedin_url }}</span></a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="col-md-8">

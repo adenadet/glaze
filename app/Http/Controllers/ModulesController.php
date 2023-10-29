@@ -14,6 +14,15 @@ class ModulesController extends Controller
         return view('home')->with($params);
     }
 
+    public function guarantors()
+    {
+        $params = [
+            'page' => 'Customer', 
+            'page_title' => 'Guarantors',
+        ];
+        return view('home')->with($params);
+    }
+
     public function loans()
     {
         $params = [

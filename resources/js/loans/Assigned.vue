@@ -5,8 +5,8 @@
             <h3 class="card-title">Assigned Loan Accounts</h3>
         </div>
         <div class="card-body">
-            <table class="table table-bordered">
-                <thead>
+            <table class="table table-striped table-hover">
+                <thead class="th-dark">
                     <tr>
                         <th scope="col">Customer Name</th>
                         <th scope="col">Loan Name</th>
@@ -21,6 +21,7 @@
                 </thead> 
                 <tbody>
                     <tr v-for="account in accounts.data" :key="account.id">
+                        <td>{{ account.user | FullName }}</td>
                         <th scope="row">{{account.name}} <br /><span class="text-muted">{{ account.unique_id }}</span></th>
                         <td>{{ account.type ? account.type.name : 'Old Type' }}</td>
                         <td>{{ account.amount}}</td>
@@ -31,8 +32,8 @@
                         <td>
                             <button type="button" class="btn btn-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
                             <div class="dropdown-menu">
-                                <router-link class="btn btn-block dropdown-item" :to="'/loans/1'"><i class="fa fa-eye mr-1 text-primary"></i> View Loan Account</router-link>
-                                <router-link class="btn btn-block dropdown-item" :to="'/loans/1'"><i class="fa fa-user mr-1 text-success"></i> View Customer</router-link>
+                                <router-link class="btn btn-block dropdown-item" :to="'/staff/loans/'+account.id"><i class="fa fa-eye mr-1 text-primary"></i> View Loan Account</router-link>
+                                <router-link class="btn btn-block dropdown-item" :to="'/staff/customers/'+account.user_id"><i class="fa fa-user mr-1 text-success"></i> View Customer</router-link>
                                 <button v-if="account.status > 13" class="btn btn-block dropdown-item" @click="closeLoan()"><i class="fa fa-times mr-1 text-danger"></i> Close Loan</button>
                                 <button v-else class="btn btn-block dropdown-item" @click="deleteLoan(1)"><i class="fa fa-trash mr-1 text-danger"></i> Delete Loan Request</button>
                             </div>
@@ -42,13 +43,7 @@
             </table>
         </div>
         <div class="card-footer clearfix">
-            <ul class="pagination pagination-sm m-0 float-right">
-                <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
-            </ul>
+            <pagination :data="accounts" @pagination-change-page="getInitials"><span slot="prev-nav">&lt; Previous </span><span slot="next-nav">Next &gt;</span></pagination>
         </div>
     </div>      
 </section>
@@ -109,8 +104,8 @@ export default {
                 }
             });
         },
-        getInitials(){
-            axios.get('/api/loans/accounts/assigned').then(response =>{
+        getInitials(page=1){
+            axios.get('/api/loans/account_officers?page='+page).then(response =>{
                 this.reloadPage(response);
                 toast.fire({icon: 'success', title: 'Assigned Loan Accounts loaded successfully',});
             })

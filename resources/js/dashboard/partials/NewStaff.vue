@@ -1,18 +1,19 @@
 <template>
 <div class="card custom-card">
-    <div class="card-header justify-content-between"> 
-        <div class="card-title"> New Staffs </div> 
-        <div> 
-            <button type="button" class="btn btn-light btn-wave btn-sm waves-effect waves-light">View All</button> 
-        </div> 
+    <div class="card-header">
+        <h3 class="card-title">Latest Members</h3>
     </div>
-    <div class="card-body p-3">
-        <div class="row gy-xl-0 gy-3">
-            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-6 col-sm-12" v-for="user in staffs" :key="user.id"> 
-                <span class="avatar avatar-lg me-2"> <img src="/assets/images/faces/7.jpg" alt="img"> </span>
-                <p>Staff Name</p> 
-            </div>
-        </div>
+    <div class="card-body p-0">
+        <ul class="users-list clearfix">
+            <li v-for="user in staffs" :key="user.id">
+                <img style="height: 50px;" :src="user | userImage" :title="user.first_name+' '+user.last_name" :alt="user.first_name+' '+user.last_name">
+                <a :href="'/staff/contacts/'+user.id" class="users-list-name">{{user.first_name+' '+user.last_name}}</a>
+                <span class="users-list-date">{{user.joined_at | ExcelDateMonth}}</span>
+            </li>
+        </ul>
+    </div>
+    <div class="card-footer text-center">
+        <a href="/staff/contacts">View All Users</a>
     </div>
 </div>
 </template>

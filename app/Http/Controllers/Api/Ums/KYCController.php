@@ -19,7 +19,7 @@ class KYCController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'user_id' => 'required|numeric',
+            //'user_id' => 'required|numeric',
             'kyc_items' => 'required|array',
         ]);
 
@@ -52,7 +52,7 @@ class KYCController extends Controller
 
             echo $file_name;
             UserKYC::create([
-                'user_id' => $request->input('user_id'),
+                'user_id' => auth('api')->id(),
                 'item_id' => $kyc['id'],
                 'file' => $file_name,
                 'identification' => $kyc['identification'] ?? NULL,
