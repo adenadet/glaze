@@ -1,38 +1,22 @@
 <template>
 <section class="card">
-    <div class="modal fade" id="templateModal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true"> 
-        <div class="modal modal-dialog"> 
-            <div class="modal-content"> 
-                <div class="modal-header"> 
-                    <h6 class="modal-title">{{template.name}} </h6> 
-                    <button type="button" class="btn-default btn btn-sm" data-bs-dismiss="modal" aria-label="Close" @click="closeModal()">
-                        <i class="text-danger fa fa-times"></i>
-                    </button> 
-                </div> 
-                <div class="modal-body p-3"> 
-                    <LoanFormRequirement :editMode="editMode"/>
-                </div> 
+    <div class="modal fade" id="templateFormModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" v-show="editMode">Edit Template: {{ template.name }} </h4>
+                    <h4 class="modal-title" v-show="!editMode">New Template</h4>
+                    <button type="button" class="close" @click="closeModal"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <AdminFormCPMTemplate :editMode="editMode" />
+                </div>
             </div>
-        </div> 
-    </div>
-    <div class="modal fade" id="templateFormModal" tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel" aria-hidden="true"> 
-        <div class="modal modal-dialog"> 
-            <div class="modal-content"> 
-                <div class="modal-header"> 
-                    <h6 class="modal-title">{{editMode ? 'Update Template' : 'Create New Template'}} </h6> 
-                    <button type="button" class="btn-default btn btn-sm" data-bs-dismiss="modal" aria-label="Close" @click="closeModal()">
-                        <i class="text-danger fa fa-times"></i>
-                    </button> 
-                </div> 
-                <div class="modal-body p-3"> 
-                    <AdminFormCPMTemplate :editMode="editMode"/>
-                </div> 
-            </div>
-        </div> 
+        </div>
     </div>
     <div class="card-header">{{ module.name }}
         <div class="card-tools">
-            <button class="btn btn-success btn-sm" @click="addNew()">Add New</button>
+            <button class="btn btn-success btn-sm" @click="addTemplate">Add New</button>
         </div>
     </div>
     <div class="card-body">
@@ -41,6 +25,7 @@
                 <thead>
                     <tr>
                         <th>Template Name</th>
+                        <th>Module</th>
                         <th>Loan Type</th>
                         <th></th>
                     </tr>
@@ -48,11 +33,12 @@
                 <tbody>
                     <tr v-for="template in module.templates" :key="template.id">
                         <td>{{template.name}}</td>
+                        <td>{{module.name}}</td>
                         <td>{{ template.loan_type ? template.loan_type.name : 'Does not apply'}}
                             <button type="button" class="btn btn-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
                             <div class="dropdown-menu">
                                 <button class="btn btn-block dropdown-item" @click="viewTemplate(template)"><i class="fa fa-eye mr-1 text-primary"></i> View </button>
-                                <button class="btn btn-block dropdown-item" @click="editTemplate(template)"><i class="fa fa-edit mr-1 text-warning"></i> View </button>
+                                <button class="btn btn-block dropdown-item" @click="editTemplate(template)"><i class="fa fa-edit mr-1 text-warning"></i> Edit </button>
                                 <button class="btn btn-block dropdown-item" @click="deleteTemplate(template.id)"><i class="fa fa-trash mr-1 text-danger"></i> Delete Loan Request</button>
                             </div>
                         </td>
@@ -73,7 +59,12 @@ export default {
         }
     },
     methods:{
-        addTemplate(){Fire.$emit('ModuleDataFill', {});},
+        addTemplate(){
+            this.editMode = false;
+            this.template = {name: '', module: this.module, loan_type: '',};
+            Fire.$emit('ModuleTemplateDataFill', this.template);
+            $('#templateFormModal').modal('show');
+        },
         closeModal(){$('#templateModal').modal('hide');$('#templateFormModal').modal('hide');},
         deleteTemplate(id){
             Swal.fire({

@@ -5,15 +5,29 @@
         <div class="row">
             <div class="col-md-12 col-sm-12">
                 <div class="form-group">
-                    <label>Loan Details</label>
-                    <div class="form-control">Put Loan Details Here</div>
-                    <input type="hidden" id="loan_id" name="loan_id" v-model="cpmData.loan_id">
+                    <label>Module</label>
+                    <div class="form-control">{{ module.name }}</div>
                 </div>
             </div>
-            <div class="col-md-4 col-sm-12">
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input id="name" name="name" v-model="cpmData.name" class="form-control">
+                </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                    <label>Loan Type</label>
+                    <select id="loan_type_id" name="loan_type_id" v-model="cpmData.loan_type_id" class="form-control">
+                        <option value="">--Select Loan Type--</option>
+                        <option v-for="loan_type in loan_types" :value="loan_type.id">{{ loan_type.name }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-12 col-sm-12">
                 <div class="form-group">
                     <label>Detailed Text</label>
-                    <wysiwyg id="detail" name="detail" v-model="cpmData.detail" required></wysiwyg>
+                    <wysiwyg id="detail" name="detail" v-model="cpmData.details" required></wysiwyg>
                 </div>
             </div>
         </div>
@@ -27,18 +41,27 @@ export default {
         return  {
             cpmData: new Form({
                 id: '',
-                detail: '',
+                details: '',
                 loan_id: '',
+                module_id: '',
+                name: '',
             }),
+            module: {},
+            loan_types: [],
         }
     },
     mounted() {
-        Fire.$on('cpmDataFill', cpm =>{this.cpmData.fill(cpm)});
+        this.getInitials();
+        Fire.$on('ModuleTemplateDataFill', template =>{
+            this.cpmData.fill(template);
+            this.module = template.module;
+        });
     },
     methods:{
         createCPM(){
             this.$Progress.start();
-            this.cpmData.post('/api/loans/cpms')
+            this.cpmData.module_id = this.module.id;
+            this.cpmData.post('/api/settings/cpm_module_templates')
             .then(response =>{
                 Fire.$emit('BranchRefresh', response);
                 Swal.fire({
@@ -60,9 +83,18 @@ export default {
             this.$Progress.finish();
             this.cpmData.clear();
         },
+        getInitials(){
+            axios.get('/api/settings/cpm_module_templates')
+            .then(response =>{
+                this.loan_types = response.data.loan_types;
+            })
+            .catch(()=>{
+                toast.fire({icon: 'error', title: 'Modules were not loaded successfully',})
+            });
+        },
         updateCPM(){
             this.$Progress.start();
-            this.cpmData.put('/api/ums/branches/'+ this.cpmData.id)
+            this.cpmData.put('/api/loans/cpm_templates/'+ this.cpmData.id)
             .then(response =>{
                 Fire.$emit('BranchRefresh', response);
                 Swal.fire({
@@ -85,6 +117,10 @@ export default {
             });            
         },
     },
-    props:{branch: Object, editMode: Boolean, users: Array,}
+    props:{
+        editMode: Boolean,
+        //loan_types: Array,
+        //module: Object,  
+    },
 }
 </script>

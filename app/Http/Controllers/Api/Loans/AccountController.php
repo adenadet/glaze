@@ -18,6 +18,7 @@ use App\Models\User;
 use App\Models\Area;
 use App\Models\Loans\CreditScore;
 use App\Models\Loans\CheckListItem;
+use App\Models\Loans\Disbursement;
 use App\Models\Loans\TypeRequirement;
 use App\Models\State;
 
@@ -133,7 +134,7 @@ class AccountController extends Controller{
     public function show($id)
     {
         return response()->json([
-            'account' => Account::where('id', '=', $id)->with(['user', 'type'])->first(),
+            'account' => Account::where('id', '=', $id)->with(['account_officer.staff', 'user', 'type'])->first(),
             'repayments' => Repayment::where('loan_id', '=', $id)->with(['bank'])->latest()->paginate(20),     
         ]);    
     }
@@ -157,7 +158,6 @@ class AccountController extends Controller{
             'loan_requirements' => $loan_requirements,
         ]);
     }
-
 
     public function update(Request $request, $id)
     {

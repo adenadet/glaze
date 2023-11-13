@@ -34,16 +34,16 @@
                 <div class="card-footer p-0">
                     <ul class="nav flex-column" v-if="user.social_medias != null">
                         <li class="nav-item">
-                            <a href="#" class="nav-link"><i class="fab fa-facebook-square text-primary"></i>Facebook: <span class="float-right badge bg-primary">{{ user.social_medias.facebook_url }}</span></a>
+                            <a href="#" class="nav-link"><i class="fab fa-facebook-square text-primary mr-1"></i>Facebook: <span class="float-right badge bg-primary">{{ user.social_medias.facebook_url }}</span></a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link"><i class="fab fa-twitter-square text-primary"></i>Twitter: <span class="float-right badge bg-primary">{{ user.social_medias.twitter_url }}</span></a>
+                            <a href="#" class="nav-link"><i class="fab fa-twitter-square text-primary mr-1"></i>Twitter: <span class="float-right badge bg-primary">{{ user.social_medias.twitter_url }}</span></a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link"><i class="fab fa-instagram-square text-primary"></i>Instagram: <span class="float-right badge bg-primary">{{ user.social_medias.instagram_url }}</span></a>
+                            <a href="#" class="nav-link"><i class="fab fa-instagram-square text-primary mr-1"></i>Instagram: <span class="float-right badge bg-primary">{{ user.social_medias.instagram_url }}</span></a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link"><i class="fab fa-linkedin-square text-primary"></i>LinkedIn: <span class="float-right badge bg-primary">{{ user.social_medias.linkedin_url }}</span></a>
+                            <a href="#" class="nav-link"><i class="fab fa-linkedin-square text-primary mr-1"></i>LinkedIn: <span class="float-right badge bg-primary">{{ user.social_medias.linkedin_url }}</span></a>
                         </li>
                     </ul>
                 </div>

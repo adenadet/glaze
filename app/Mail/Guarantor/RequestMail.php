@@ -21,7 +21,7 @@ class RequestMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Request for Loan Guarantee {{$loan->customer->first_name}} {{$loan->customer->last_name}}')
+        return $this->subject('Request for Loan Guarantee '.$this->loan->user->first_name.' '.$this->loan->user->last_name)
         ->view('mails.guarantor.request');
     }
 }

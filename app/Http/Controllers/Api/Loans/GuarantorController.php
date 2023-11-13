@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Api\Loans;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+
 use App\Http\Controllers\Controller;
 use App\Models\Loans\Account;
 use App\Models\Loans\Guarantor;
 use App\Models\Loans\GuarantorRequest;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
 
 use App\Mail\Guarantor\RequestMail;
 
@@ -77,7 +78,9 @@ class GuarantorController extends Controller
     public function resend($id)
     {
         $gr = GuarantorRequest::where('id', '=', $id)->first();
-        $loan = Account::where('id', '=', $gr->loan_id)->with('customer')->first();
+        $loan = Account::where('id', '=', $gr->loan_id)->with('user')->first();
+
+        Mail::to($gr->email)->send(new RequestMail( $loan, $gr));
         
         return response()->json([
             'message' => 'Guarantor added successfully',       

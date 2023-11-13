@@ -12,6 +12,7 @@ import LoanInitiate         from '../loans/Initiate.vue';
 import LoanNew              from '../loans/Initiate.vue';
 import LoanPending          from '../loans/Pending.vue';
 import LoanRequirements     from '../loans/Requirements.vue';
+import LoanUndisbursed      from '../loans/Undisbursed.vue';
 import LoanSingle           from '../loans/Single.vue';
 import LoanStaff            from '../loans/Staff.vue';
 import LoanStaffSingle      from '../loans/StaffSingle.vue';
@@ -29,6 +30,7 @@ Vue.component('LoanInitiate',       LoanInitiate);
 Vue.component('LoanNew',            LoanNew);
 Vue.component('LoanPending',        LoanPending);
 Vue.component('LoanRequirements',   LoanRequirements);
+Vue.component('LoanUndisbursed',    LoanUndisbursed);
 Vue.component('LoanSingle',         LoanSingle);
 Vue.component('LoanStaff',          LoanStaff);
 Vue.component('LoanStaffSingle',    LoanStaffSingle);
@@ -36,6 +38,7 @@ Vue.component('LoanTypes',          LoanTypes);
 
     import LoanDetailCheckList      from '../loans/details/CheckList.vue';  
     import LoanDetailCreditScore    from '../loans/details/CreditScore.vue';   
+    import LoanDetailCPM            from '../loans/details/CPM.vue';   
     import LoanDetailConfirmations  from '../loans/details/Confirmations.vue';
     import LoanDetailGuarantors     from '../loans/details/Guarantors.vue';
     import LoanDetailRepayments     from '../loans/details/Repayments.vue';
@@ -44,6 +47,7 @@ Vue.component('LoanTypes',          LoanTypes);
 
     Vue.component('LoanDetailCheckList', LoanDetailCheckList);
     Vue.component('LoanDetailCreditScore', LoanDetailCreditScore);
+    Vue.component('LoanDetailCPM', LoanDetailCPM);
     Vue.component('LoanDetailConfirmations', LoanDetailConfirmations);
     Vue.component('LoanDetailGuarantors', LoanDetailGuarantors);
     Vue.component('LoanDetailRepayments', LoanDetailRepayments);
@@ -54,7 +58,9 @@ Vue.component('LoanTypes',          LoanTypes);
     import LoanForm                 from '../loans/forms/Loan.vue';
     import LoanFormCheckList        from '../loans/forms/CheckList.vue';
     import LoanFormCreditScore      from '../loans/forms/CreditScore.vue';
+    import LoanFormCPM              from '../loans/forms/CPM.vue';
     import LoanFormConfirm          from '../loans/forms/Confirm.vue';
+    import LoanFormDisbursement     from '../loans/forms/Disbursement.vue';
     import LoanFormInitial          from '../loans/forms/Initial.vue';
     import LoanFormRepayment        from '../loans/forms/Repayment.vue';
     import LoanFormRequirement      from '../loans/forms/Requirement.vue';
@@ -65,7 +71,9 @@ Vue.component('LoanTypes',          LoanTypes);
     Vue.component('LoanForm',               LoanForm);
     Vue.component('LoanFormCheckList',      LoanFormCheckList);
     Vue.component('LoanFormCreditScore',    LoanFormCreditScore);
+    Vue.component('LoanFormCPM',            LoanFormCPM);
     Vue.component('LoanFormConfirm',        LoanFormConfirm);
+    Vue.component('LoanFormDisbursement',   LoanFormDisbursement);
     Vue.component('LoanFormInitial',        LoanFormInitial);
     Vue.component('LoanFormRepayment',      LoanFormRepayment);
     Vue.component('LoanFormRequirement',    LoanFormRequirement);
@@ -82,8 +90,10 @@ let routes = [
     {path: '/loans/:id',                            component: LoanSingle},
     
     {path: '/staff/loans',                          component: LoanStaff},
-    {path: '/staff/loans/:id',                      component: LoanStaffSingle},
+    {path: '/staff/loans/create_cpm/:id',           component: LoanDetailCPM},
     {path: '/staff/loans/pending',                  component: LoanPending},
+    {path: '/staff/loans/undisbursed',              component: LoanUndisbursed},
+    {path: '/staff/loans/:id',                      component: LoanStaffSingle},
     {path: '/staff/accounts/assigned',              component: LoanAssigned},
     {path: '/staff/confirm/loans',                  component: LoanConfirmAll},
     {path: '/staff/confirm/loans/:id',              component: LoanConfirm},

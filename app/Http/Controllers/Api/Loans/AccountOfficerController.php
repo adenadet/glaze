@@ -12,10 +12,9 @@ class AccountOfficerController extends Controller
     public function index()
     {
         $account_list = AccountOfficer::where([['status', '=', 1], ['staff_id', '=', auth('api')->id()]])->pluck('account_id');
-        $accounts = Account::whereIn('id', $account_list)->with(['repayments', 'user', 'type'])->paginate(20);
+        $accounts = Account::whereIn('id', $account_list)->with(['repayments', 'user', 'type', 'cpm'])->paginate(20);
 
         return response()->json([
-            'account_list' => $account_list, 
             'accounts' => $accounts,
         ]);
     }
@@ -29,7 +28,7 @@ class AccountOfficerController extends Controller
 
         $accounts = AccountOfficer::where('account_id', '=', $request->input('account_id'))->get();
 
-        foreach ($accounts as $account){
+        foreach ($accounts as $account) {
             $account->status = 2;
             $account->save();
         }

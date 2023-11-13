@@ -30,7 +30,7 @@
                         <td>{{ticket.priority.name}}</td>
                         <td>
                             <div class="btn-group">
-                                <a :href="'/ticketing/'+ticket.id" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></a>
+                                <a :href="'/staff/tickets/'+ticket.id" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></a>
                             </div>          
                         </td>
                     </tr>

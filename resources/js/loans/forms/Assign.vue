@@ -68,7 +68,6 @@ export default {
         this.getAllInitials();
         Fire.$on('LoanAssignDataFill', loan => {
             this.loan_data = loan;
-            alert(loan)
         });
     },
     props:{

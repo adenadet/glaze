@@ -11,8 +11,16 @@ class Account extends Model
     protected $table = 'loan_accounts';
     protected $fillable = array('name', 'unique_id', 'amount', 'type_id', 'user_id', 'payable', 'emi', 'duration', 'bank_id', 'acct_name', 'acct_number', 'total_paid', 'request_date', 'request_by', 'guaranteed_date', 'approved_by', 'approved_date', 'payout_by', 'payout_date', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at', 'deleted_at');
 
+    public function account_officer(){
+        return $this->hasOne('App\Models\Loans\AccountOfficer', 'account_id', 'id');
+    }
+
     public function bank(){
         return $this->belongsTo('App\Models\Finance\AllBank', 'bank_id', 'id');
+    }
+
+    public function cpm(){
+        return $this->hasOne('App\Models\Loans\CPM', 'loan_id', 'id');
     }
 
     public function guarantors(){

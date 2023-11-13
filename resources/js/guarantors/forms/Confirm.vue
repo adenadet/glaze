@@ -4,7 +4,7 @@
         <div class="card-header">Guarantee A Loan</div>
         <div class="card-body">
             <div class="row">
-                Place Loan Summary Here
+                <div class="col-md-12"><LoanDetailSummary /></div>
             </div>
             <div class="row">
                 <div class="col-sm-3">
@@ -113,15 +113,16 @@
                     </div>
                 </div>   
             </div>
-            <div class="row">
+            <!--div class="row">
                 <div class="col-sm-6">
                     <div class="form--group">
                         <label>Signature</label>
                         <VueSignature :options="options" class="signature" ref="signaturePad" v-model="confirmationData.signaturePad" />
                     </div>
                 </div>   
-            </div>
-            <button class="btn btn-success">Submit</button>
+            </div-->
+            <button class="btn btn-success" type="submit">Guarantee Loan</button>
+            <button class="btn btn-danger" type="button" @click="rejection()">Reject Request</button>
         </div>
     </form>
 </section>
@@ -197,6 +198,17 @@ export default {
             });  
                     
         },
+        getInitials(){
+            axios.get('/api/loans/accounts/staffs')
+            .then(response => {
+                this.loans = response.data.accounts;
+                toast.fire({ icon: 'success', title: 'Loan Accounts loaded successfully', });
+            })
+            .catch(() => {
+                this.$Progress.fail();
+                toast.fire({ icon: 'error', title: 'Loan Accounts not loaded successfully', });
+            });
+        },
         updateAddressData(){
             this.AddressData.user_id = this.user.id;
             this.$Progress.start();
@@ -217,13 +229,6 @@ export default {
             });            
         },
     },
-    props:{
-        areas: Array,
-        states: Array,
-        nations: Array,
-        user: Object,
-        editMode: Boolean,
-        source: String,
-    },
+    props:{},
 }
 </script>

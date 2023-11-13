@@ -16,13 +16,16 @@ Vue.component('BranchForm',             BranchForm);
 Vue.component('BranchSingle',           BranchSingle);
 
 import AdminCPMModuleAll        from '../admin/CPMModules.vue';
-import AdminCPMModuleSingle     from '../admin/CPMModuleSingle.vue';
+import AdminCPMModuleSingle     from '../admin/CPMModule.vue';
 
 Vue.component('AdminCPMModuleAll',            AdminCPMModuleAll);
 Vue.component('AdminCPMModuleSingle',         AdminCPMModuleSingle);
 
-    import AdminFormCPMModule from '../admin/forms/CPMModule.vue'
-    import AdminFormCPMTemplate from '../admin/forms/CPMTemplate.vue';
+    import AdminFormCPMModule       from '../admin/forms/CPMModule.vue';
+    import AdminFormCPMTemplate     from '../admin/forms/CPMTemplate.vue';
+
+    Vue.component('AdminFormCPMModuleAll',            AdminFormCPMModule);
+    Vue.component('AdminFormCPMTemplate',       AdminFormCPMTemplate);
 
 import DepartmentAdmin     from '../admin/departments/Admin.vue';
 import DepartmentAll       from '../admin/departments/All.vue';

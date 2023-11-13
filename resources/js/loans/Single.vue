@@ -17,7 +17,10 @@
         <div class="col-md-12">   
             <LoanDetailSummary />
         </div>
-        <div class="col-md-8">
+        <div class="col-md-6">
+            <LoanDetailGuarantors />
+        </div>
+        <div class="col-md-6">
             <LoanDetailRepayments />
         </div>
         <div class="col-md-4"> 

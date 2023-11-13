@@ -39,11 +39,7 @@ class ConfirmationController extends Controller
         }
 
         return response()->json([
-            //'roles' => $roles,
-            //'matrices' => $matrices,
             'accounts' => $loans->with(['repayments', 'user', 'type'])->latest()->paginate(20),
-            //'account' => $loan,
-            //'actions' => ConfirmationAction::where('loan_id', '=', $request->input('loan_id'))->orderBy('created_at', 'DESC')->with([])->paginate(20),
         ]);
     }
 

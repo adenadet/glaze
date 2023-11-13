@@ -12,6 +12,7 @@
                 <li class="nav-item"><a href="#" class="nav-link"><i class="nav-icon fas fa-copy"></i><p>Loans<i class="fas fa-angle-left right"></i></p></a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item"><a href="/staff/loans" class="nav-link"><i class="nav-icon fas fa-file"></i><p>All Loans</p></a></li>
+                        <li class="nav-item"><a href="/staff/loans/undisbursed" class="nav-link"><i class="nav-icon fas fa-file"></i><p>Undisbursed Loans</p></a></li>
                         <li class="nav-item"><a href="/staff/accounts/assigned" class="nav-link"><i class="nav-icon fa fa-clipboard"></i><p>My Assigned Loans</p></a></li>
                         <li class="nav-item"><a href="/staff/accounts/pending" class="nav-link"><i class="nav-icon fas fa-file"></i><p>Pending Loans</p></a></li>
                     </ul>

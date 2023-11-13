@@ -16,7 +16,7 @@ class CPMModule extends Model
 	}
 
 	public function templates(){
-		return $this->hasMany('App\Models\Settings\CPMModuleTemplate', 'id', 'module_id');
+		return $this->hasMany('App\Models\Settings\CPMModuleTemplate', 'module_id', 'id');
 	}
 
 	public function updater(){

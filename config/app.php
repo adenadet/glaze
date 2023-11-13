@@ -12,6 +12,7 @@ return [
     'logo_h_w' => 'img/logos/glaze_credit_horizontal_white.png',
     'logo_s_w' => 'img/logos/glaze_credit_stacked_white.png',
     'website' => 'https://glazecredit.com',
+    'email' => 'support@glazecredit.com',
 
     'env' => env('APP_ENV', 'production'),
 

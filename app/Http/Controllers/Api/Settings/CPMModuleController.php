@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Models\Settings\CPMModule;
+use App\Models\Loans\Type;
 use Illuminate\Http\Request;
 
 class CPMModuleController extends Controller
@@ -12,6 +13,7 @@ class CPMModuleController extends Controller
     {
         return response()->json([
             'modules' => CPMModule::orderBy('name', 'ASC')->with(['creator','templates'])->paginate(10),
+            'loan_types' => Type::get(),
         ]);
     }
 

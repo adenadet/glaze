@@ -3,9 +3,7 @@
     <div class="row clearfix">
         <div class="col-lg-4">
             <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">CPM Modules</h3>
-                </div>
+                <div class="card-header"><h3 class="card-title">CPM Modules</h3></div>
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-stripped table-hover m-b-0">
@@ -16,13 +14,13 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="module in modules.data" :key="module.id">
-                                    <td>{{module.name}}</td>
+                                <tr v-for="module_unit in modules.data" :key="module_unit.id">
+                                    <td>{{module_unit.name}}</td>
                                     <td>
                                         <button type="button" class="btn btn-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
                                         <div class="dropdown-menu">
-                                            <button class="btn btn-block dropdown-item" @click="viewModule(module)"><i class="fa fa-eye mr-1 text-primary"></i> View </button>
-                                            <button class="btn btn-block dropdown-item" @click="deleteBranch(1)"><i class="fa fa-trash mr-1 text-danger"></i> Delete Loan Request</button>
+                                            <button class="btn btn-block dropdown-item" @click="viewModule(module_unit)"><i class="fa fa-eye mr-1 text-primary"></i> View </button>
+                                            <button class="btn btn-block dropdown-item" @click="deleteModule(module_unit.id)"><i class="fa fa-trash mr-1 text-danger"></i> Delete Loan Request</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -104,6 +102,7 @@ export default {
         refreshPage(response){
             this.modules = response.data.modules;
             this.users = response.data.users;
+            this.loan_types = response.data.loan_types;
             Fire.$emit('ViewModuleDataFill', this.modules.data[0]);
         },
         viewModule(module){

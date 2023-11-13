@@ -40,7 +40,10 @@
                         <td>Closed Date</td>
                         <td><strong>{{ (account.status == 14 ? account.updated_at | excelDate : 'N/A') }}</strong></td>
                         <td>Account Officer</td>
-                        <td><strong>{{ account.account_officer | FullName }}</strong></td>
+                        <td>
+                            <strong v-if="account.account_officer != null">{{ account.account_officer.staff | FullName }}</strong>
+                            <strong v-else>Not Yet Assigned</strong>
+                        </td>
                     </tr>
                 </tbody>
             </table>
