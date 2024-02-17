@@ -29,7 +29,7 @@
                     <label class="control-label">Check Type</label>
                     <select class="form-control" id="product_id" name="product_id" v-model="ScoreRequestData.product_id" required>
                         <option value="">--Select Search Type--</option>
-                        <option v-for="(product, index) in bureau_products" :value="index">{{ product.name }}</option>
+                        <option v-for="product in bureau_products" :value="product.id">{{ product.name }}</option>
                     </select>
                 </div>
             </div>
@@ -41,34 +41,42 @@
 <script>
 export default{
 	created(){
-		//this.getInitials();
+        this.$store.dispatch('firstCentral/loginUser');
 	},
+    computed:{
+        firstCentralUser: {
+            get(){
+                return this.$store.state.firstCentral.user;
+            }
+        }
+    },
     data () {
         return {
             ScoreRequestData: new Form({
-                EnquiryReason:"Test",
+                EnquiryReason:"",
                 ConsumerName:"",
                 DateOfBirth:"",
                 Identification:"",
                 Accountno:"",
                 bureau_id: "",
                 product_id: "",
-                ProductID:"45"
+                loan_id: "",
+                DataTicket: "",
             }),
         };
     },
     methods: {
         createConfirmation(){
             this.$Progress.start();
-            this.ScoreRequestData.DataTicket = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImRlbW8iLCJwYXNzd29yZCI6ImRlbW9AMTIzIiwiaWF0IjoxNjk3NTc3NzM1LCJleHAiOjE3MTU1Nzc3MzV9.hp4Kh6e2Yu00fqY5clP0A7NTJARbF-sgvtSpUDxsN8U"
+            this.ScoreRequestData.DataTicket = this.firstCentralUser.DataTicket;
+            this.ScoreRequestData.loan_id = this.$route.params.id;
             this.ScoreRequestData.Identification = this.account.user.bvn;
-            this.ScoreRequestData.ProductID = this.bureau_products[this.ScoreRequestData.product_id].id;
-            this.ScoreRequestData.post("https://uat.firstcentralcreditbureau.com/firstcentralrestv2/ConnectConsumerMatch")
+            this.ScoreRequestData.post("/api/servers/first_central/getCreditScore")
             .then(response =>{
                 this.$Progress.finish();
-                alert(response.data);
+                console.log(response.data);
                 Fire.$emit('refreshRepayment', response);
-                this.RescheduleData.reset();
+                this.ScoreRequestData.reset();
                 Swal.fire({icon: 'success', title: 'The Checklist has been saved', showConfirmButton: false, timer: 1500});
             })
             .catch(()=>{
@@ -80,6 +88,9 @@ export default{
                 });
             this.$Progress.fail();
             });
+        },
+        checkValidity(){
+            this.$store.dispatch('firstCentral/login');
         },
         createCheckList(){
             this.$Progress.start();
@@ -101,9 +112,6 @@ export default{
             this.$Progress.fail();
             });
         },
-		updateProfilePic(){
-
-		},
     },
     props:{
         account: Object,

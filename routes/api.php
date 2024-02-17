@@ -10,28 +10,17 @@ Route::namespace('App\Http\Controllers\Api\Chats')->middleware('auth:api')->name
 Route::namespace('App\Http\Controllers\Api\Loans')->middleware('auth:api')->name('api.loans.')->group(base_path('routes/api/loans.php'));
 //Route::namespace('App\Http\Controllers\Api\Lms')->middleware('auth:api')->name('api.lms.')->group(base_path('routes/api/lms.php'));
 //Route::namespace('App\Http\Controllers\Api\Som')->name('api.som.')->group(base_path('routes/api/som.php'));
+Route::namespace('App\Http\Controllers\Api\Servers')->middleware(['auth:api'])->name('api.servers.')->group(base_path('routes/api/servers.php'));
 Route::namespace('App\Http\Controllers\Api\Settings')->middleware(['auth:api', 'role:Super Admin'])->name('api.settings.')->group(base_path('routes/api/settings.php'));
 Route::namespace('App\Http\Controllers\Api\Ticketing')->middleware('auth:api')->name('api.tickets.')->group(base_path('routes/api/ticket.php'));
 Route::namespace('App\Http\Controllers\Api\ToDo')->name('api.todos.')->group(base_path('routes/api/todo.php'));
 
-Route::namespace('App\Http\Controllers\Api\Ums')//->middleware('auth:api')
-->name('api.ums.')->group(base_path('routes/api/ums.php'));
+Route::namespace('App\Http\Controllers\Api\Ums')->middleware('auth:api')->name('api.ums.')->group(base_path('routes/api/ums.php'));
 
-/* Route::get('dashboard/applicant',  'App\Http\Controllers\Api\DashboardController@applicant')->name('api.dashboard.applicant');
-
-Route::post('notices/modify',    'App\Http\Controllers\Api\NoticeController@modify')->name('api.notices.modify');
-Route::get('policies/all/{id}',  'App\Http\Controllers\Api\PolicyController@all')->name('api.policies.all');
-Route::post('policies/assign',   'App\Http\Controllers\Api\PolicyController@assign')->name('api.policies.assign');
-
-Route::get('/schedulers/cancel', 'App\Http\Controllers\Api\EMR\RegistrationController@cancel')->name('schedulers.cancel');
-Route::post('/schedulers/cancelled', 'App\Http\Controllers\Api\EMR\RegistrationController@cancelled')->name('schedulers.cancelled');
-*/
 Route::apiResources([
-    //'certificates'  => 'App\Http\Controllers\Api\EMR\CertificateController',
-    //'emr/cancellations' => 'App\Http\Controllers\Api\EMR\CancellationController',
     'dashboard'     => 'App\Http\Controllers\Api\DashboardController',
-    //'member'        => 'App\Http\Controllers\Api\MemberController',
+    'guarantor_requests'        => 'App\Http\Controllers\Api\Loans\GuarantorRequestController',
     'notices'       => 'App\Http\Controllers\Api\NoticeController',
     'policies'      => 'App\Http\Controllers\Api\PolicyController',
-    'scheduler'     => 'App\Http\Controllers\Api\EMR\RegistrationController',
+    //'scheduler'     => 'App\Http\Controllers\Api\EMR\RegistrationController',
 ]);

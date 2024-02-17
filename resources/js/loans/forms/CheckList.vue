@@ -30,7 +30,7 @@
 <script>
 export default{
 	created(){
-		this.getInitials();
+		//this.getInitials();
 	},
     data () {
         return {

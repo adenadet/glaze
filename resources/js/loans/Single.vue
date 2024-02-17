@@ -18,7 +18,7 @@
             <LoanDetailSummary />
         </div>
         <div class="col-md-6">
-            <LoanDetailGuarantors />
+            <LoanDetailGuarantors source="Customer"/>
         </div>
         <div class="col-md-6">
             <LoanDetailRepayments />

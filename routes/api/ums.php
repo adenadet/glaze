@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 Route::group(['prefix'=>'ums'], function () {
 
     Route::get('/bvn_verifications/send_mail/{id}', 'ConfirmationController@send_mail')->name('ums.bvn_verifications.send_mail');
+    Route::get('/bvn_verifications/user/{id}', 'ConfirmationController@display')->name('ums.bvn_verifications.user');
     Route::get('/kyc_items', 'UserController@kyc')->name('ums.kyc');
     Route::post('/kyc_store', 'UserController@kyc_store')->name('ums.kyc_store');
     Route::post('/password', 'UserController@password')->name('profile.password');

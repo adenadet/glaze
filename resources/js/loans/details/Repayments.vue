@@ -40,15 +40,26 @@
                 </table>
             </div>
             <div class="row" v-else>
-                <div class="col-12">
-                    <div class="info-box">
-                        <span class="info-box-icon bg-danger"><i class="far fa-star"></i></span>
-                        <div class="info-box-content">
-                            <span class="info-box-text">No Repayments Yet</span>
-                            <span class="info-box-number">0</span>
-                        </div>
-                    </div>
-                </div>
+                <table class="table text-nowrap">
+                    <thead>
+                        <tr>
+                            <th scope="col">Schedule</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Payment Method</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="index in account.duration" :key="index">
+                            <td><small>{{ account.frequency == 'weeks' ? 'Week' : 'Month'}} {{index}} </small></td>
+                            <td><small>No Decided Yet</small></td>
+                            <td>CyberPay planned</td>
+                            <td>{{account.emi | currency}}</td>
+                            <td ><span class="badge bg-outline-primary">Pending</span></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

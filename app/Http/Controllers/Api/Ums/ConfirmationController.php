@@ -12,6 +12,15 @@ use Illuminate\Support\Facades\Mail;
 
 class ConfirmationController extends Controller
 {
+    public function display($id)
+    {
+        $user = User::where('id', '=', $id)->first();
+
+        return response()->json([
+            'user'       => $user,       
+        ]);  
+    }
+
     public function index()
     {
         $customers = Customer::where('bvn_status', '!=', 1)->pluck('user_id');
@@ -66,7 +75,7 @@ class ConfirmationController extends Controller
 
     public function show($id)
     {
-        
+        //$user = U
     }
 
     public function update(Request $request, $id)

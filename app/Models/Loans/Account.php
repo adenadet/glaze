@@ -2,14 +2,15 @@
 
 namespace App\Models\Loans;
 
+use App\Models\Structure;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Account extends Model
+class Account extends Structure
 {
     protected $primaryKey = 'id';
     protected $table = 'loan_accounts';
-    protected $fillable = array('name', 'unique_id', 'amount', 'type_id', 'user_id', 'payable', 'emi', 'duration', 'bank_id', 'acct_name', 'acct_number', 'total_paid', 'request_date', 'request_by', 'guaranteed_date', 'approved_by', 'approved_date', 'payout_by', 'payout_date', 'status', 'created_by', 'updated_by', 'created_at', 'updated_at', 'deleted_at');
+    protected $fillable = array('name', 'unique_id', 'amount', 'type_id', 'user_id', 'payable', 'emi', 'duration', 'frequency', 'bank_id', 'acct_name', 'acct_number', 'total_paid', 'request_date', 'request_by', 'guaranteed_date', 'approved_by', 'approved_date', 'payout_by', 'payout_date', 'status', 'created_by', 'updated_by', 'deleted_by', 'created_at', 'updated_at', 'deleted_at');
 
     public function account_officer(){
         return $this->hasOne('App\Models\Loans\AccountOfficer', 'account_id', 'id');

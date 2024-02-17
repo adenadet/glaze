@@ -11,15 +11,42 @@ use App\Models\Loans\Guarantor;
 use App\Models\Loans\GuarantorRequest;
 
 use App\Mail\Guarantor\RequestMail;
+use App\Models\Loans\Type;
 
 class GuarantorController extends Controller
 {
     public function display($id)
     {
         return response()->json([
-            'account' => Account::where('id', '=', $id)->first(),
-            'guarantors' => GuarantorRequest::where('loan_id', '=', $id)->get(),
+            'account' => Account::where('id', '=', $id)->with('guarantor_requests.guarantor')->first(),
+            'guarantors' => GuarantorRequest::where('loan_id', '=', $id)->with('guarantor')->get(),
         ]);
+    }
+
+    public function initials($id)
+    {
+        $request = GuarantorRequest::where('id', '=', $id)->first();
+
+        if ($request->status == 1){
+            return response()->json([
+                'status' => 'Error',
+                'message' => 'You have already guaranteed this loan',
+                'account' => Account::where('id', '=', $request->loan_id)->first(),
+            ]);    
+        }
+        else if ($request->status == 2){
+            return response()->json([
+                'status' => 'Error',
+                'message' => 'You have already rejected this loan',
+                'account' => Account::where('id', '=',  $request->loan_id)->with('guarantor_requests')->first(),
+            ]);
+        }
+        else{
+            return response()->json([
+                'account' => Account::where('id', '=', $id)->with('guarantor_requests')->first(),
+                'guarantors' => GuarantorRequest::where('loan_id', '=', $id)->get(),
+            ]);
+        }
     }
 
     public function index()
@@ -33,7 +60,7 @@ class GuarantorController extends Controller
     }
 
     public function add(Request $request){
-        $loan = Account::where('id', '=', $request->input('loan_id'))->with('customer')->first();
+        $loan = Account::where('id', '=', $request->input('loan_id'))->with('user')->first();
 
         foreach ($request->input('guarantors') as $guarantor){
             $gr = GuarantorRequest::create([
@@ -120,6 +147,22 @@ class GuarantorController extends Controller
             'guarantor_passport'=> $image,
             'net_income' => $request->input('net_income'),
         ]);
+
+        $loan = Account::where('id', '=', $request->input('loan_id'))->first();
+        $loan_type = Type::where('id', '=', $loan->type_id)->with('requirements')->first();
+        $guarantors = Guarantor::where('loan_id', '=', $request->input('loan_id'))->where('status', '=', 1)->count();
+
+        $guarantors_needed = 0;  
+        foreach ($loan_type->requirements as $requirement){
+            if ($requirement->type == 'guarantors'){
+                $guarantors_needed += $requirement->type->rate;
+            }
+        }
+        echo $guarantors_needed;
+
+        if( $guarantors >= $guarantors_needed){
+            
+        }
 
         return response()->json([
             'message' => 'The loan has been successfully guaranteed',

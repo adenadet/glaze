@@ -1,6 +1,6 @@
 <template>
 <section>
-    <form class="form" action="#" @submit.prevent="editMode ? updateGuarantor() : createGuarantor() ">
+    <form class="form" action="#" @submit.prevent="createGuarantor()">
         <input type="hidden" name="loan_id" id="loan_id" v-model="requestData.loan_id" />
         <div class="card">
             <div class="card-header">
@@ -67,7 +67,9 @@ export default {
         }
     },
     mounted() {
+        this.getInitials();
         Fire.$on('GuarantorDataFill', loan =>{
+            this.loan = loan;
             this.requestData.loan_id = loan.id;
             if (loan.guarantor_requests != null){this.requestData.guarantors = loan.guarantor_requests; this.editMode = true;}
             else{this.addGuarantor(); this.editMode = false;}
@@ -82,9 +84,9 @@ export default {
                 phone: '',
             });
         },
-        deleteGuarantor(guarantor){this.requestData.guarantors.pop(guarantor);},
         createGuarantor(){
             this.$Progress.start();
+            this.requestData.loan_id = this.loan.id;
             this.requestData.post('/api/loans/guarantors/add')
             .then(response =>{
                 this.$Progress.finish();
@@ -101,31 +103,31 @@ export default {
                 this.$Progress.fail();
             });           
         },
-        updateGuarantor(){
+        deleteGuarantor(guarantor){this.requestData.guarantors.pop(guarantor);},
+        getInitials(){
             this.$Progress.start();
-            this.requestData.put('/api/loans/guarantors/reset/'+this.requestData.loan_id)
+            axios.get('/api/loans/accounts/'+this.$route.params.id)
             .then(response =>{
+                this.refresh(response);
                 this.$Progress.finish();
-                Fire.$emit('Reload', response);
-                Swal.fire({
+                toast.fire({
                     icon: 'success',
-                    title: 'The Guarantors list has been updated',
-                    showConfirmButton: false,
-                    timer: 1500
+                    title: 'Departments were loaded successfully',
                 });
             })
             .catch(()=>{
-                Swal.fire({icon: 'error', title: 'Oops...', text: 'Something went wrong!', footer: 'Please try again later!'});
                 this.$Progress.fail();
-            });            
+                toast.fire({
+                    icon: 'error',
+                    title: 'Departments were not loaded successfully',
+                })
+            });
+        },
+        refresh(response){
+            this.loan = response.data.account;
         },
     },
     props:{
-        areas: Array,
-        states: Array,
-        nations: Array,
-        user: Object,
-        source: String,
     },
 }
 </script>

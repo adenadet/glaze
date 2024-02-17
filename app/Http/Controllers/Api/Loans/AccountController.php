@@ -28,12 +28,7 @@ use GuzzleHttp\HandlerStack;
 class AccountController extends Controller{
     public function credit_scores($id)
     {
-        return response()->json([
-            'account' => Account::where('id', '=', $id)->with(['repayments', 'user'])->first(),
-            'bureaus' => Bureau::select('id', 'name', 'link')->orderBy('name', 'ASC')->get(),
-            'bureau_products' => BureauProduct::orderBy('name', 'ASC')->get(),
-            'credit_score' => CreditScore::where('loan_id', '=', $id)->first(),
-        ]);
+        
     }
     
     public function customer($id)
@@ -41,7 +36,7 @@ class AccountController extends Controller{
         return response()->json([
             'all_banks' => AllBank::select('id', 'bank_name')->orderBy('bank_name', 'ASC')->get(),
             'loan_types' => Type::where('status', '1')->get(),       
-            'accounts' => Account::where('user_id', '=', $id)->with(['repayments', 'user'])->latest()->paginate(10),
+            'accounts' => Account::where('user_id', '=', $id)->with(['repayments', 'guarantor_requests', 'type', 'guarantors'])->latest()->paginate(10),
         ]);
     }
 
@@ -59,7 +54,7 @@ class AccountController extends Controller{
     public function index()
     {
         return response()->json([      
-            'accounts' => Account::where('user_id', auth('api')->id())->with(['repayments', 'user', 'type'])->paginate(20),
+            'accounts' => Account::where('user_id', auth('api')->id())->with([ 'guarantor_requests', 'repayments', 'user', 'type', ])->latest()->paginate(20),
         ]);
     }
 
@@ -100,21 +95,22 @@ class AccountController extends Controller{
         
         $loan = Account::create([
             'type_id' => $request['loan_type_id'],
-            'user_id' => $request->input('user_id'),
+            'user_id' => $request->input('user_id') ?? auth('api')->id(),
             'amount' => $request['amount'],
             'payable' => round(($emiMonthly * $request->input('duration')), 2),
             'emi' => round(($emiMonthly), 2),
             'balance' => round(($emiMonthly), 2),
             'duration' => $request->input('duration'),
+            'frequency' => $request->input('frequency'),
             'name' => $request->input('name') ?? 'Loan',
             'bank_id' => $request->input('bank_id'),
             'acct_name' => $request->input('acct_name'),
             'acct_number' => $request->input('acct_number'),
             'total_paid' => 0,
-            'status' => 3,
+            'status' => 2,
             'status_date' => date('Y-m-d H:i:s'),
             'request_date' => date('Y-m-d H:i:s'),
-            'request_by' => $request->input('user_id'), 
+            'request_by' => $request->input('user_id') ?? auth('api')->id(), 
             'created_by' => auth('api')->id(),
             'updated_by' => auth('api')->id(),    
         ]);
@@ -127,14 +123,14 @@ class AccountController extends Controller{
 
         return response()->json([
             'current_loan' => $loan,       
-            'status' => 'Successfully created',
+            'message' => 'Successfully created, kindly add guarantors',
         ]);
     }
     
     public function show($id)
     {
         return response()->json([
-            'account' => Account::where('id', '=', $id)->with(['account_officer.staff', 'user', 'type'])->first(),
+            'account' => Account::where('id', '=', $id)->with(['account_officer.staff', 'user', 'type', 'guarantors'])->first(),
             'repayments' => Repayment::where('loan_id', '=', $id)->with(['bank'])->latest()->paginate(20),     
         ]);    
     }
@@ -142,13 +138,13 @@ class AccountController extends Controller{
     public function staffs()
     {
         return response()->json([
-            'accounts' => Account::where('status', '<=', 13)->with(['bank', 'type', 'user'])->latest()->paginate(50),
+            'accounts' => Account::where('status', '<=', 13)->with(['bank', 'type', 'user', 'account_officer.staff'])->latest()->paginate(50),
         ]);
     }
 
     public function staff_show($id)
     {
-        $account = Account::where('id', '=', $id)->first();
+        $account = Account::where('id', '=', $id)->with(['bank', 'type', 'user', 'account_officer'])->first();
         $requirements = TypeRequirement::select('requirement_id')->where('loan_type_id', '=', $account->type_id)->with('requirement')->get();
         $loan_requirements = CheckListItem::where('loan_id', '=', $id)->with('requirement')->get();
 
@@ -185,22 +181,12 @@ class AccountController extends Controller{
         $loan = Account::find($id);
 
         $loan->status = 3;
-        $loan->admin_id = auth('api')->id();
-        $loan->admin_date = date('y-m-d H:i:s');
+        $loan->deleted_by = auth('api')->id();
+        $loan->deleted_at = date('Y-m-d H:i:s');
         $loan->save();
 
-        $user = User::find($loan->user_id);
-        $message = 'Hello Cooperator '.$user->unique_id.', your loan request for '.$loan->amount.' has been rejected by Admin.';
-        $sms_sender = $this->sendSMS('234'.substr($user->phone, -10), $message);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'A rejection message has been sent to the Cooperator: '.$user->unique_id,
-            'accounts' => Bank::all(),
-            'all_banks' => AllBank::orderBy('bank_name', 'ASC')->get(),
-            'branches' => Branch::with('users.savings')->get(),      
-            //'savings' => Saving::where('user_id',  auth('api')->id())->get(),
-            'loans' => Account::where('status', '=', 0)->with('user.branch')->with('payment_bank')->with('loan_guarantors.guarantor')->orderBy('requested_date', 'ASC')->get(),      
+        return response()->json([      
+            'accounts' => Account::where('user_id', auth('api')->id())->with([ 'guarantor_requests', 'repayments', 'user', 'type', ])->latest()->paginate(20),
         ]);
     }
 

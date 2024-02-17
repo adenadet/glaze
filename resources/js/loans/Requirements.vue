@@ -49,9 +49,9 @@
                             <td>
                                 <button type="button" class="btn btn-default-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
                                 <div class="dropdown-menu">
-                                    <router-link class="btn btn-block dropdown-item" :to="'/loans/1'"><i class="fa fa-eye mr-1 text-primary"></i> View </router-link>
+                                    <!--router-link class="btn btn-block dropdown-item" :to="'/loans/1'"><i class="fa fa-eye mr-1 text-primary"></i> View </router-link-->
                                     <button class="btn btn-block dropdown-item" @click="editRequirement(requirement)"><i class="fa fa-edit mr-1 text-warning"></i> Edit </button>
-                                    <button class="btn btn-block dropdown-item" @click="deleteRequirement(requirement.id)"><i class="fa fa-trash mr-1 text-danger"></i> Delete Loan Request</button>
+                                    <button class="btn btn-block dropdown-item" @click="deleteRequirement(requirement.id)"><i class="fa fa-trash mr-1 text-danger"></i> Delete Requirement</button>
                                 </div>
                             </td>
                         </tr> 

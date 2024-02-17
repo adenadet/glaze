@@ -6,7 +6,7 @@
     <div class="card-body p-0">
         <ul class="users-list clearfix">
             <li v-for="user in staffs" :key="user.id">
-                <img style="height: 50px;" :src="user | userImage" :title="user.first_name+' '+user.last_name" :alt="user.first_name+' '+user.last_name">
+                <img :src="user | userImage" :title="user.first_name+' '+user.last_name" :alt="user.first_name+' '+user.last_name">
                 <a :href="'/staff/contacts/'+user.id" class="users-list-name">{{user.first_name+' '+user.last_name}}</a>
                 <span class="users-list-date">{{user.joined_at | ExcelDateMonth}}</span>
             </li>

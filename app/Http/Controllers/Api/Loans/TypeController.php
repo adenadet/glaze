@@ -49,6 +49,7 @@ class TypeController extends Controller
             'start_date' => $request->input('state_date'),
             'end_date' => $request->input('end_date'),
             'status' => $request->input('status') ?? 1,
+            'matrix_id' => $request->input('matrix_id') ?? 1,
             'created_by' => auth('api')->id(),
             'updated_by' => auth('api')->id(),
         ]);

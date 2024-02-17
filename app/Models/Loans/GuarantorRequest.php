@@ -17,6 +17,6 @@ class GuarantorRequest extends Structure
 	}
     
     public function guarantor(){
-    	return $this->belongsTo('App\Models\Loans\Guarantor', 'request_id', 'id'); 
+    	return $this->belongsTo('App\Models\Loans\Guarantor',  'id','request_id'); 
 	}
 }

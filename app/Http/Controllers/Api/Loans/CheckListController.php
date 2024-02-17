@@ -48,7 +48,19 @@ class CheckListController extends Controller
 
     public function update(Request $request, $id)
     {
+        $checklist = CheckListItem::where('id', '=', $id)->first();
+
+
+        $checklist->status = $request->input('status');
+        $checklist->comment = $request->input('comment');
+        $checklist->loan_officer_id = auth('api')->id();
         
+        $checklist->save();
+
+        return response()->json([      
+            'account' => Account::where('id','=', $request->input('loan_id'))->with(['user', 'type',])->first(),
+            'checklist' => CheckListItem::where('loan_id', '=', $request->input('loan_id'))->with(['account_officer', 'requirement'])->get(),
+        ]);
     }
 
     public function destroy($id)

@@ -1,10 +1,36 @@
 <template>
 <div class="col-md-12">
+    <div class="modal fade" id="loanModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{ editMode ? 'Edit Loan Request: '+ loan.name : 'Create New Loan Request'}}</h4>
+                    <button type="button" class="close" data-dismiss="modal" @click="closeModal()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <LoanForm :editMode="editMode" :loan="loan"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="GuarantorModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{ editMode ? 'Edit Guarantor Request: '+ loan.name : 'Create New Guarantor Request'}}</h4>
+                    <button type="button" class="close" data-dismiss="modal" @click="closeModal()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <GuarantorFormRequest :editMode="editMode" :guarantor="guarantor"/>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="card custom-card"> 
         <div class="card-header justify-content-between"> 
             <div class="card-title"> Loans </div> 
             <div class="card-tools"> 
-                <a href="/loans/new" class="btn btn-sm btn-primary"><i class="fa fa-plus mr-1"></i> Request New</a> 
+                <button class="btn btn-sm btn-primary" @click="addNew()"><i class="fa fa-plus mr-1"></i> Request New</button> 
             </div> 
         </div> 
         <div class="card-body"> 
@@ -29,13 +55,14 @@
                             <td>{{ account.amount | currency}}</td>
                             <td class="text-warning">{{ account.balance | currency}}</td>
                             <td>{{ account.created_at | excelDate }}</td>
-                            <td>{{ account.duration }} weeeks</td>
-                            <td><span class="badge bg-outline-primary">{{ account.status }}</span></td>
+                            <td>{{ account.duration }} {{ account.frequency }}</td>
+                            <td><span class="badge bg-outline-primary">{{ account.status < 3 ? 'Awaiting Guarantors' : (account.status > 16 ? 'Ongoing' : 'Processing') }}</span></td>
                             <td>
                                 <button type="button" class="btn btn-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
                                 <div class="dropdown-menu">
                                     <router-link class="btn btn-block dropdown-item" :to="'/loans/'+account.id"><i class="fa fa-eye mr-1 text-primary"></i> View </router-link>
-                                    <button v-if="account.status > 13" class="btn btn-block dropdown-item" @click="closeLoan()"><i class="fa fa-times mr-1 text-danger"></i> Close Loan</button>
+                                    <button v-if="account.status < 5" class="btn btn-block dropdown-item" @click="addGuarantors(account)"><i class="fa fa-user-friends mr-1 text-primary"></i> Add Guarantor </button>
+                                    <button v-if="account.status > 13" class="btn btn-block dropdown-item" @click="closeLoan()"><i class="fa fa-times mr-1 text-danger"></i> Liquidate Loan</button>
                                     <button v-else class="btn btn-block dropdown-item" @click="deleteLoan(1)"><i class="fa fa-trash mr-1 text-danger"></i> Delete Loan Request</button>
                                 </div>
                             </td>
@@ -54,10 +81,13 @@
 export default {
     data(){
         return  {
-            editMode: false,
             accounts: {},
             account: {},
             all_banks: [],
+            editMode: false,
+            form: new Form({}),
+            guarantor: {},
+            loan: {},
             loan_types: [],
             option_mode: '',
             initial_route: '',
@@ -67,10 +97,25 @@ export default {
         this.getInitials();
         Fire.$on('reloadLoans', response =>{
             this.reloadPage(response);
-            this.closeModals();
-        })
+            this.closeModal();
+        });
+        Fire.$on('reload', response =>{
+            this.getInitials();
+            this.closeModal();
+        });
+        Fire.$on('getGuarantors', response => {
+            this.closeModal();
+            this.account = response.data.current_loan;
+            this.addGuarantors(response.data.current_loan);
+        });
     },
     methods:{
+        addGuarantors(account){
+            this.$Progress.start();
+            Fire.$emit('GuarantorDataFill', account);
+            $('#GuarantorModal').modal('show');
+            this.$Progress.finish();
+        },
         addNew(){
             this.$Progress.start();
             this.editMode = false;

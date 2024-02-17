@@ -39,15 +39,15 @@
                         <td>{{ account.user | FullName }}</td>
                         <th scope="row">{{account.name}} <br /><span class="text-muted">{{ account.unique_id }}</span></th>
                         <td>{{ account.type ? account.type.name : 'Old Type' }}</td>
-                        <td>{{ account.amount}}</td>
-                        <td class="text-warning">{{ account.balance}}</td>
+                        <td>{{ account.amount | currency}}</td>
+                        <td class="text-warning">{{ account.balance | currency}}</td>
                         <td>{{ account.created_at | excelDate }}</td>
                         <td>{{ account.duration }} weeeks</td>
-                        <td><span class="badge bg-outline-primary">{{ account.status }}</span></td>
+                        <td><span class="badge bg-outline-primary">{{ account.status < 3 ? 'Awaiting Guarantors' : (account.status > 16 ? 'Ongoing' : 'Processing') }}</span></td>
                         <td>
                             <button type="button" class="btn btn-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
                             <div class="dropdown-menu">
-                                <router-link class="btn btn-block dropdown-item" :to="'/staff/loans/'+account.id"><i class="fa fa-eye mr-1 text-primary"></i> View Loan Account</router-link>
+                                <router-link class="btn btn-block dropdown-item" :to="'/staff/accounts/assigned/'+account.id"><i class="fa fa-eye mr-1 text-primary"></i> View Loan Account</router-link>
                                 <router-link class="btn btn-block dropdown-item" :to="'/staff/confirm/loans/'+account.id"><i class="fa fa-check mr-1"></i> Confirmation</router-link>
                                 <button v-show="account.cpm != null" class="btn btn-block dropdown-item" @click="updateCPM(account)"><i class="fa fa-file mr-1"></i> Update Proposal Memo</button>
                                 <button v-show="account.cpm == null" class="btn btn-block dropdown-item" @click="createCPM(account)"><i class="fa fa-file mr-1"></i> Create Proposal Memo</button>

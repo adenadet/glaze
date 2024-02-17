@@ -1,21 +1,64 @@
 <template>
 <section >
+    <div class="modal fade" id="loanModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">New Credit Score Search</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <LoanFormCreditScore :editMode="editMode" :account="account" :bureau_products="bureau_products" :bureaus="bureaus"/>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Loan Credit Score</h3>
+            <button  v-if="source == 'account'" class="card-tools btn btn-sm btn-primary" @click="addNew">Get New Credit Score</button>
         </div>
         <div class="card-body">
-            <div v-if="credit_score != null && credit_score.id != null">
-                <div class="info-box">
-                    <span class="info-box-icon"><i class="fa fa-check"></i></span>
-
-                    <div class="info-box-content">
-                        <span class="info-box-text">Matching Rate</span>
-                        <span class="info-box-number">{{credit_score}}</span>
+            <div class="card card-success card-outline card-tabs">
+                <div class="card-header p-0 pt-1 border-bottom-0">
+                    <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+                        <li class="nav-item"  v-for="(credit_score, index) in credit_scores.data" :key="credit_score.id">
+                            <a class="nav-link" :class="index==0 ? 'active': ''" :id="'credit-score-'+index+'-tab'" data-toggle="pill" :href="'#credit-score-'+index" role="tab" :aria-controls="'credit-score-'+index" aria-selected="true">{{ credit_score.created_at | excelDate }}</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body">
+                    <div class="tab-content" id="custom-tabs-three-tabContent">
+                        <div v-for="(credit_score, index) in credit_scores.data" :key="credit_score.id" class="tab-pane fade" :class="index==0 ? 'show active': ''" :id="'credit-score-'+index" role="tabpanel" :aria-labelledby="'credit-score-'+index+'-tab'">
+                            <table class="table table-bordered table-striped">
+                                <tbody>
+                                    <tr>
+                                        <td>Provided By:</td>
+                                        <td> {{credit_score.product.bureau.name}} </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Query Type:</td>
+                                        <td> {{credit_score.product.name}} </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Created By:</td>
+                                        <td> {{credit_score.creator | FullName}} </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Date:</td>
+                                        <td>{{ credit_score.created_at | excelDate }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">
+                                            {{ credit_score.response }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>    
+                        </div>
                     </div>
                 </div>
             </div>
-            <LoanFormCreditScore :editMode="editMode" :account="account" :bureaus="bureaus" :bureau_products="bureau_products" v-else/>
         </div>
     </div>
 </section>
@@ -30,7 +73,7 @@ export default {
             account: {},
             bureaus: [],
             bureau_products: [],
-            credit_score: {},
+            credit_scores: [],
             checkData: new Form({
                 DataTicket: "",
                 EnquiryReason:"",
@@ -54,14 +97,16 @@ export default {
         });
     },
     methods:{
-        loginToFirstCentral(){
-            this.$store.dispatch('FCCLogin');
+        addNew(){
+            this.$Progress.start();
+            this.editMode = false;
+            $('#loanModal').modal('show');
+            this.$Progress.finish();
         },
-        getCreditScore(){},
         getInitials(){
             this.$Progress.start();
             this.showLoader();
-            axios.get('/api/loans/accounts/credit_scores/'+this.$route.params.id).
+            axios.get('/api/loans/credit_scores/'+this.$route.params.id).
             then(response =>{
                 this.reloadPage(response);
                 this.$Progress.finish();
@@ -81,21 +126,16 @@ export default {
             this.account = response.data.account;
             this.bureaus = response.data.bureaus;
             this.bureau_products = response.data.bureau_products;
-            this.credit_score = response.data.credit_score;
+            this.credit_scores = response.data.credit_scores;
             this.editMode = response.data.credit_score.id != null ? false : true;
         },
         showLoader(text="Loading"){
-            /*loader = Vue.prototype.$loading({
-                lock: true,
-                text: text,
-                spinner: 'fa fa-loading',
-                background: 'rgba(255, 255, 255, 0.85)',
-            });*/
+           
         }
 
     },  
     props:{
-
+        source: String,
     },
 }
 </script>

@@ -82,8 +82,8 @@ import VueYoutube from 'vue-youtube';
 Vue.use(VueYoutube);
 
 //Import Signature Pad
-import VueSignature from 'vue-signature-pad';
-Vue.use(VueSignature);
+import VueSignaturePad from 'vue-signature-pad';
+Vue.use(VueSignaturePad);
 
 
 import Vuex from 'vuex';
@@ -103,7 +103,7 @@ Vue.filter('age', function(value){
 Vue.filter('currency', function(value) {
     if (isNaN(value)){ return '0.00';}
     let val = (value/1).toFixed(2).replace(',', '.')
-    return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    return  '₦ '+val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 });
 
 Vue.filter('ExcelDate', function(text){
@@ -113,6 +113,10 @@ Vue.filter('ExcelDate', function(text){
 
 Vue.filter('ExcelDateShort', function(text){
     return moment(text).format('DD/MM/YYYY');
+});
+
+Vue.filter('ExcelDateExtended', function(text){
+    return moment(text).format('LLL');
 });
 
 Vue.filter('ExcelDateMonth', function(text){

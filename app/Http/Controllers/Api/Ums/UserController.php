@@ -67,7 +67,7 @@ class UserController extends Controller
         $departments = Department::select('id', 'name')->orderBy('name', 'ASC')->get();
         $nok = NextOfKin::where('user_id', auth('api')->id())->get();
         $states = State::orderBy('name', 'ASC')->get();
-        $users = User::orderBy('first_name', 'ASC')->with('area')->with('state')->with('branch')->with('roles')->paginate(51);
+        $users = User::orderBy('first_name', 'ASC')->with(['state', 'roles', 'area'])->paginate(51);
 
         return response()->json([
             'areas' => $areas,

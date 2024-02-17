@@ -7,7 +7,6 @@
         <div class="timeline timeline-inverse">
             <div v-for="action in actions.data">
                 <i class="fa" :class="action.start_stage < action.end_stage ? 'fa-check bg-primary' : 'fa-times bg-danger'"></i>
-
                 <div class="timeline-item">
                     <span class="time"><i class="far fa-clock"></i> {{ action.created_at | excelDate }}</span>
                     <h3 class="timeline-header"><a href="#">{{ action.creator | FullName }}</a> sent {{ action.summary }}</h3>

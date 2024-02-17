@@ -2,69 +2,29 @@
 <section>
     <form>
         <div class="row">
-            <div class="col-md-6 col-sm-12">
-                <div class="form-group">
-                    <label>First Name</label>
-                    <input type="text" class="form-control" id="first_name" name="first_name"  v-model="bvnConfirmationData.first_name" required>
-                </div>
-            </div>
-            <div class="col-md-6 col-sm-12">
-                <div class="form-group">
-                    <label>Last Name</label>
-                    <input type="text" class="form-control" id="last_name" name="last_name"  v-model="bvnConfirmationData.last_name" required>
-                </div>
-            </div>
+            <div class="col-md-4"><div class="form-group"><label>First Name</label><div class="form-control" v-html="user.first_name"></div></div></div>
+            <div class="col-md-4"><div class="form-group"><label>Middle Name</label><div class="form-control" v-html="user.middle_name"></div></div></div>
+            <div class="col-md-4"><div class="form-group"><label>Last Name</label><div class="form-control" v-html="user.last_name"></div></div></div>
+            <div class="col-md-4"><div class="form-group"><label>Date of Birth</label><div class="form-control" v-html="user.dob"></div></div></div>
+            <div class="col-md-4"><div class="form-group"><label>Phone Number</label><div class="form-control" v-html="user.phone"></div></div></div>
+            <div class="col-md-4"><div class="form-group"><label>Gender</label><div class="form-control" v-html="user.sex"></div></div></div>
+            <div class="col-md-4"><div class="form-group"><label>Email</label><div class="form-control" v-html="user.email"></div></div></div>
+            <div class="col-md-4"><div class="form-group"><label>BVN</label><div class="form-control" v-html="user.bvn"></div></div></div>
+            <div class="col-md-4"><div class="form-group"><label>National ID</label><div class="form-control" v-html="user.nin"></div></div></div>
         </div>
         <div class="row">
-            <div class="col-md-6 col-sm-12">
-                <div class="form-group">
-                    <label>Email</label>
-                    <input type="text" class="form-control" id="first_name" name="first_name"  v-model="bvnConfirmationData.first_name" required>
-                </div>
-            </div>
-            <div class="col-md-6 col-sm-12">
-                <div class="form-group">
-                    <label>Phone</label>
-                    <input type="text" class="form-control" id="last_name" name="last_name"  v-model="bvnConfirmationData.last_name" required>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-6 col-sm-12">
-                <div class="form-group">
-                    <label>BVN</label>
-                    <input type="text" class="form-control" id="bvn" name="bvn" size="11" maxlength="11" v-model="bvnConfirmationData.bvn" required>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <button class="col-md-3 btn btn-warning" @click="QoreIDCheck()" type="button">
-                Check using QoreID
-            </button>
-            <button class="col-md-3 btn btn-success" @click="VerifyMeCheck()" type="button">
-                Check using VerifyMe
+            <button class="col-md-3 btn btn-warning" @click="PericulumBVNCheck()" type="button">
+                Check using Periculum
             </button>
         </div>
-        <div class="row" v-show="qore_used">
-            <div class="col-7">
-                <h2 class="lead"><b>Qore Verification</b></h2>
-                <p class="text-muted text-sm"><b>About: </b> Web Designer / UX / Graphic Artist / Coffee Lover </p>
-                <ul class="ml-4 mb-0 fa-ul text-muted">
-                    <li class="small"><span class="fa-li"><i class="fas fa-lg fa-user"></i></span>First Name: {{qore.firstname}}</li>
-                    <li class="small"><span class="fa-li"><i class="fas fa-lg fa-user"></i></span>Last Name: {{qore.lastname}}</li>
-                    <li class="small"><span class="fa-li"><i class="fas fa-lg fa-phone"></i></span> Phone #: {{qore.phone}}</li>
-                    <li class="small"><span class="fa-li"><i class="fas fa-lg fa-gender"></i></span> Sex: {{qore.phone}}</li>
-                </ul>
-            </div>
-            <div class="col-5 text-center">
-                <img src="/dist/img/user1-128x128.jpg" alt="user-avatar" class="img-circle img-fluid">
-            </div>
+        <div class="row">
+            <div class="col-md-4"><div class="form-group"><label>First Name</label><div class="form-control" v-html="qore.firstname"></div></div></div>
+            <div class="col-md-4"><div class="form-group"><label>Last Name</label><div class="form-control" v-html="qore.lastname"></div></div></div>
+            <div class="col-md-4"><div class="form-group"><label>Date of Birth</label><div class="form-control" v-html="qore.dateofbirth"></div></div></div>
+            <div class="col-md-4"><div class="form-group"><label>Phone Number</label><div class="form-control" v-html="qore.fphone"></div></div></div>
+            <div class="col-md-4"><div class="form-group"><label>Gender</label><div class="form-control" v-html="qore.gender"></div></div></div>
+            <div class="col-md-4"><div class="form-group"><label>Email</label><div class="form-control" v-html="qore.email"></div></div></div>
         </div>
-            <div class="col-md-4"><div class="form-group"><label>First Name</label><div class="form-control" ></div></div></div>
-            <div class="col-md-4"><div class="form-group"><label>Last Name</label><div class="form-control" v-html="qore.firstname"></div></div></div>
-            <div class="col-md-4"><div class="form-group"><label>Date of Birth</label><div class="form-control" v-html="qore.firstname"></div></div></div>
-            <div class="col-md-4"><div class="form-group"><label>Gender</label><div class="form-control" v-html="qore.firstname"></div></div></div>
-            <div class="col-md-4"><div class="form-group"><label>Gender</label><div class="form-control" v-html="qore.firstname"></div></div></div>
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group">
@@ -78,6 +38,16 @@
 </template>
 <script>
 export default {
+    created(){
+        this.$store.dispatch('periculum/loginUser');
+	},
+    computed:{
+        periculumUser: {
+            get(){
+                return this.$store.state.periculum.user;
+            }
+        }
+    },
     data(){
         return {
             actions: [],
@@ -102,8 +72,29 @@ export default {
         }
     },
     methods:{
-        QoreIDCheck(){
+        PericulumBVNCheck(){
+            this.$Progress.start();
+            
+            this.bvnConfirmationData.user_id = this.user.id;
+            this.bvnConfirmationData.bvn = 22168282056;
+            this.bvnConfirmationData.confirmation_channel = 'Periculum';
+            this.bvnConfirmationData.confirmation = '';
+            this.bvnConfirmationData.et =  this.periculumUser.dataTicket;
 
+            this.bvnConfirmationData.post('/api/servers/periculum/bvn_check')
+            .then(
+                response => {
+                    this.$Progress.finish();
+                }
+            )
+            .catch(()=> {
+                this.$Progress.fail();
+                toast.fire({icon: 'error', title: 'BVN Check failed',});
+            });
+
+
+        },
+        QoreIDCheck(){
             this.QoreForm.firstname = user.first_name;
             this.QoreForm.lastname = user.last_name;
             this.QoreForm.dob = user.dob;
@@ -144,16 +135,31 @@ export default {
                 });
             });
         },
-        getCreditScore(){},
+        getInitials(){
+            this.$Progress.start();
+            axios.get('/api/ums/bvn_verifications/user/'+this.$route.params.id).
+            then(response =>{
+                this.reloadPage(response);
+                this.$Progress.finish();
+            })
+            .catch(()=>{
+                this.$Progress.fail();
+                toast.fire({
+                    icon: 'error',
+                    title: 'Accounts was not loaded successfully',
+                })
+            });
+        },
+        reloadPage(response){
+            this.user = response.data.user;
+        },
     },
     mounted() {
         this.getInitials()
         Fire.$on('BasicDataFill', user => {
             this.user = user;
         });
-        Fire.$on('BVNDataFill', confirmation => {
 
-        });
     },
 }
 </script>

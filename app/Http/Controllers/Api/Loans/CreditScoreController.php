@@ -3,60 +3,39 @@
 namespace App\Http\Controllers\Api\Loans;
 
 use App\Http\Controllers\Controller;
+use App\Models\Finance\Bureau;
+use App\Models\Finance\BureauProduct;
+use App\Models\Loans\Account;
+use App\Models\Loans\CreditScore;
 use Illuminate\Http\Request;
 
 class CreditScoreController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        //
+        return response()->json([
+            'account' => Account ::where('id', '=', $id)->with(['repayments', 'user'])->first(),
+            'bureaus' => Bureau ::select('id', 'name', 'link')->orderBy('name', 'ASC')->get(),
+            'bureau_products' => BureauProduct ::orderBy('name', 'ASC')->get(),
+            'credit_scores' => CreditScore ::where('loan_id', '=', $id)->with('product.bureau', 'creator')->latest()->paginate(4),
+        ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //

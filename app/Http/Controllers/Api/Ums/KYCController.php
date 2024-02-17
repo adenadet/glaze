@@ -50,7 +50,6 @@ class KYCController extends Controller
                 $file_name = NULL;
             }
 
-            echo $file_name;
             UserKYC::create([
                 'user_id' => auth('api')->id(),
                 'item_id' => $kyc['id'],

@@ -18,12 +18,16 @@
 
         <p>Your loan funds have been transferred to the bank account you provided during the application process. Please allow 6 hours for the funds to reflect in your account, depending on your bank's processing times.</p>
 
-        <p>If you have any questions or need further assistance, please do not hesitate to contact our customer support team at [Customer Support Phone Number] or email us at {{config('app.email')}}. Our dedicated team is here to assist you with any queries you may have.</p>
+        <p>If you have any questions or need further assistance, please do not hesitate to contact our customer support team at {{$loan->account_officer->phone}} or email us at {{config('app.email')}}. Our dedicated team is here to assist you with any queries you may have.</p>
 
         <p>Thank you for choosing {{config('app.name')}} for your financial needs. We value your trust and look forward to serving you in the future. We wish you the very best in achieving your financial goals.</p>
 
         <p>Sincerely, <br />
-<br />
-<br />{{$loan}}
-<br />Customer Service Representative
-<br />{{config('app.name')}}
+        <br />
+        <br />{{$loan->account_officer->first_name}} {{$loan->account_officer->last_name}}
+        <br />Customer Service Representative
+        <br />{{$loan->account_officer->phone}} | {{$loan->account_officer->email}}
+        <br />{{config('app.name')}}
+        </p>
+    </body>
+</html>

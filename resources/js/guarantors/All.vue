@@ -1,6 +1,6 @@
 <template>
 <section class="container-fluid">
-    <div class="row justify-content-center mt-5">
+    <div class="row justify-content-center">
         <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="card-header">
@@ -30,6 +30,7 @@
                                     <button type="button" class="btn btn-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
                                     <div class="dropdown-menu">
                                         <button v-if="request.status > 0" class="btn btn-block dropdown-item"><i class="fa fa-eye mr-1 text-primary"></i> View </button>
+                                        <button class="btn btn-block dropdown-item" @click="resendGuarantor(guarantor.id)"><i class="fa fa-reply mr-1"></i> Resend Request</button>
                                         <button v-if="request.status == 0" class="btn btn-block dropdown-item" @click="deleteRequest(request.id )"><i class="fa fa-trash mr-1 text-danger"></i> Delete Loan Request</button>
                                     </div>
                                 </td>

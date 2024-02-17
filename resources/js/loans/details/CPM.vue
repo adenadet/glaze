@@ -6,7 +6,12 @@
         </div>
         <div class="card-body">
             <div v-if="!editMode" v-html="cpm.detail" style="max-height: 500px; overflow:scroll;"></div>
-            <LoanFormCPM v-else :editMode="editMode" :account="account" />
+            <LoanFormCPM :editMode="editMode" :account="account" v-else-if="source == 'account'"/>
+            <div class="row" v-else>
+                <div class="col-md-12 text-center">
+                    <h3>Credit Proposal Memorandum not created</h3>
+                </div>
+            </div>
         </div>
     </div>
 </section>
@@ -64,7 +69,8 @@ export default{
         },
        
     },
-    props:{    
+    props:{
+        source: String
     }
 }
 </script>

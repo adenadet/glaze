@@ -1,10 +1,37 @@
 <template>
 <section>
+    <div class="modal fade" id="GuarantorModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{ editMode ? 'Edit Guarantor Request: '+ loan.name : 'Create New Guarantor Request'}}</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModal"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <GuarantorFormRequest :editMode="editMode"/>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="GuarantorViewModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">View Guarantor Details</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModal"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <GuarantorDetailGuarantee />
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Loan Guarantors</h3>
+            <button class="card-tools btn btn-sm btn-primary" @click="addNew()" v-if="source == 'Customer'">Modify Guarantors</button>
         </div>
-        <div class="card-body">
+        <div class="card-body p-0">
             <table class="table table-bordered table-stripped ">
                 <thead>
                     <tr>
@@ -16,7 +43,7 @@
                         <th>&nbsp;</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody v-if="guarantors != null">
                     <tr v-for="(guarantor, index) in guarantors" :key="guarantor.id">
                         <td>{{ index | addOne }}</td>
                         <td>{{ guarantor.first_name+' '+guarantor.last_name }}</td>
@@ -26,14 +53,15 @@
                         <td>
                             <button type="button" class="btn btn-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
                             <div class="dropdown-menu">
-                                <router-link class="btn btn-block dropdown-item" :to="'/loans/1'"><i class="fa fa-eye mr-1 text-primary"></i> View </router-link>
-                                <button class="btn btn-block dropdown-item" @click="editRequirement()"><i class="fa fa-edit mr-1"></i> Modify</button>
-                                <button class="btn btn-block dropdown-item" @click="resendGuarantor(guarantor.id)"><i class="fa fa-reply mr-1"></i> Resend Request</button>
-                                <button v-if="account.status > 13" class="btn btn-block dropdown-item" @click="closeLoan()"><i class="fa fa-times mr-1 text-danger"></i> Close Loan</button>
-                                <button v-else class="btn btn-block dropdown-item" @click="deleteLoan(1)"><i class="fa fa-trash mr-1 text-danger"></i> Delete Loan Request</button>
+                                <button class="btn btn-block dropdown-item" v-if="guarantor.status == 1" @click="viewGuarantor(guarantor.guarantor)"><i class="fa fa-eye mr-1 text-primary"></i> View </button>
+                                <button class="btn btn-block dropdown-item" v-else @click="resendGuarantor(guarantor.id)"><i class="fa fa-reply mr-1"></i> Resend Request</button>
+                                <button v-if="guarantor.status == 0" class="btn btn-block dropdown-item" @click="deleteGuarantor(guarantor.id)"><i class="fa fa-trash mr-1 text-danger"></i> Delete Guarantor Request</button>
                             </div>
                         </td>
                     </tr>    
+                </tbody>
+                <tbody v-else>
+                    <tr><td colspan="6">No Guarantor has been added</td></tr>
                 </tbody>
             </table>
         </div> 
@@ -41,15 +69,32 @@
 </section>
 </template>
 <script>
+import GuarantorDetailGuarantee from '../../guarantors/details/View.vue';
 export default {
+    component:{
+        GuarantorDetailGuarantee
+    },
     data(){
         return {
             account: {},
+            editMode: false,
             form: new Form({}),
             guarantors: {},
+            guarantor: {},
         }
     },
     methods:{
+        addNew(){
+            this.$Progress.start();
+            this.editMode = false;
+            Fire.$emit('GuarantorDataFill', this.account);
+            $('#GuarantorModal').modal('show');
+            this.$Progress.finish();
+        },
+        closeModal(){
+            $('#GuarantorModal').modal('hide');
+            $('#GuarantorViewModal').modal('hide');
+        },
         getAllInitials(){
             this.$Progress.start();
             axios.get('/api/loans/guarantors/loans/'+this.$route.params.id).then(response =>{
@@ -71,6 +116,7 @@ export default {
         reloadPage(response){
             this.account = response.data.account;
             this.guarantors = response.data.guarantors;
+            this.closeModal();
         },
         resendGuarantor(id){
             Swal.fire({
@@ -94,9 +140,16 @@ export default {
                 }
             });
         },
+        viewGuarantor(guarantor){
+            Fire.$emit('GuarantorDataFill', guarantor);
+            $('#GuarantorViewModal').modal('show');
+        },
     },
     mounted() {
         this.getAllInitials();
+    },
+    props:{
+        source: String,
     },
 }
 </script>

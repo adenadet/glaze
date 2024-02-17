@@ -2,6 +2,10 @@
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Loan Summary</h3>
+            <button type="button" v-if="source == 'staff'" class="card-tools btn-sm btn btn-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
+            <div class="dropdown-menu" v-if="source == 'staff'">
+                <router-link class="btn btn-block dropdown-item" :to="'/staff/customers/'+account.user_id"><i class="fa fa-user mr-1 text-primary"></i> View Customer </router-link>
+            </div>
         </div>
         <div class="card-body p-0">
             <table class="table table-sm table-bordered table-hover table-stripped">
@@ -15,21 +19,27 @@
                     <tr>
                         <td>Request Date</td>
                         <td><strong>{{ account.request_date | excelDate }}</strong></td>
-                        <td>Guaranteed On</td>
-                        <td><strong>{{ account.guaranteed_at | excelDate }}</strong></td>
+                        <td>Duration</td>
+                        <td><strong>{{ account.duration}} {{ account.frequency}}</strong></td>
                         <td>Approved On</td>
-                        <td><strong>{{ account.created_at | excelDate }}</strong></td>
+                        <td><strong>{{ account.approved_date | excelDate }}</strong></td>
                     </tr>
                     <tr>
                         <td>Start Date</td>
-                        <td colspan="2"><strong>{{ account.created_at | excelDate }}</strong></td>
+                        <td colspan="2">
+                            <strong v-if="account.payout_date != null">{{account.payout_date | excelDate }}</strong>
+                            <strong v-else>Not Yet Started</strong>
+                        </td>
                         <td>Guaranteed On</td>
-                        <td colspan="2"><strong>{{ account.created_at | excelDate }}</strong></td>
+                        <td colspan="2">
+                            <strong v-if="account.guaranteed_date != null">{{  account.guaranteed_date | excelDate  }}</strong>
+                            <strong v-else>Not Yet Guaranteed</strong>
+                        </td>
                     </tr>
                     <tr>
                         <td>Amount</td>
                         <td><strong>{{ account.amount | currency }}</strong></td>
-                        <td>Estimated Monthly Installment</td>
+                        <td>Estimated {{ account.frequency == 'weeks' ? 'Weekly' : 'Monthly' }} Installment</td>
                         <td><strong>{{ account.emi | currency }}</strong></td>
                         <td>Payment Summary</td>
                         <td><strong>{{ account.balance | currency }} / {{ account.payable | currency }}</strong></td>
@@ -84,5 +94,8 @@ export default {
     mounted() {
         this.getAllInitials();
     },
+    props: {
+        source: String,
+    }
 }
 </script>

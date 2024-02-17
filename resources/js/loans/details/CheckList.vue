@@ -1,5 +1,18 @@
 <template>
 <section>
+    <div class="modal fade" id="checklistModal" tabindex="-1" aria-labelledby="repaymentModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="repaymentModalLabel">Update Checklist</h5>
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal" aria-label="Close" @click="closeModal()"><i class="fa fa-times text-success"></i></button>
+                </div>
+                <div class="modal-body">
+                    <LoanFormCheckListSingle />
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Loan Officer Checklist</h3>
@@ -24,16 +37,18 @@
                         <td>
                             <button type="button" class="btn btn-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
                             <div class="dropdown-menu">
-                                <router-link class="btn btn-block dropdown-item" :to="'/loans/1'"><i class="fa fa-eye mr-1 text-primary"></i> View </router-link>
-                                <button class="btn btn-block dropdown-item" @click="editRequirement(checklist.id)"><i class="fa fa-edit mr-1"></i> Modify</button>
-                                <button v-if="account.status > 13" class="btn btn-block dropdown-item" @click="closeLoan()"><i class="fa fa-times mr-1 text-danger"></i> Close Loan</button>
-                                <button v-else class="btn btn-block dropdown-item" @click="deleteLoan(1)"><i class="fa fa-trash mr-1 text-danger"></i> Delete Loan Request</button>
+                                <button class="btn btn-block dropdown-item" @click="editRequirement(checklist)"><i class="fa fa-edit mr-1"></i> Modify</button>
                             </div>
                         </td>
                     </tr>    
                 </tbody>
             </table>
-            <LoanFormCheckList :editMode="editMode" v-else/>
+            <LoanFormCheckList :editMode="editMode" v-else-if="source == 'account'"/>
+            <div class="row" v-else>
+                <div class="col-md-12 text-center">
+                    <h3>Checklist Not Yet Completed</h3>
+                </div>
+            </div>
         </div>
         
     </div>
@@ -50,6 +65,13 @@ export default {
         }
     },
     methods:{
+        closeModal(){
+            $('#checklistModal').modal('hide');
+        },
+        editRequirement(checklist){
+            Fire.$emit('checklistDataFill', checklist);
+            $('#checklistModal').modal('show');
+        },
         getAllInitials(){
             this.$Progress.start();
             axios.get('/api/loans/checklists/'+this.$route.params.id).then(response =>{
@@ -75,6 +97,13 @@ export default {
     },
     mounted() {
         this.getAllInitials();
+        Fire.$on('checklistReload', checklist=> {
+            this.closeModal();
+            this.getAllInitials();
+        });
     },
+    props:{
+        source: String
+    }
 }
 </script>

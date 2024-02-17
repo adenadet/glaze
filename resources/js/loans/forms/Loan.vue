@@ -16,17 +16,27 @@
                     </div>
                     <div class="col-md-12 col-sm-12">
                         <div class="form-group">
-                            <label>Name</label>
+                            <label>Purpose</label>
                             <input type="text" class="form-control" id="name" name="name" placeholder="Name *" v-model="loanData.name" required>
                         </div>
                     </div>
-                    <div class="col-md-6 col-sm-12">
+                    <div class="col-md-4 col-sm-12">
                         <div class="form-group">
                             <label>Amount</label>
                             <input type="number" class="form-control" id="amount" name="amount" placeholder="Amount *" v-model.number="loanData.amount" required>
                         </div>
                     </div>
-                    <div class="col-md-6 col-sm-12">
+                    <div class="col-md-4 col-sm-12">
+                        <div class="form-group">
+                            <label>Payback Freq.</label>
+                            <select class="form-control" id="frequency" name="frequency" placeholder="frequency *" v-model.number="loanData.frequency" required>
+                                <option value="">--Select Payback Frequency--</option>
+                                <option value="weeks">Weekly</option>
+                                <option value="months">Monthly</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-12">
                         <div class="form-group">
                             <label>Duration</label>
                             <input type="number" class="form-control" id="duration" name="duration" placeholder="Duration *" v-model.number="loanData.duration" required>
@@ -63,9 +73,9 @@
             <thead>
                 <tr>
                     <th style="width: 10px">#</th>
-                    <th>Amount</th>
-                    <th>Principal</th>
-                    <th>Balance</th>
+                    <th>Repayment</th>
+                    <th>Outstanding Principal</th>
+                    <th>Outstanding Balance</th>
                 </tr>
             </thead>
             <tbody>
@@ -92,12 +102,11 @@
                         interest = interest + this.loan_types[getIndex].requirements[i].rate;
                     }
                 }
-                console.log(interest);
                 return (1 + (interest/100));
             },
             interestRate(){
                 let getIndex = this.loan_types.map(object => object.id).indexOf(this.loanData.loan_type_id);
-                let interest = this.loan_types[getIndex].percentage / 52 / 100;
+                let interest = this.loanData.frequency == "weeks" ? this.loan_types[getIndex].percentage / 52 / 100 : this.loan_types[getIndex].percentage / 12 / 100;
                 return Number(interest);
             },
 
@@ -107,7 +116,6 @@
 
             emi(){
                 var x = Math.pow(1 + this.interestRate, this.tenureMonths);
-                //var principal = (this.loanData.amount * this.adminInterestRate);
                 var emiMonthly =  ((this.loanData.amount * this.adminInterestRate)  * x * this.interestRate) / (x-1);
                 return Number(emiMonthly);
             },
@@ -123,8 +131,8 @@
         },
         data(){
             return {
-                //banks: [],
-                //loan_types: [],
+                banks: [],
+                loan_types: [],
                 loanData: new Form({
                     id:'',
                     unique_id: '',
@@ -133,6 +141,7 @@
                     user_id: '', 
                     payable: '', 
                     duration: '', 
+                    frequency: '',
                     bank_id: '', 
                     acct_name: '', 
                     acct_number: '',
@@ -143,16 +152,17 @@
         },
         methods:{
             createLoan(){
-                this.loanData.user_id = this.user.id;
+                this.$Progress.start();
                 this.loanData.post('/api/loans/accounts')
                 .then(response=>{
-                    Fire.$emit('GetCourse', response);
+                    //Fire.$emit('GetCourse', response);
+                    this.$Progress.finish();
                     Swal.fire({
                         icon: 'success',
                         title: response.data.message,
                     });
-                    this.courseData.reset();
-                    Fire.emit('')
+                    Fire.$emit('getGuarantors', response);
+                    //this.$route.push('/loans/'+response.data.loan.id+'/guarantor_request');
                 })
                 .catch(()=>{
                     this.$Progress.fail();
@@ -162,9 +172,15 @@
                     });
                 });
             },
+            getBanks(){
+                axios.get('/api/servers/gemini/getBanks')
+                .then(response => {
+                    this.banks = response.data.banks
+                })
+            },
             getInitials(){
                 axios.get('/api/loans/accounts/initials').then(response =>{
-                    this.banks = response.data.all_banks,
+                    this.banks = response.data.all_banks;
                     this.loan_types = response.data.loan_types;
                     this.users = response.data.users;
                 })
@@ -176,7 +192,6 @@
                 });
             },
             updateLoan(id){
-                this.loanData.user_id = this.user.id;
                 this.loanData.put('/api/loans/accounts/'+this.loanData.id)
                 .then(response=>{
                     Swal.fire({
@@ -194,6 +209,7 @@
             }, 
         },
         mounted() {
+            this.getInitials();
             Fire.$on('LoanDataFill', loan =>{
                 if (loan != null){
                     this.loanData.id = loan.id;
@@ -212,10 +228,9 @@
         },
         props: {
             editMode: Boolean,
-            loan: Object,
-            user: Object,
-            banks: Array,
-            loan_types: Array, 
+            //user: Object,
+            //banks: Array,
+            //loan_types: Array, 
         },
     }
 </script>

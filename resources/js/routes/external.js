@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 
 import RequestGuarantorConfirm           from '../guarantors/forms/Confirm.vue';
 
+
 Vue.component('RequestGuarantorConfirm', RequestGuarantorConfirm);
 
 let routes = [

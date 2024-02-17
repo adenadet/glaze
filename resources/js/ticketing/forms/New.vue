@@ -14,7 +14,7 @@
                 <div class="col-md-12 col-sm-12">
                     <div class="form-group">
                         <label for="content" class="col-lg-2 col-form-label">Description: </label>
-                        <textarea class="form-control summernote-editor" rows="5" required="required" name="content" cols="50" id="content" v-model="ticketData.content" :class="{'is-invalid' : ticketData.errors.has('content') }"></textarea>
+                        <wysiwyg rows="5" required="required" name="content" id="content" v-model="ticketData.content" :class="{'is-invalid' : ticketData.errors.has('content') }"></wysiwyg>
                         <small class="form-text text-muted">Describe your issue here in details</small>        
                     </div>
                 </div>

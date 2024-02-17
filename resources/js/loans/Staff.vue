@@ -26,7 +26,7 @@
                         <thead>
                             <tr>
                                 <th scope="col">Customer </th>
-                                <th scope="col">Loan Name/ID </th>
+                                <th scope="col">Purpose/ GLC ID </th>
                                 <th scope="col">Loan Account Number</th>
                                 <th scope="col">Loan Account Officer</th>
                                 <th scope="col">Loan Type</th>
@@ -43,7 +43,8 @@
                                 <th>{{ loan.user | FullName }}</th>
                                 <td>{{ loan.name }} <br /><span class="text-muted">{{ loan.unique_id }}</span></td>
                                 <td>{{ loan.bank ? loan.bank.bank_name : '' }} <br /> {{ loan.acct_name }} ({{ loan.acct_number }})</td>
-                                <td>{{ loan.account_officer | FullName }} </td>
+                                <td v-if="loan.account_officer != null">{{ loan.account_officer.staff | FullName }} </td>
+                                <td v-else>Not Yet Assigned</td>
                                 <td>{{ loan.type ? loan.type.name : 'Old Type' }}</td>
                                 <td>{{ loan.amount | currency }}</td>
                                 <td>{{ loan.total_paid | currency }} / {{ loan.payable | currency }}</td>
@@ -56,15 +57,15 @@
                                     <div class="dropdown-menu">
                                         <router-link class="btn btn-block dropdown-item" :to="'/staff/loans/' + loan.id"><i class="fa fa-eye mr-1 text-primary"></i> View </router-link>
                                         <button class="btn btn-block dropdown-item" @click="assignLoan(loan)"><i class="fa fa-user-cog mr-1 text-success"></i> Assign Loan</button>
-                                        <button class="btn btn-block dropdown-item" @click="closeLoan(loan.id)"><i class="fa fa-times mr-1 text-danger"></i> Close Loan</button>
-                                        <button class="btn btn-block dropdown-item" @click="deleteLoan(loan.id)"><i class="fa fa-trash mr-1 text-danger"></i> Delete Loan Request</button>
+                                        <button v-if="loan.status>=14" class="btn btn-block dropdown-item" @click="closeLoan(loan.id)"><i class="fa fa-times mr-1 text-danger"></i> Liquidate Loan</button>
+                                        <button  v-if="loan.status < 14" class="btn btn-block dropdown-item" @click="deleteLoan(loan.id)"><i class="fa fa-trash mr-1 text-danger"></i> Cancel Loan Request</button>
                                     </div>
                                 </td>
                             </tr>
                         </tbody>
                         <tbody v-else>
                             <tr>
-                                <td colspan="9">There are no loan request currently, kindly create one<br />
+                                <td colspan="10">There are no loan request currently, kindly create one<br />
                                 </td>
                             </tr>
                         </tbody>

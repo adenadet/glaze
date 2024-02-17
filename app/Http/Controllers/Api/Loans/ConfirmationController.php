@@ -48,6 +48,7 @@ class ConfirmationController extends Controller
         $loan = Account::where('id', '=', $id)->first();
         $loan_type = Type::where('id', '=', $loan->type_id)->first();
         $acts = $loan->status + 1;
+        
         $actions = ConfirmationMatrixItem::where('stage_number', '<=', $acts)->where('stage_number', '!=', $loan->status)->where('matrix_id', '=', $loan_type->matrix_id)->with(['role'])->orderBy('stage_number', 'DESC')->get();
         $current = ConfirmationMatrixItem::where('stage_number', '=', $loan->status)->where('matrix_id', '=', $loan_type->matrix_id)->with(['role'])->first();
 
