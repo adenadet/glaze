@@ -1,10 +1,27 @@
 <template>
 <div class="container-fluid">
     <div class="row clearfix">
+        <div class="modal fade" id="departmentModal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" v-show="editMode">Edit Department: {{department.name}}</h4>
+                        <h4 class="modal-title" v-show="!editMode">New Department</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body p-0">
+                        <DepartmentForm :editMode="editMode"/>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Departments</h3>
+                    <div class="card-tools">
+                        <button class="btn btn-primary btn-sm" @click="addDepartment()"><i class="fa fa-plus mr-1"></i>Add New</button>
+                    </div>
                 </div>
                 <div class="body">
                     <div class="table-responsive">
@@ -23,16 +40,18 @@
                             <tbody>
                                 <tr v-for="department in departments.data" :key="department.id">
                                     <td>{{department.name}}</td>
-                                    <td>{{department.hod | FullName}}</td>
+                                    <td v-if="department.hod != null">{{department.hod | FullName}}</td>
+                                    <td v-else>No HOD Attached</td>
                                     <td>{{department.email}}</td>
                                     <td>{{department.ext}}</td>
-                                    <td>{{department.users.length}}</td>
+                                    <td>{{department.staffs.length}}</td>
                                     <td :title="department.description">{{department.description | readMore(25, '...')}}</td>
                                     <td>
                                         <button type="button" class="btn btn-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
                                         <div class="dropdown-menu">
                                             <router-link class="btn btn-block dropdown-item" :to="'/admin/departments/'+department.id"><i class="fa fa-eye mr-1 text-primary"></i> View </router-link>
-                                            <button class="btn btn-block dropdown-item" @click="deleteDepartment(1)"><i class="fa fa-trash mr-1 text-danger"></i> Delete </button>
+                                            <button class="btn btn-block dropdown-item" @click="editDepartment(department)"><i class="fa fa-edit mr-1"></i> Edit </button>
+                                            <button class="btn btn-block dropdown-item" @click="deleteDepartment(department.id)"><i class="fa fa-trash mr-1 text-danger"></i> Delete </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -56,9 +75,27 @@ export default {
     data(){
         return {
             departments: {},
+            department: {},
+            editMode: false,
         }
     },
     methods:{
+        addDepartment(){
+            this.$Progress.start();
+            this.editMode = false;
+            Fire.$emit('DepartmentDataFill', {});
+            $('#departmentModal').modal('show');
+            this.$Progress.finish();
+        },
+        deleteDepartment(){},
+        editDepartment(department){
+            this.$Progress.start();
+            this.editMode = true;
+            this.department = department;
+            Fire.$emit('DepartmentDataFill', department);
+            $('#departmentModal').modal('show');
+            this.$Progress.finish();
+        },
         getAllInitials(){
             this.$Progress.start();
             axios.get('/api/ums/departments').then(response =>{

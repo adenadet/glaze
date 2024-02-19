@@ -127,27 +127,27 @@
                 <input type="date" class="form-control" id="joined_at" name="joined_at" placeholder="Enter Email Address *" required v-model="StaffData.joined_at" :class="{'is-invalid' : StaffData.errors.has('joined_at') }">
             </div>
         </div>
-        <div class="col-md-6 col-sm-12">
+        <div class="col-md-4 col-sm-12">
             <div class="form-group">
                 <label>Staff ID</label>
                 <input type="text" class="form-control" id="unique_id" name="unique_id" required v-model="StaffData.unique_id" :class="{'is-invalid' : StaffData.errors.has('unique_id') }">
             </div>
         </div>
-        <div class="col-md-3" v-show="editMode">
+        <div class="col-md-4" v-show="editMode">
             <label>Profile Pic</label><br />
-            <div class="user-block"><img class="img-circle" :src=" user.user | profilePicture" /></div>
+            <div class="user-block"><img class="img-circle" :src="user.user | profilePicture" /></div>
         </div>
-        <div class="col-md-3" v-show="editMode">
+        <div class="col-md-4" v-show="editMode">
             <label>Change Profile Pic</label>
             <input type="file" class="form-control" placeholder="Birth Date" @change="updateProfilePic">
         </div>
-        <div class="col-md-3 col-sm-12" v-show="!editMode">
+        <div class="col-md-4 col-sm-12" v-show="!editMode">
             <label>Profile Pic</label>
             <div class="form-group">
                 <input type="file" class="form-control" placeholder="Birth Date" @change="updateProfilePic">
             </div>
         </div>
-        <div class="col-md-6 col-sm-12">
+        <div class="col-md-4 col-sm-12">
             <div class="form-group">
                 <label>Password</label>
                 <input type="password" class="form-control" id="password" name="password" required v-model="StaffData.password" :class="{'is-invalid' : StaffData.errors.has('password') }">

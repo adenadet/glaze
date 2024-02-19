@@ -16,19 +16,19 @@ Route::group(['prefix'=>'ums'], function () {
     Route::get('/users/search', 'UserController@search')->name('users.search');
 
     Route::apiResources([
-        '/addresses'    => 'CustomerAddressController',
-        '/address_verifications' => 'AddressVerificationController',
-        '/bvn_verifications' => 'ConfirmationController',
-        '/branches'     => 'BranchController',
-        '/bios'         => 'BioController',
-        '/customers'    => 'CustomerController',
-        '/departments'  => 'DepartmentController',
-        '/profile'      => 'ProfileController',
-        '/nok'          => 'NOKController',
-        '/roles'        => 'RoleController',
-        '/socials'      => 'SocialController',
-        '/staffs'       => 'StaffController',
-        '/users'        => 'UserController',
-        '/user_kyc'     => 'KYCController',
+        '/addresses'                => 'CustomerAddressController',
+        '/address_verifications'    => 'AddressVerificationController',
+        '/bvn_verifications'        => 'ConfirmationController',
+        '/branches'                 => 'BranchController',
+        '/bios'                     => 'BioController',
+        '/customers'                => 'CustomerController',
+        '/departments'              => 'DepartmentController',
+        '/nok'                      => 'NOKController',
+        '/profile'                  => 'ProfileController',
+        '/roles'                    => 'RoleController',
+        '/socials'                  => 'SocialController',
+        '/staffs'                   => 'StaffController',
+        '/users'                    => 'UserController',
+        '/user_kyc'                 => 'KYCController',
     ]);
 });

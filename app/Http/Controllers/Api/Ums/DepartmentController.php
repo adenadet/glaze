@@ -3,18 +3,21 @@
 namespace App\Http\Controllers\Api\Ums;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\ConfigTrait;
 use Illuminate\Http\Request;
 
 use App\Models\Department;
+use App\Models\Ums\Staff;
 use App\Models\User;
 
 class DepartmentController extends Controller
 {
+    use ConfigTrait;
+
     public function index()
     {
         return response()->json([
-            'departments' => Department::with('users')->with('hod')->orderBy('name', 'ASC')->paginate(10),       
-            'users'       => User::orderBy('first_name', 'ASC')->get(),       
+            'departments' => $this->initial_departments(),          
         ]);        
     }
 
@@ -29,16 +32,14 @@ class DepartmentController extends Controller
         ]);
 
         return response()->json([
-            'departments' => Department::with('users')->with('hod')->orderBy('name', 'ASC')->paginate(10),       
-            'users'       => User::orderBy('first_name', 'ASC')->get(),       
+            'departments' => $this->initial_departments(),           
         ]);
     }
 
     public function show($id)
     {
         return response()->json([
-            'department' => Department::where('id', '=', $id)->with('users')->with('hod')->orderBy('name', 'ASC')->first(),       
-            'users'       => User::all(),       
+            'department' => Department::where('id', '=', $id)->with('users')->with('hod')->orderBy('name', 'ASC')->first(),           
         ]);
     }
 
@@ -55,14 +56,13 @@ class DepartmentController extends Controller
         $department->save();
 
         return response()->json([
-            'departments' => Department::with('users')->with('hod')->orderBy('name', 'ASC')->paginate(10),       
-            'users'       => User::orderBy('first_name', 'ASC')->get(),       
+            'departments' => $this->initial_departments(),          
         ]);
     }
 
     public function destroy($id)
     {
-        $users = User::where('department_id', '=', $id)->get();
+        $users = Staff::where('department_id', '=', $id)->get();
         if ((count($users) != 0) && (!is_null($users))){
             foreach ($users as $user){
                 $user->department_id = null;
@@ -75,8 +75,7 @@ class DepartmentController extends Controller
         $department->save();
 
         return response()->json([
-            'departments' => Department::with('users')->with('hod')->orderBy('name', 'ASC')->paginate(10),       
-            'users'       => User::orderBy('first_name', 'ASC')->get(),       
+            'departments' => $this->initial_departments(),            
         ]); 
     }
 }

@@ -59,10 +59,12 @@
                                 </div>
                                 <div class="card-footer">
                                     <div class="text-right">
-                                        <router-link class="btn btn-sm btn-default" :to="'/admin/staffs/'+user.id" title="View Staff"><i class="fa fa-eye"></i></router-link>
-                                        <button class="btn btn-sm btn-success" @click="setUserRole(user.user)" title="Set Staff Role"><i class="fa fa-user-cog"></i></button>
-                                        <button class="btn btn-sm btn-primary" @click="editUser(user)" title="Edit Staff"><i class="fa fa-edit"></i></button>
-                                        <button class="btn btn-sm btn-danger" @click="deleteUser(user.id)" title="Delete Staff"><i class="fa fa-trash"></i></button>
+                                        <div class="btn-group">
+                                            <router-link class="btn btn-sm btn-default" :to="'/admin/staffs/'+user.id" title="View Staff"><i class="fa fa-eye"></i></router-link>
+                                            <button class="btn btn-sm btn-success" @click="setUserRole(user.user)" title="Set Staff Role"><i class="fa fa-user-cog"></i></button>
+                                            <button class="btn btn-sm btn-primary" @click="editUser(user)" title="Edit Staff"><i class="fa fa-edit"></i></button>
+                                            <button class="btn btn-sm btn-danger" @click="deleteUser(user.id)" title="Delete Staff"><i class="fa fa-trash"></i></button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

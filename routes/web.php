@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -53,25 +54,25 @@ Route::group(['prefix' => '/staff', 'middleware' => ['auth', 'role:Staff'],'name
     Route::get('/loans/{any}',                      'StaffController@loans')->where('any', '.*')->name('staff.loans.others');
 
         
-    Route::get('/tickets',                          'StaffController@tickets')->name('tickets');
-    Route::get('/tickets/{any}',                    'StaffController@tickets')->where('any', '.*')->name('tickets.others');
+    Route::get('/tickets',                          'StaffController@tickets')->name('staff.tickets');
+    Route::get('/tickets/{any}',                    'StaffController@tickets')->where('any', '.*')->name('staff.tickets.others');
 
 });
 
 Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'role:Admin'],'namespace' => 'App\Http\Controllers',],function(){
 
     Route::get('/branches',                         'AdminController@branches')->name('admin.branches');
-    Route::get('/branches/{any}',                   'AdminController@branches')->where('any', '.*')->name('branches.others');
+    Route::get('/branches/{any}',                   'AdminController@branches')->where('any', '.*')->name('admin.branches.others');
  
-    Route::get('/cpm_modules',                      'AdminController@cpm_modules')->name('cpm_modules');
-    Route::get('/cpm_modules/{any}',                'AdminController@cpm_modules')->where('any', '.*')->name('cpm_modules');
+    Route::get('/cpm_modules',                      'AdminController@cpm_modules')->name('admin.cpm_modules');
+    Route::get('/cpm_modules/{any}',                'AdminController@cpm_modules')->where('any', '.*')->name('admin.cpm_modules.others');
 
  
     Route::get('/departments',                      'AdminController@departments')->name('admin.departments');
-    Route::get('/departments/{any}',                'AdminController@departments')->where('any', '.*')->name('departments.others');
+    Route::get('/departments/{any}',                'AdminController@departments')->where('any', '.*')->name('admin.departments.others');
     
-    Route::get('/settings',                         'AdminController@settings')->name('settings');
-    Route::get('/settings/{any}',                   'AdminController@settings')->where('any', '.*')->name('settings.others');
+    Route::get('/settings',                         'AdminController@settings')->name('admin.settings');
+    Route::get('/settings/{any}',                   'AdminController@settings')->where('any', '.*')->name('admin.settings.others');
 
     Route::get('/dashboard',                        'AdminController@dashboard')->name('admin.dashboard');
 
@@ -85,8 +86,8 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'role:Admin'],'name
     Route::get('/staffs/{any}',                     'AdminController@staffs')->where('any', '.*')->name('admin.staffs.others');
 
         
-    Route::get('/tickets',                          'AdminController@tickets')->name('tickets');
-    Route::get('/tickets/{any}',                    'AdminController@tickets')->where('any', '.*')->name('tickets.others');
+    Route::get('/tickets',                          'AdminController@tickets')->name('admin.tickets');
+    Route::get('/tickets/{any}',                    'AdminController@tickets')->where('any', '.*')->name('admin.tickets.others');
 
     Route::get('/users',                            'AdminController@users')->name('admin.users');
     Route::get('/users/{any}',                      'AdminController@users')->where('any', '.*')->name('admin.users.others');
@@ -95,4 +96,13 @@ Route::group(['prefix' => '/admin', 'middleware' => ['auth', 'role:Admin'],'name
 Route::group(['prefix' => '/requests', 'namespace' => 'App\Http\Controllers',],function(){
     Route::get('/guarantors/{id}/confirm',          'GuarantorController@show')->name('requests.guarantors');
     Route::get('/guarantors/{any}',                 'GuarantorController@settings')->where('any', '.*')->name('settings.others');
+});
+
+
+Route::get('/clear-cache', function() {
+    //$exitCode = Artisan::call('cache:clear');
+    $exitCode = Artisan::call('config:cache');
+    $exitCode = Artisan::call('route:cache');
+    $exitCode = Artisan::call('cache:clear');    
+    return "All done boss, anything else";
 });
