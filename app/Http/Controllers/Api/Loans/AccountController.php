@@ -25,7 +25,12 @@ use App\Models\State;
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 
+use App\Http\Traits\GeminiTrait;
+
 class AccountController extends Controller{
+
+    use GeminiTrait;
+
     public function credit_scores($id)
     {
         
@@ -42,8 +47,11 @@ class AccountController extends Controller{
 
     public function initials()
     {
+        $all_banks = $this->get_banks();
+        
+
         return response()->json([
-            'all_banks' => AllBank::select('id', 'bank_name')->orderBy('bank_name', 'ASC')->get(),
+            'all_banks' => $all_banks,
             'accounts' => Account::where('user_id', auth('api')->id())->with(['repayments', 'guarantor_requests', 'guarantors'])->get(),
             'user'=> User::where('id', '=', auth('api')->id())->with(['customer_address', 'customer_accounts', 'next_of_kin'])->first(),
             'current_loan' => Account::where('user_id', auth('api')->id())->where('status', '<', 5)->with(['guarantor_requests', 'guarantors', 'repayments'])->first(),

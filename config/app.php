@@ -32,6 +32,8 @@ return [
     'first_central_user_test' => "demo",
     'first_central_password_test' => "demo@123",
 
+    'gemini_url' => 'https://glazecredit.geminiapp.net/service/Request.svc/api',
+
     'periculum_url' => 'https://insightsb2b.auth-periculum.com',
     'periculum_user' => 'insights-glazecredit-api',
     'periculum_client_secret' => 'anewSQqfl9X1eMda4OUVGUHeqbm7bQ2X',
@@ -107,7 +109,7 @@ return [
         'Mail' => Illuminate\Support\Facades\Mail::class,
         'Notification' => Illuminate\Support\Facades\Notification::class,
         'Password' => Illuminate\Support\Facades\Password::class,
-        'PDF' => Barryvdh\DomPDF\Facade::class,
+        //'PDF' => Barryvdh\DomPDF\Facade::class,
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
         'Queue' => Illuminate\Support\Facades\Queue::class,
         'RateLimiter' => Illuminate\Support\Facades\RateLimiter::class,

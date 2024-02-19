@@ -47,7 +47,7 @@
                             <label>Bank</label>
                             <select class="form-control" id="bank_id" name="bank_id" placeholder="Name *" v-model="loanData.bank_id" required>
                                 <option value=''>--Select Bank To Pay To--</option>
-                                <option v-for="bank in banks" :value="bank.id">{{ bank.bank_name }}</option>
+                                <option v-for="bank in banks" :value="bank.code == null ? bank.BankCode : bank.bank_code">{{ bank.bank_name == null ? bank.BankName : bank.bank_code }}</option>
                             </select>
                         </div>
                     </div>
@@ -228,9 +228,7 @@
         },
         props: {
             editMode: Boolean,
-            //user: Object,
-            //banks: Array,
-            //loan_types: Array, 
+
         },
     }
 </script>
