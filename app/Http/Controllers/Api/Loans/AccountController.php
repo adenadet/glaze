@@ -47,15 +47,12 @@ class AccountController extends Controller{
 
     public function initials()
     {
-        $all_banks = $this->get_banks();
-        
-
         return response()->json([
-            'all_banks' => $all_banks,
+            'all_banks' =>  $this->get_gemini_banks(),
             'accounts' => Account::where('user_id', auth('api')->id())->with(['repayments', 'guarantor_requests', 'guarantors'])->get(),
             'user'=> User::where('id', '=', auth('api')->id())->with(['customer_address', 'customer_accounts', 'next_of_kin'])->first(),
             'current_loan' => Account::where('user_id', auth('api')->id())->where('status', '<', 5)->with(['guarantor_requests', 'guarantors', 'repayments'])->first(),
-            'loan_types' => Type::where('status', '1')->with('requirements')->get(),
+            'loan_types' => $this->get_gemini_loan_products(),
         ]);
     }
 
@@ -84,7 +81,7 @@ class AccountController extends Controller{
             'acct_number' => 'required|numeric',
         ]);
 
-        $loan_type = Type::where('id', '=', $request['loan_type_id'])->with('requirements')->first();
+        $loan_type = Type::where('ProductCode', '=', $request['loan_type_id'])->with('requirements')->first();
 
         $admin_interest = 0;
         for ($i = 0; $i < count($loan_type->requirements); $i++){
@@ -101,6 +98,8 @@ class AccountController extends Controller{
         
         $emiMonthly =  ($principal  * $x * $interest) / ($x-1);
         
+        $bank = Bank::where('bank_code', '=', $request->input('bank_id'))->first();
+
         $loan = Account::create([
             'type_id' => $request['loan_type_id'],
             'user_id' => $request->input('user_id') ?? auth('api')->id(),
@@ -111,7 +110,7 @@ class AccountController extends Controller{
             'duration' => $request->input('duration'),
             'frequency' => $request->input('frequency'),
             'name' => $request->input('name') ?? 'Loan',
-            'bank_id' => $request->input('bank_id'),
+            'bank_id' => $bank->id,
             'acct_name' => $request->input('acct_name'),
             'acct_number' => $request->input('acct_number'),
             'total_paid' => 0,

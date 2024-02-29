@@ -10,7 +10,7 @@
                             <label>Loan Type</label>
                             <select type="text" class="form-control" id="name" name="name" placeholder="Name *" v-model="loanData.loan_type_id" required>
                                 <option value=''>---Select Loan Type---</option>
-                                <option v-for="loan_type in loan_types" :value="loan_type.id">{{ loan_type.name }}</option>
+                                <option v-for="(loan_type, index) in loan_types" :value="loan_type.ProductCode" :key="index">{{ loan_type.ProductName }}</option>
                             </select>
                         </div>
                     </div>
@@ -47,7 +47,7 @@
                             <label>Bank</label>
                             <select class="form-control" id="bank_id" name="bank_id" placeholder="Name *" v-model="loanData.bank_id" required>
                                 <option value=''>--Select Bank To Pay To--</option>
-                                <option v-for="bank in banks" :value="bank.code == null ? bank.BankCode : bank.bank_code">{{ bank.bank_name == null ? bank.BankName : bank.bank_code }}</option>
+                                <option v-for="(bank, index) in banks" :value="bank.code == null ? bank.BankCode : bank.bank_code" :key="index">{{ bank.bank_name == null ? bank.BankName : bank.bank_code }}</option>
                             </select>
                         </div>
                     </div>
@@ -79,7 +79,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(n, index) in loanData.duration">
+                <tr v-for="(n, index) in loanData.duration" :key="index">
                     <td>{{ index | addOne }}.</td>
                     <td>{{ emi.toFixed(2) | currency}}</td>
                     <td>{{ totalPayment.toFixed(2) - ((index)*emi.toFixed(2)) | currency}}</td>
@@ -95,38 +95,35 @@
         computed:{
             adminInterestRate(){
                 let getIndex = this.loan_types.map(object => object.id).indexOf(this.loanData.loan_type_id);
-                let interest = 0;
+                console.log(getIndex);
+                let interest = 36;
                 
-                for (let i = 0; i < this.loan_types[getIndex].requirements.length; i++){
-                    if (this.loan_types[getIndex].requirements[i].type == 'interest'){
-                        interest = interest + this.loan_types[getIndex].requirements[i].rate;
-                    }
+                /*if(this.loan_types[getIndex].requirements == null || this.loan_types[getIndex].requirements == 0){
+                    interest = 60;
                 }
+                else{
+                    for (let i = 0; i < this.loan_types[getIndex].requirements.length; i++){
+                        if (this.loan_types[getIndex].requirements[i].type == 'interest'){
+                            interest = interest + this.loan_types[getIndex].requirements[i].rate;
+                        }
+                    }
+                }*/
                 return (1 + (interest/100));
             },
             interestRate(){
-                let getIndex = this.loan_types.map(object => object.id).indexOf(this.loanData.loan_type_id);
-                let interest = this.loanData.frequency == "weeks" ? this.loan_types[getIndex].percentage / 52 / 100 : this.loan_types[getIndex].percentage / 12 / 100;
+                //let getIndex = this.loan_types.map(object => object.id).indexOf(this.loanData.loan_type_id);
+                //let interest = this.loanData.frequency == "weeks" ? this.loan_types[getIndex].percentage / 52 / 100 : this.loan_types[getIndex].percentage / 12 / 100;
+                let interest = (this.loanData.frequency == "weeks") ? (60 / 52 / 100) : (60 / 12 / 100);
                 return Number(interest);
             },
-
-            tenureMonths(){
-                return Number(this.loanData.duration);
-            },
-
+            tenureMonths(){return Number(this.loanData.duration);},
             emi(){
                 var x = Math.pow(1 + this.interestRate, this.tenureMonths);
                 var emiMonthly =  ((this.loanData.amount * this.adminInterestRate)  * x * this.interestRate) / (x-1);
                 return Number(emiMonthly);
             },
-
-            totalPayment(){
-                return Number(this.emi * this.tenureMonths);
-            },
-
-            totalInterest(){
-                return Number(this.totalPayment - this.loanAmount);
-            },
+            totalPayment(){return Number(this.emi * this.tenureMonths);},
+            totalInterest(){return Number(this.totalPayment - this.loanAmount);},
             
         },
         data(){
@@ -172,39 +169,23 @@
                     });
                 });
             },
-            getBanks(){
-                axios.get('/api/servers/gemini/getBanks')
-                .then(response => {
-                    this.banks = response.data.banks
-                })
-            },
             getInitials(){
                 axios.get('/api/loans/accounts/initials').then(response =>{
                     this.banks = response.data.all_banks;
                     this.loan_types = response.data.loan_types;
-                    this.users = response.data.users;
                 })
                 .catch(()=>{
-                    toast.fire({
-                        icon: 'error',
-                        title: 'Loan Form Initialization failed',
-                    })
+                    toast.fire({icon: 'error', title: 'Loan Form Initialization failed',})
                 });
             },
             updateLoan(id){
                 this.loanData.put('/api/loans/accounts/'+this.loanData.id)
                 .then(response=>{
-                    Swal.fire({
-                        icon: 'success',
-                        title: response.data.message,
-                    });
+                    Swal.fire({icon: 'success', title: response.data.message,});
                 })
                 .catch(()=>{
                     this.$Progress.fail();
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Your form was not sent try again later!',
-                    });
+                    Swal.fire({icon: 'error', title: 'Your form was not sent try again later!',});
                 });
             }, 
         },
