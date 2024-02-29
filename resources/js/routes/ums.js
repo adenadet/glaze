@@ -9,13 +9,15 @@ import UserStaffs               from '../users/Staffs.vue';
 
     import UserDetailAddress    from '../users/details/Address.vue';
     import UserDetailBasic      from '../users/details/Basic.vue';
+    import UserDetailEmployment from '../users/details/Employment.vue';
     import UserDetailKYC        from '../users/details/KYC.vue';
     import UserDetailNOK        from '../users/details/NOK.vue';
     import UserDetailSocial     from '../users/details/Social.vue';
-
+    
     import UserFormAddress      from '../users/forms/Address.vue';    
     import UserFormAssignRole   from '../users/forms/AssignRole.vue';    
     import UserFormBasic        from '../users/forms/Basic.vue'; 
+    import UserFormEmployment   from '../users/forms/Employment.vue'; 
     import UserFormKYC          from '../users/forms/KYC.vue';
     import UserFormNOK          from '../users/forms/NextOfKin.vue'; 
     import UserFormRole         from '../users/forms/Role.vue';    
@@ -29,6 +31,7 @@ Vue.component('UserStaffs',             UserStaffs);
 
     Vue.component('UserDetailAddress',  UserDetailAddress);
     Vue.component('UserDetailBasic',    UserDetailBasic);
+    Vue.component('UserDetailEmployment',    UserDetailEmployment);
     Vue.component('UserDetailKYC',      UserDetailKYC);
     Vue.component('UserDetailNOK',      UserDetailNOK);
     Vue.component('UserDetailSocial',   UserDetailSocial);
@@ -36,6 +39,7 @@ Vue.component('UserStaffs',             UserStaffs);
     Vue.component('UserFormAddress',    UserFormAddress);
     Vue.component('UserFormAssignRole', UserFormAssignRole);
     Vue.component('UserFormBasic',      UserFormBasic);
+    Vue.component('UserFormEmployment', UserFormEmployment);
     Vue.component('UserFormKYC',        UserFormKYC);
     Vue.component('UserFormNOK',        UserFormNOK);
     Vue.component('UserFormRole',       UserFormRole);

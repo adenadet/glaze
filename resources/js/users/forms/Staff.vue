@@ -193,7 +193,6 @@ export default {
     },
     mounted() {
         Fire.$on('StaffDataFill', user =>{
-            this.user = user;
             this.StaffData.alt_phone = user.alt_phone; 
             this.StaffData.area_id = user.area_id; 
             this.StaffData.branch_id = user.branch_id; 

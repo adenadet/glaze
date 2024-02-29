@@ -17,7 +17,7 @@
                                 <label>Head of Department</label>
                                 <select class="form-control" id="_id" name="_id" v-model="departmentData.hod_id" required>
                                     <option value="">--Select Head of Department--</option>
-                                    <option v-for="user in users" :key="user.id" :value="user.id">{{user.unique_id+' | '+user.first_name+' '+user.last_name}}</option>
+                                    <option v-for="user in staffs" :key="user.id" :value="user.id">{{user.unique_id+' | '+user.user.first_name+' '+user.user.last_name}}</option>
                                 </select>
                             </div>
                         </div>
@@ -59,11 +59,12 @@ export default {
                 description:'', 
                 hod_id:'',
             }),
+            staffs: [],
         }
     },
     mounted() {
+        this.getAllInitials();
         Fire.$on('DepartmentDataFill', department =>{
-            console.log('Working');
             this.departmentData.id = department.id;
             this.departmentData.name = department.name;
             this.departmentData.description = department.description;
@@ -83,7 +84,7 @@ export default {
                 Fire.$emit('DepartmentRefresh', response);
                 Swal.fire({
                     icon: 'success',
-                    title: 'The Department'+ this.DepartmentData.name+' has been created',
+                    title: 'The Department'+ this.departmentData.name+' has been created',
                     showConfirmButton: false,
                     timer: 1500
                 });
@@ -99,6 +100,17 @@ export default {
             });
             this.$Progress.finish();
             this.departmentData.clear();
+        },
+        getAllInitials(){
+            axios.get('/api/ums/departments/initials').then(response =>{
+                this.staffs = response.data.staffs;
+            })
+            .catch(()=>{
+                toast.fire({
+                    icon: 'error',
+                    title: 'Department Form was not loaded successfully',
+                })
+            });
         },
         updateDepartment(){
             this.$Progress.start();
@@ -125,6 +137,6 @@ export default {
             });            
         },
     },
-    props:{department: Object, editMode: Boolean, users: Array,}
+    props:{editMode: Boolean,}
 }
 </script>

@@ -11,75 +11,75 @@ use Illuminate\Support\Facades\Http;
 trait GeminiTrait{
 
     public function create_customer($customer, $user){
-        $feedback = Http::post(config('app.gemini_url').'/updateCustomer', [
-            "Address" => ($user->customer_address ? $user->customer_address->street.', ' : ''). (($user->customer_address && !(is_null($user->customer_address->street2))) ? $user->customer_address->street2.', ': '').($user->customer_address ?  $user->customer_address->city.', ' : '').($user->customer_address && $user->customer_address->state_id && $user->customer_address->state != null? $user->customer_address->state->name: ''), 
-            "BirthDate" => $user->dob,
-            "City" => $user->customer_address,
-            "CountryCode" => $customer->employment->income,
+        $feedback = Http::withToken('yP5lnti7wDChJxwmBYz7dpbgbzGqQRG1dyvAZihesrA=')->post(config('app.gemini_url').'/updateCustomer', [
+            "Address" => ($user->customer_address ? $user->customer_address->street.', ' : ''). (($user->customer_address && !(is_null($user->customer_address->street2))) ? $user->customer_address->street2.', ': '').($user->customer_address ?  $user->customer_address->city.', ' : '').($user->customer_address && $user->customer_address->state_id && $user->customer_address->state != null? $user->customer_address->state->name: '') ?? "", 
+            "BirthDate" => $user->dob ?? "",
+            "City" => $user->customer_address->city ?? "",
+            "CountryCode" => $customer->employment->income ?? "",
             "CustomerID" => "0",
             "Email" => $user->email,
             "Employer" => (object)[
-                "Address" => $customer->employment->address,
-                "City" => $customer->employment->city,
-                "EducationLevel" => $customer->employment->education_level,
-                "Email" => $customer->employment->email,
-                "EmployedDate" => $customer->employment->joined_at,
-                "EmployerName" => $customer->employment->name,
-                "EmploymentStatus" => $customer->employment->type,
+                "Address" => $customer->employment->address ?? "",
+                "City" => $customer->employment->city ?? "",
+                "EducationLevel" => $customer->employment->education_level ?? "",
+                "Email" => $customer->employment->email ?? "",
+                "EmployedDate" => $customer->employment->joined_at ?? "",
+                "EmployerName" => $customer->employment->name ?? "",
+                "EmploymentStatus" => $customer->employment->type ?? "",
                 "LGACode" => 32767,
-                "Landmark" => $customer->employment->landmark,
-                "MonthlyIncome" => $customer->employment->income,
-                "PayDay" => $customer->employment->pay_day,
-                "PensionNo" => $customer->employment->pension_id,
-                "SectorCode" => $customer->employment->sector_code,
-                "StaffID" => $customer->employment->staff_id,
-                "StateCode" => $customer->employment->state_code,
-                "TaxNo" => $customer->employment->tax_id,
-                "TelephoneNo" => $customer->employment->phone_number
+                "Landmark" => $customer->employment->landmark ?? "",
+                "MonthlyIncome" => $customer->employment->income ?? "",
+                "PayDay" => $customer->employment->pay_day ?? "",
+                "PensionNo" => $customer->employment->pension_id ?? "",
+                "SectorCode" => $customer->employment->sector_code ?? "",
+                "StaffID" => $customer->employment->staff_id ?? "",
+                "StateCode" => $customer->employment->state_code ?? "",
+                "TaxNo" => $customer->employment->tax_id ?? "",
+                "TelephoneNo" => $customer->employment->phone_number ?? ""
             ],
             "FirstName" => $user->first_name,
             "Gender" =>  $user->sex,
             "Identification" => (object)[
-                "ExpiryDate" => "String content",
-                "Identification" => "String content",
-                "IdentificationNo" => "String content",
-                "IssuedDate" => "String content",
-                "OtherIdentification" => "String content"
+                "ExpiryDate" => "",
+                "Identification" => "",
+                "IdentificationNo" => "",
+                "IssuedDate" => "",
+                "OtherIdentification" => ""
             ],
             "Info" => (object)[
-                "AccountNo" => "String content",
-                "BVNo" => "String content",
-                "BankCode" => "String content",
-                "ChildrenCount" => "String content",
-                "HouseholdCount" => "String content",
-                "LoanRepayment" => "String content",
-                "ResidentialStatus" => "String content"
+                "AccountNo" => "",
+                "BVNo" => $user->bvn,
+                "BankCode" => "",
+                "ChildrenCount" => "",
+                "HouseholdCount" => "",
+                "LoanRepayment" => "",
+                "ResidentialStatus" => ""
             ],
             "Kin" => (object)[
-                "Address" => $user->next_of_kin->address,
+                "Address" => $user->next_of_kin->address ?? "",
                 "City" => '',
-                "Email" => $user->next_of_kin->email,
-                "EmployerName" => "",
-                "KinName" => $user->next_of_kin->name,
-                "LGACode" => "",
+                "Email" => $user->next_of_kin->email ?? "",
+                "EmployerName" => "" ?? "",
+                "KinName" => $user->next_of_kin->name ?? "",
+                "LGACode" => "" ,
                 "Landmark" => "",
-                "PhoneNo" => $user->next_of_kin->phone,
-                "Relationship" => $user->next_of_kin->relationship,
+                "PhoneNo" => $user->next_of_kin->phone  ?? "",
+                "Relationship" => $user->next_of_kin->relationship ?? "",
                 "StateCode" => "",
                 "TitleKey" => ""
             ],
-            "LGACode" => "String content",
-            "Landmark" => "String content",
+            "LGACode" => "",
+            "Landmark" => "",
             "LastName" => $user->last_name,
-            "MaidenName" => "String content",
-            "MaritalStatus" => $user->marital_status,
+            "MaidenName" => "",
+            "MaritalStatus" => "",
             "MiddleName" => $user->other_name,
-            "PhoneNo" => $user->phone,
-            "ReferralCode" => "String content",
-            "StateCode" => "String content",
-            "Title" => "String content"
+            "PhoneNo" => $user->phone ?? "",
+            "ReferralCode" => "",
+            "StateCode" => "",
+            "Title" => ""
 
-        ])->withToken('yP5lnti7wDChJxwmBYz7dpbgbzGqQRG1dyvAZihesrA=');
+        ]);
     }
 
     public function create_loan_request(){}
@@ -147,7 +147,7 @@ trait GeminiTrait{
 
     public function get_customer_loan_requests($id){
         $customer = Customer::where('id', '=', $id)->first();
-        $feedback = Http::get(config('app.gemini_url').'/getloanrequest/'.$customer->gemini_id)->withToken('yP5lnti7wDChJxwmBYz7dpbgbzGqQRG1dyvAZihesrA=');
+        $feedback = Http::withToken(config('app.gemini_strain'))->get(config('app.gemini_url').'/getloanrequest/'.$customer->gemini_id);
         if ($feedback->status() != 200){
             $customer_group = Account::where('user_id', '=', $customer->user_id)->orderBy('created_at', 'ASC')->orderBy('status', 'DESC')->get();
         }
@@ -159,6 +159,18 @@ trait GeminiTrait{
 
     public function get_customer_loan_request($id){
 
+    }
+
+    public function get_employer_sectors(){
+        $feedback = Http::withToken('yP5lnti7wDChJxwmBYz7dpbgbzGqQRG1dyvAZihesrA=')->get(config('app.gemini_url').'/sectors');
+        
+        if($feedback->status() != 200){
+            echo $feedback->status();
+            return Array();
+        }
+        
+        $notes =  json_decode($feedback->body());
+        return $notes->Sectors;
     }
 
     public function get_loan_purpose(){}

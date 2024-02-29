@@ -46,12 +46,12 @@
                     }
                 else{
                 this.$Progress.start();
-                this.pwForm.post('/api/hrms/password')
+                this.pwForm.post('/api/ums/password')
                 .then(response =>{
                     this.$Progress.finish();
                     Swal.fire({
                         icon: response.data.status,
-                        title: 'Oops...',
+                        title: 'Done!',
                         text: response.data.message,
                         footer: 'Please try again later!'
                         });    

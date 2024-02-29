@@ -4,23 +4,6 @@
         <li class="nav-item d-none d-sm-inline-block"><a href="/dashboard" class="nav-link">Customer Area </a></li>
         @if(Auth::user()->hasRole('Staff') || Auth::user()->hasRole('Super Admin'))<li class="nav-item d-none d-sm-inline-block"><a href="{{route('staff.dashboard')}}" class="nav-link">Staff Area</a></li>@endif
         @if(Auth::user()->hasRole('Admin') || Auth::user()->hasRole('Super Admin'))<li class="nav-item d-none d-sm-inline-block"><a href="{{route('admin.dashboard')}}" class="nav-link">Admin Area</a></li>@endif
-        
-        <!--@if(Auth::user()->hasRole('Staff') || Auth::user()->hasRole('Super Admin'))<li class="nav-item d-none d-sm-inline-block"><a class="nav-link" href="/hr" class="nav-link">Human Resources</a></li>@endif
-        @if(Auth::user()->hasRole('Learning') || Auth::user()->hasRole('Super Admin'))<li class="nav-item d-none d-sm-inline-block"><a class="nav-link" href="/learn" class="nav-link">Learning</a></li>@endif
-        <li class="nav-item d-none d-sm-inline-block dropdown">
-            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">More</a>
-            <ul class="dropdown-menu">
-                @if(Auth::user()->hasRole('Payroll') || Auth::user()->hasRole('Super Admin'))<li><a class="dropdown-item" href="/payroll">Payroll</a></li>@endif
-                <li><a class="dropdown-item" href="#">Contact</a></li>
-                <li><a class="dropdown-item" href="#">Operations</a></li>
-                @if(Auth::user()->hasRole('Staff') || Auth::user()->hasRole('Super Admin'))<li><a class="dropdown-item" href="/nursing">Nursing Care</a></li>@endif
-                <li><a class="dropdown-item" href="/employee">Employee</a></li>
-                @if(Auth::user()->hasRole('Staff') || Auth::user()->hasRole('Super Admin'))<li><a class="dropdown-item" href="/hims">HIMS</a></li>@endif
-                @if(Auth::user()->hasRole('Domiciliary Care') || Auth::user()->hasRole('Super Admin'))<li class="nav-item d-none d-sm-inline-block"><a href="/domiciliary" class="nav-link">Domiciliary Care</a></li>@endif
-                @if(Auth::user()->hasRole('Settings') || Auth::user()->hasRole('Super Admin'))<li><a class="dropdown-item"  href="/settings">Settings</a></li>@endif
-            
-            </ul>
-        </li>-->
     </ul>
 
     <form class="form-inline ml-3" @submit.prevent="searchIt">

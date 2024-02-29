@@ -24,7 +24,7 @@ return [
     'faker_locale' => 'en_US',
     'key' => env('APP_KEY'),
     'cipher' => 'AES-256-CBC',
-
+    
     'first_central_url' => "https://online.firstcentralcreditbureau.com/firstcentralrestv2",
     'first_central_user' => "GLAZE-CREDITAPI",
     'first_central_password' => "glazecredit@100&",
@@ -33,6 +33,7 @@ return [
     'first_central_password_test' => "demo@123",
 
     'gemini_url' => 'https://glazecredit.geminiapp.net/service/Request.svc/api',
+    'gemini_strain' => 'yP5lnti7wDChJxwmBYz7dpbgbzGqQRG1dyvAZihesrA=',
 
     'periculum_url' => 'https://insightsb2b.auth-periculum.com',
     'periculum_user' => 'insights-glazecredit-api',

@@ -63,11 +63,10 @@ class StaffController extends Controller
             'department_id' => 'required|numeric',
             'joined_at' => 'sometimes|date',
             'sex' => 'required|string',
-            'dob' => 'required|date',
-            //'unique_id' => 'required|unique:users',
+            'dob' => 'required|date',                                                                                                                                                                                                                               
         ]);
 
-        $user = $this->create_new_user($request);
+        $user = $this->create_new_staff($request);
 
         return $this->initial_staffs();
 

@@ -23,7 +23,7 @@ class Staff extends Structure
     protected $table = 'staffs';
 
     protected $fillable = [
-        'user_id', 'unique_id', 'branch_id', 'image', 'sex', 'street', 'street2', 'city', 'area_id', 'state_id', 'nation_id', 'department_id', 'phone', 'alt_phone', 'dob', 'joined_at', 'email', 'personal_email', 'marital_status',    
+        'user_id', 'unique_id', 'branch_id', 'image', 'sex', 'street', 'street2', 'city', 'area_id', 'state_id', 'nation_id', 'department_id', 'phone', 'alt_phone', 'dob', 'joined_at', 'email', 'personal_email', 'marital_status', 'created_at', 'updated_at', 'deleted_by', 'deleted_at'  
         ];
 
     public function area(){

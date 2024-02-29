@@ -46,7 +46,7 @@
                                             <h2 class="lead"><b>{{user.user | FullName}}</b></h2>
                                         </div>
                                         <div class="col-5 text-center">
-                                            <img style="height: 100px;" :src="(user.user.image) ? '/img/profile/'+user.image : '/img/profile/default.png'" alt="" class="img-circle img-fluid">
+                                            <img style="height: 100px;" :src="(user.user.image) ? '/img/profile/'+user.user.image : '/img/profile/default.png'" alt="" class="img-circle img-fluid">
                                         </div>
                                         <div class="col-12">
                                             <ul class="ml-4 mb-0 fa-ul text-muted">
@@ -63,7 +63,7 @@
                                             <router-link class="btn btn-sm btn-default" :to="'/admin/staffs/'+user.id" title="View Staff"><i class="fa fa-eye"></i></router-link>
                                             <button class="btn btn-sm btn-success" @click="setUserRole(user.user)" title="Set Staff Role"><i class="fa fa-user-cog"></i></button>
                                             <button class="btn btn-sm btn-primary" @click="editUser(user)" title="Edit Staff"><i class="fa fa-edit"></i></button>
-                                            <button class="btn btn-sm btn-danger" @click="deleteUser(user.id)" title="Delete Staff"><i class="fa fa-trash"></i></button>
+                                            <button class="btn btn-sm btn-danger" @click="deleteStaff(user.id)" title="Delete Staff"><i class="fa fa-trash"></i></button>
                                         </div>
                                     </div>
                                 </div>
@@ -103,17 +103,15 @@ export default {
     methods:{
         addUser(){
             this.editMode = false;
-            this.user = {};
-            Fire.$emit('BioDataFill', this.user);
+            Fire.$emit('StaffDataFill', {});
             $('#userModal').modal('show');
-
             this.$Progress.finish();
         },
         closeModal(){
             $('#roleModal').modal('hide');
             $('#userModal').modal('hide');
         },
-        /*deleteUser(id){
+        deleteStaff(id){
             Swal.fire({
                 title: 'Are you sure?',
                 text: "You won't be able to revert this!",
@@ -126,7 +124,7 @@ export default {
             .then((result) => {
                 //Send Delete request
                 if(result.value){
-                    this.form.delete('/api/ums/users/'+id)
+                    this.form.delete('/api/ums/staffs/'+id)
                     .then(response=>{
                         Swal.fire('Deleted!', response.data.message, 'success');
                         this.refreshPage(response);   
@@ -136,7 +134,7 @@ export default {
                     });
                 }
             });  
-        },*/
+        },
         editUser(user){
             this.$Progress.start();
             this.editMode = true;

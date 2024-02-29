@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\Ums;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\GeminiTrait;
+use App\Http\Traits\UserTrait;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 
@@ -22,6 +24,8 @@ use App\Models\Ums\UserKYC;
 
 class UserController extends Controller
 {
+    use UserTrait, GeminiTrait;
+
     public function initials()
     {
         $users = User::where('branch_id', '=', auth('api')->user()->branch_id)->paginate(52);
@@ -47,6 +51,38 @@ class UserController extends Controller
         ]);
     }
 
+    public function password(Request $request)
+    {
+        $this->validate($request, [
+            'npw' => 'required|min:8|required_with:cpw|same:cpw',
+            'opw' => 'required',
+            'cpw' => 'required|min:8',
+        ]);
+
+        $user = User::find(auth('api')->id());
+        
+        $user->password = bcrypt($request->npw);
+        $user->save();
+        return response()->json(['status' => 'success', 'message' => 'Your password has been changed successfully']);
+        
+    }
+
+    public function profile()
+    {
+        $areas = Area::select('id', 'name')->where('state_id', 25)->orderBy('name', 'ASC')->get();
+        $nok = NextOfKin::where('user_id', auth('api')->id())->first();
+        $states = State::orderBy('name', 'ASC')->get();
+        $sectors = $this->get_employer_sectors();
+        
+        return response()->json([
+            'areas' => $areas,
+            'user' => User::where('id', '=', auth('api')->id())->with('next_of_kin', 'customer_accounts', 'customer_address.state', 'social_medias', 'kyc_items')->with(['area', 'state',])->first(),
+            'nok' => $nok,
+            'states' => $states,   
+            'sectors' => $sectors,  
+        ]);
+    }
+    
     public function roles(Request $request)
     {
         $this->validate($request, [
@@ -90,44 +126,11 @@ class UserController extends Controller
             'state_id' => 'numeric',
             'area_id' => 'numeric',
             'phone' => 'numeric',
-            'alt_phone' => 'nullable|numeric',
-            //'branch_id' => 'required|numeric',
             'sex' => 'required|string',
             'dob' => 'required|date',
-            //'unique_id' => 'required|unique:users',
         ]);
 
-        $image_url = null;
-        if (!is_null($request['image'])){
-            $image = $request['id']."-".time().".".explode('/',explode(':', substr( $request['image'], 0, strpos($request['image'], ';')))[1])[1];
-            \Image::make($request['image'])->save(public_path('img/profile/').$image);
-            $image_url = $image;
-        }
-        
-        $user = User::create([
-            'email' => $request['email'],
-            'first_name' => $request['first_name'],
-            'middle_name' => $request['middle_name'],
-            'last_name' => $request['last_name'],
-            'street' => $request['street'],
-            'street2' => $request['street2'],
-            'city' => $request['city'],
-            'state_id' => $request['state_id'],
-            'area_id' => $request['area_id'],
-            'personal_email' => $request['personal_email'],
-            'phone' => $request['phone'],
-            'alt_phone' => $request['alt_phone'],
-            'branch_id' => $request['branch_id'],
-            'department_id' => $request['department_id'],
-            'sex' => $request['sex'],
-            'dob' => $request['dob'],
-            'image' => $image_url,
-            'updated_at' => date('Y-m-d H:i:s'),
-            'joined_at' => $request['joined_at'],
-            'unique_id' => $request['unique_id'],
-            ]);
-
-        $user->save();
+        $user = $this->create_new_user($request);
 
         return response()->json([
             // This are the required for User page
@@ -172,50 +175,19 @@ class UserController extends Controller
         return response()->json(['status' => 'Successful']);
     }
 
-    public function password(Request $request)
-    {
-        $this->validate($request, [
-            'npw' => 'required|min:8|required_with:cpw|same:cpw',
-            'opw' => 'required',
-            'cpw' => 'required|min:8',
-        ]);
-
-        $user = User::find(auth('api')->id());
-        
-        $user->password = bcrypt($request->npw);
-        $user->save();
-        return response()->json(['status' => 'success', 'message' => 'Your password has been changed successfully']);
-        
-    }
-    
-    public function profile()
-    {
-        $areas = Area::select('id', 'name')->where('state_id', 25)->orderBy('name', 'ASC')->get();
-        $nok = NextOfKin::where('user_id', auth('api')->id())->first();
-        $states = State::orderBy('name', 'ASC')->get();
-        
-        return response()->json([
-            'areas' => $areas,
-            'user' => User::where('id', '=', auth('api')->id())->with('next_of_kin', 'customer_accounts', 'customer_address.state', 'social_medias', 'kyc_items')->with(['area', 'state',])->first(),
-            'nok' => $nok,
-            'states' => $states,
-            //'patient' => Patient::where('user_id',  auth('api')->id())->first(),       
-        ]);
-    }
-    
     public function show($id)
     {
         $user = User::find($id);
 
         return response()->json([
             'nations' => Country::orderBy('name', 'ASC')->get(),
-            'areas' => $areas,
+            /*'areas' => $areas,
             'user' => $user,
             'branches' => $branches,
             'departments' => $departments,
             'nok' => $nok,
             'states' => $states,
-            'patient' => Patient::where('user_id',  auth('api')->id())->first(),       
+            'patient' => Patient::where('user_id',  auth('api')->id())->first(), */     
         ]);
     }
 

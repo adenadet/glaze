@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\Ums;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\GeminiTrait;
+use App\Http\Traits\UserTrait;
 use App\Models\Area;
 use App\Models\NextOfKin;
 use App\Models\Settings\KYCItem;
@@ -14,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 
 class ProfileController extends Controller
 {
+    use GeminiTrait, UserTrait;
     public function index()
     {
         $kyc_items = KYCItem::select( 'setting_kyc_items.*', 
@@ -28,6 +31,7 @@ class ProfileController extends Controller
             'kyc_items' => $kyc_items,
             'kyc_list' => KYCItem::all(),
             'nok' => NextOfKin::where('user_id', auth('api')->id())->first(),
+            'sectors' => $this->get_employer_sectors(),
             'states' => State::orderBy('name', 'ASC')->get(),
             'socials' => SocialMedia::where('user_id', auth('api')->id())->first(),
             'user' => User::where('id', '=', auth('api')->id())->with('next_of_kin', 'customer_accounts', 'customer_address.state', 'social_medias')->with(['area', 'state',])->first(),

@@ -10,21 +10,24 @@
                     <div class="card card-primary card-tabs">
                         <div class="card-header p-0 pt-1">
                             <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
-                            <li class="nav-item">
-                                <a class="nav-link active" id="basic-tab" data-toggle="pill" href="#basic" role="tab" aria-controls="basic" aria-selected="true">Basic</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="address-tab" data-toggle="pill" href="#address" role="tab" aria-controls="address" aria-selected="false">Address</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="next-of-kin-tab" data-toggle="pill" href="#next-of-kin" role="tab" aria-controls="next-of-kin" aria-selected="false">Next of Kin</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="socials-tab" data-toggle="pill" href="#socials" role="tab" aria-controls="socials" aria-selected="false">Social Media</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" id="kyc-tab" data-toggle="pill" href="#kyc" role="tab" aria-controls="kyc" aria-selected="false">Know Your Customer</a>
-                            </li>
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="basic-tab" data-toggle="pill" href="#basic" role="tab" aria-controls="basic" aria-selected="true">Basic</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="address-tab" data-toggle="pill" href="#address" role="tab" aria-controls="address" aria-selected="false">Address</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="next-of-kin-tab" data-toggle="pill" href="#next-of-kin" role="tab" aria-controls="next-of-kin" aria-selected="false">Next of Kin</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="socials-tab" data-toggle="pill" href="#socials" role="tab" aria-controls="socials" aria-selected="false">Social Media</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="kyc-tab" data-toggle="pill" href="#kyc" role="tab" aria-controls="kyc" aria-selected="false">Know Your Customer</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="employment-tab" data-toggle="pill" href="#employment" role="tab" aria-controls="employment" aria-selected="false">Employment Details</a>
+                                </li>
                             </ul>
                         </div>
                         <div class="card-body">
@@ -43,6 +46,9 @@
                                 </div>
                                 <div class="tab-pane fade" id="kyc" role="tabpanel" aria-labelledby="kyc-tab">
                                     <UserDetailKYC />
+                                </div>
+                                <div class="tab-pane fade" id="employment" role="tabpanel" aria-labelledby="employment-tab">
+                                    <UserDetailEmployment />
                                 </div>
                             </div>
                         </div>

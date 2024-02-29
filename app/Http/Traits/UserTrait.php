@@ -14,22 +14,30 @@ use App\Models\User;
 use Illuminate\Support\Facades\Http;
 
 trait UserTrait{
+    public function all_staffs(){
+        return Staff::orderBy('unique_id', 'ASC')->with(['user.roles', 'branch', 'department', 'roles'])->get();
+    }
+
     public function initial_staffs(){
         return response()->json([
             'areas' => Area::select('id', 'name')->where('state_id', 25)->orderBy('name', 'ASC')->get(),
             'branches' => Branch::select('id', 'name')->orderBy('name', 'ASC')->get(),
             'departments' => Department::select('id', 'name')->orderBy('name', 'ASC')->get(),
             'states' => State::orderBy('name', 'ASC')->get(),       
-            'users' => Staff::orderBy('unique_id', 'ASC')->with(['user.roles', 'area', 'state', 'branch', 'department', 'roles'])->paginate(6),
+            'users' => Staff::orderBy('unique_id', 'ASC')->with(['user.roles', 'area', 'state', 'branch', 'department', 'roles'])->paginate(15),
         ]);
     }
 
     public function create_new_staff($request){
-        $user = $this->create_new_staff($request);
+        $user = $this->create_new_user($request);
+
+        $user->assignRole('Staff');
 
         $staff = Staff::create([
             'user_id' => $user->id,
+            'unique_id' => $request->input('unique_id'),
             'branch_id' => $request->input('branch_id'),
+            'department_id' => $request->input('department_id'),
             'street' => $request->input('street'),
             'street2' => $request->input('street2'),
             'city' => $request->input('city'),
@@ -107,6 +115,20 @@ trait UserTrait{
     }
 
     public function update_user($request, $id){
+        $user = User::where('id', '=', $id)->first();
 
+        $user->first_name = $request->input('first_name');
+        $user->middle_name = $request->input('middle_name');
+        $user->last_name = $request->input('last_name');
+        $user->unique_id = $request->input('unique_id');
+        $user->bvn = $request->input('bvn');
+        //$user->image = $request->input('image');
+        $user->sex = $request->input('sex');
+        $user->phone = $request->input('phone');
+        $user->dob = $request->input('dob'); 
+
+        $user->save();
+
+        return $user;
     }
 }

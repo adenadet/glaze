@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\GeminiTrait;
+use App\Http\Traits\UserTrait;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use App\Models\Finance\Wallet;
@@ -15,7 +17,7 @@ use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
 {
-    use RegistersUsers;
+    use GeminiTrait, RegistersUsers, UserTrait;
 
     protected $redirectTo = RouteServiceProvider::HOME;
 
@@ -55,7 +57,7 @@ class RegisterController extends Controller
             'updated_by' => $user->id, 
             'status' => 1,
         ]);*/
-        Customer::create([
+        $customer = Customer::create([
             'user_id' => $user->id,
             'status' => 1,
             'created_by' => $user->id,
@@ -63,6 +65,8 @@ class RegisterController extends Controller
         ]);
         
         $user->assignRole('Customer');
+
+        $this->create_customer($customer, $user);
 
         Activity::create([
             'subject' => $user->first_name.' '.$user->last_name.' has successfully registered',

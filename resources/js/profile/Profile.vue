@@ -59,6 +59,7 @@
                         <li class="nav-item" role="presentation"> <a class="nav-link" data-bs-toggle="tab" role="tab" href="#security" aria-selected="false" tabindex="-1">Security</a> </li> 
                         <li class="nav-item" role="presentation"> <a class="nav-link" data-bs-toggle="tab" role="tab" href="#socials" aria-selected="true">Social Media</a> </li>
                         <li class="nav-item" role="presentation"> <a class="nav-link" data-bs-toggle="tab" role="tab" href="#kyc" aria-selected="true">Know Your Customer</a> </li> 
+                        <li v-if="user.staff == null" class="nav-item" role="presentation"> <a class="nav-link" data-bs-toggle="tab" role="tab" href="#employment" aria-selected="true">Current Employer</a> </li> 
                     </ul> 
                 </div> 
                 <div class="card-body"> 
@@ -82,6 +83,9 @@
                         <div class="tab-pane text-muted" id="kyc" role="tabpanel">
                             <UserFormKYC :user="user" />     
                         </div> 
+                        <div class="tab-pane text-muted" id="employment" role="tabpanel">
+                            <UserFormEmployment :user="user" :areas="areas" :editMode="editMode" :sectors="sectors" :states="states"/>     
+                        </div> 
                     </div> 
                 </div> 
             </div>
@@ -99,6 +103,7 @@ export default {
             kyc_items: {},
             nations: [],  
             nok:{},
+            sectors: [],
             socials: {},
             states:[],
             user:{}, 
@@ -136,6 +141,7 @@ export default {
             this.nations = response.data.nations;
             this.kyc_items = response.data.kyc_items;
             this.kyc_list = response.data.kyc_list;
+            this.sectors = response.data.sectors;
             this.socials = response.data.socials;
             
             Fire.$emit('BasicDataFill', this.user);

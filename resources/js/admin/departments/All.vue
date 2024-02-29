@@ -7,7 +7,7 @@
                     <div class="modal-header">
                         <h4 class="modal-title" v-show="editMode">Edit Department: {{department.name}}</h4>
                         <h4 class="modal-title" v-show="!editMode">New Department</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModal()"><span aria-hidden="true">&times;</span></button>
                     </div>
                     <div class="modal-body p-0">
                         <DepartmentForm :editMode="editMode"/>
@@ -77,6 +77,7 @@ export default {
             departments: {},
             department: {},
             editMode: false,
+            form: new Form({}),
         }
     },
     methods:{
@@ -87,7 +88,33 @@ export default {
             $('#departmentModal').modal('show');
             this.$Progress.finish();
         },
-        deleteDepartment(){},
+        closeModal(){
+            $('#departmentModal').modal('hide');
+        },
+        deleteDepartment(id){
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+                })
+            .then((result) => {
+                //Send Delete request
+                if(result.value){
+                    this.form.delete('/api/ums/departments/'+id)
+                    .then(response=>{
+                    Swal.fire('Deleted!', 'Department has been deleted.', 'success');
+                    Fire.$emit('DepartmentRefresh', response);   
+                    })
+                    .catch(()=>{
+                    Swal.fire({icon: 'error', title: 'Oops...', text: 'Something went wrong!', footer: '<a href>Why do I have this issue?</a>'});
+                    });
+                }
+            });
+        },
         editDepartment(department){
             this.$Progress.start();
             this.editMode = true;
@@ -130,14 +157,11 @@ export default {
         this.getAllInitials();
         Fire.$on('DepartmentRefresh', response =>{
             this.refresh(response);
-            $('#DepartmentModal').modal('hide');
-        });
-        Fire.$on('DepartmentUpdate', Department=>{
-            this.Department = Department;
+            $('#departmentModal').modal('hide');
         });
         Fire.$on('GetDepartment', response =>{
             this.refresh(response);
-            $('#DepartmentModal').modal('hide');
+            $('#departmentModal').modal('hide');
         });
     }
 }

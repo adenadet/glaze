@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Ums;
 
 use App\Http\Controllers\Controller;
 use App\Http\Traits\ConfigTrait;
+use App\Http\Traits\UserTrait;
 use Illuminate\Http\Request;
 
 use App\Models\Department;
@@ -12,12 +13,19 @@ use App\Models\User;
 
 class DepartmentController extends Controller
 {
-    use ConfigTrait;
+    use ConfigTrait, UserTrait;
 
     public function index()
     {
         return response()->json([
             'departments' => $this->initial_departments(),          
+        ]);        
+    }
+
+    public function initials()
+    {
+        return response()->json([
+            'staffs' => $this->all_staffs(),         
         ]);        
     }
 
