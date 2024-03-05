@@ -66,7 +66,7 @@ class RegisterController extends Controller
         
         $user->assignRole('Customer');
 
-        $this->create_customer($customer, $user);
+        $this->create_gemini_customer($customer, $user);
 
         Activity::create([
             'subject' => $user->first_name.' '.$user->last_name.' has successfully registered',

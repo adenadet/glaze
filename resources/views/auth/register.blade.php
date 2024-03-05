@@ -85,12 +85,12 @@
                                         </div> 
                                     </div> 
                                 <div class="col-xl-12 d-grid mt-2"> 
-                                    <button type="submit" class="btn btn-lg btn-primary btn-block">Sign In</button>
+                                    <button type="submit" class="btn btn-lg btn-primary btn-block">Register</button>
                                 </div> 
                             </form>
                         </div> 
                         <div class="text-center"> 
-                            <p class="fs-12 text-muted mt-4">Already have an account? <a href="{{route('login')}}" class="text-primary">Sign Up</a></p>
+                            <p class="fs-12 text-muted mt-4">Already have an account? <a href="{{route('login')}}" class="text-primary">Login</a></p>
                         </div> 
                     </div> 
                 </div> 

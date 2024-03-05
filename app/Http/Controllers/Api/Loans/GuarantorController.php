@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\GuarantorTrait;
+
 use App\Models\Loans\Account;
 use App\Models\Loans\Guarantor;
 use App\Models\Loans\GuarantorRequest;
@@ -63,19 +65,7 @@ class GuarantorController extends Controller
         $loan = Account::where('id', '=', $request->input('loan_id'))->with('user')->first();
 
         foreach ($request->input('guarantors') as $guarantor){
-            $gr = GuarantorRequest::create([
-                'loan_id' => $request->input('loan_id'),
-                'first_name' => $guarantor['first_name'],
-                'last_name' => $guarantor['last_name'],
-                'email' => $guarantor['email'],
-                'phone' => $guarantor['phone'],
-                'status' => $guarantor['status'] ?? 0,
-                'description' => $guarantor['description'] ?? NULL,
-                'created_by' => auth('api')->id(),
-                'updated_by' => auth('api')->id(),
-            ]);
-
-            Mail::to($guarantor['email'])->send(new RequestMail($loan, $gr));
+            $this->guarantor_new_request($loan, $guarantor);
         }
 
         return response()->json([
@@ -89,16 +79,7 @@ class GuarantorController extends Controller
         GuarantorRequest::where('loan_id', '=', $id)->delete();
         
         foreach ($request->input('guarantors') as $guarantor){
-            GuarantorRequest::create([
-                'loan_id' => $request->input('loan_id'),
-                'first_name' => $guarantor['first_name'],
-                'last_name' => $guarantor['last_name'],
-                'email' => $guarantor['email'],
-                'phone' => $guarantor['phone'],
-                'status' => 0,
-                'created_by' => auth('api')->id(),
-                'updated_by' => auth('api')->id(),
-            ]);
+            $this->guarantor_new_request($loan, $guarantor);
         }
     }
 
@@ -114,55 +95,32 @@ class GuarantorController extends Controller
         ]);  
     }
 
-
     public function store(Request $request)
     {
         $this->validate($request, [
             'loan_id' => 'required|numeric',
+            'request_id'=> 'required|numeric',
+            'title'=> 'required',
+            'first_name'=> 'required',
+            'middle_name'=> 'sometimes',
+            'last_name'=> 'required',
+            'relationship'=> 'required',
+            'email'=> 'required|email',
+            'phone'=> 'required',
+            'employer'=> 'required',
+            'employer_address'=> 'required',
+            'employer_phone'=> 'required',
+            'employer_email'=> 'required|email',
+            'marital_status'=> 'required',
+            'relationship'=> 'required',
+            'address'=> 'required',
+            'bvn'=> 'required|numeric',
+            'nationality_id' => 'required|numeric',
+            'dob' => 'required|date',
+            'net_income'=> 'required',
         ]);
 
-        $signature = NULL; 
-        $image = NULL;
-
-        $guarantor = Guarantor::create([
-            'loan_id' => $request->input('loan_id'),
-            'bvn' => $request->input('bvn'),
-            'title' => $request->input('title'),
-            'first_name' => $request->input('first_name'),
-            'middle_name' => $request->input('middle_name'),
-            'last_name' => $request->input('last_name'),
-            'relationship' => $request->input('relationship'),
-            'email' => $request->input('email'),
-            'phone' => $request->input('phone'),
-            'employer' => $request->input('employer'),
-            'employer_address' => $request->input('employer_address'),
-            'marital_status' => $request->input('marital_status'),
-            'gender' => $request->input('gender'),
-            'address' => $request->input('address'),
-            'office_phone' => $request->input('office_phone'),
-            'status' => 1,
-            'description' => $request->input('description'),
-            'guarantor_signature' => $signature,
-            'guarantor_date' => date('Y-m-d H:i:s'),
-            'guarantor_passport'=> $image,
-            'net_income' => $request->input('net_income'),
-        ]);
-
-        $loan = Account::where('id', '=', $request->input('loan_id'))->first();
-        $loan_type = Type::where('id', '=', $loan->type_id)->with('requirements')->first();
-        $guarantors = Guarantor::where('loan_id', '=', $request->input('loan_id'))->where('status', '=', 1)->count();
-
-        $guarantors_needed = 0;  
-        foreach ($loan_type->requirements as $requirement){
-            if ($requirement->type == 'guarantors'){
-                $guarantors_needed += $requirement->type->rate;
-            }
-        }
-        echo $guarantors_needed;
-
-        if( $guarantors >= $guarantors_needed){
-            
-        }
+        $this->guarantor_confirm_request($request);
 
         return response()->json([
             'message' => 'The loan has been successfully guaranteed',
