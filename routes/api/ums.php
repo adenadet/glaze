@@ -10,6 +10,7 @@ Route::group(['prefix'=>'ums'], function () {
     Route::get('/kyc_items', 'UserController@kyc')->name('ums.kyc');
     Route::post('/kyc_store', 'UserController@kyc_store')->name('ums.kyc_store');
     Route::post('/password', 'UserController@password')->name('profile.password');
+    Route::get('/profile/states/{id}', 'ProfileController@states')->name('profile.states');
     Route::get('/roles/initials', 'RoleController@initials')->name('roles.initials');
     Route::get('/staffs/full_list', 'StaffController@full_list')->name('staffs.full_list');
     Route::get('/users/initials', 'UserController@initials')->name('users.initials');

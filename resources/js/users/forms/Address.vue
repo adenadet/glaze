@@ -54,9 +54,9 @@
         <div class="col-md-4 col-sm-12">
             <div class="form-group">
                 <label>State</label>
-                <select class="form-control" id="state_id" name="state_id" placeholder="Enter State / County *" required v-model="AddressData.state_id" :class="{'is-invalid' : AddressData.errors.has('state_id') }">
+                <select class="form-control" id="state_id" name="state_id" placeholder="Enter State / County *" required v-model="AddressData.state_id" :class="{'is-invalid' : AddressData.errors.has('state_id') }" @change="updateLGA">
                     <option value="">--Select State--</option>
-                    <option v-for="state in states" v-bind:key="state.id" :value="state.id" >{{state.name}}</option>
+                    <option v-for="state in states" :key="state.StateCode" :value="state.StateCode" >{{state.StateName}}</option>
                 </select>
             </div>
         </div>
@@ -65,7 +65,7 @@
                 <label>LGA</label>
                 <select class="form-control" id="area_id" name="area_id" required v-model="AddressData.area_id" :class="{'is-invalid' : AddressData.errors.has('area_id') }">
                     <option value="">--Select area--</option>
-                    <option v-for="area in areas" v-bind:key="area.id" :value="area.id" >{{area.name}}</option>
+                    <option v-for="area in areas" v-bind:key="area.LGANo" :value="area.LGANo" >{{area.LGAName}}</option>
                 </select>
             </div>
         </div>
@@ -104,6 +104,7 @@ export default {
                 street2:'',
                 unique_id: '', 
             }),
+            lgas: [],
         }
     },
     mounted() {
@@ -163,27 +164,24 @@ export default {
                 this.$Progress.fail();
             });            
         },
-        getProfilePic(){
-            let photo = (this.AddressData.image.length >= 150) ? this.AddressData.image : "./"+this.AddressData.image;
-            return photo;
-            },
-        updateProfilePic(e){
-            let file = e.target.files[0];
-            let reader = new FileReader();
-            if (file['size'] < 2000000){
-                reader.onloadend = (e) => {
-                    this.AddressData.image = reader.result;
-                    console.log(reader.result);
-                    }
-                reader.readAsDataURL(file)
-            }
-            else{
+        updateLGAs(){
+            this.$Progress.start();
+            axios.get('/api/ums/profile/states/'+ this.AddressData.state_id)
+            .then(response =>{
+                this.$Progress.finish();
+                this.lgas = response.data.areas;
+            })
+            .catch(()=>{
                 Swal.fire({
-                    type: 'error',
-                    title: 'File is too large'
-                })
-            }
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Something went wrong!',
+                    footer: 'Please try again later!'
+                });
+                this.$Progress.fail();
+            });            
         },
+        
     },
     props:{
         areas: Array,

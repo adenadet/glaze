@@ -83,14 +83,7 @@ class AccountController extends Controller{
 
         $loan_type = Type::where('ProductCode', '=', $request['loan_type_id'])->with('requirements')->first();
 
-        $admin_interest = 0;
-        for ($i = 0; $i < count($loan_type->requirements); $i++){
-            if($loan_type->requirements[$i]->type == 'interest'){
-                $admin_interest = $admin_interest + $loan_type->requirements[$i]->rate; 
-            }
-        }
-        $hidden_cost = (1 + ($admin_interest/100));
-        $principal = $request->input('amount') * $hidden_cost;
+        $principal = $request->input('amount');
         
         $interest = $loan_type->percentage / 5200;
         
@@ -98,7 +91,7 @@ class AccountController extends Controller{
         
         $emiMonthly =  ($principal  * $x * $interest) / ($x-1);
         
-        $bank = Bank::where('bank_code', '=', $request->input('bank_id'))->first();
+        $bank = AllBank::where('bank_code', '=', $request->input('bank_id'))->first();
 
         $loan = Account::create([
             'type_id' => $request['loan_type_id'],
@@ -185,7 +178,7 @@ class AccountController extends Controller{
 
     public function destroy($id)
     {
-        $loan = Account::find($id);
+        $loan = Account::where('id', '=', $id)->first();
 
         $loan->status = 3;
         $loan->deleted_by = auth('api')->id();

@@ -7,7 +7,7 @@
                 <div class="row">
                     <div class="col-md-12 col-sm-12">
                         <div class="form-group">
-                            <label>Loan Type</label>
+                            <label>Loan Type*</label>
                             <select type="text" class="form-control" id="name" name="name" placeholder="Name *" v-model="loanData.loan_type_id" required>
                                 <option value=''>---Select Loan Type---</option>
                                 <option v-for="(loan_type, index) in loan_types" :value="loan_type.ProductCode" :key="index">{{ loan_type.ProductName }}</option>
@@ -97,18 +97,9 @@
                 let getIndex = this.loan_types.map(object => object.id).indexOf(this.loanData.loan_type_id);
                 console.log(getIndex);
                 let interest = 36;
-                
-                /*if(this.loan_types[getIndex].requirements == null || this.loan_types[getIndex].requirements == 0){
-                    interest = 60;
-                }
-                else{
-                    for (let i = 0; i < this.loan_types[getIndex].requirements.length; i++){
-                        if (this.loan_types[getIndex].requirements[i].type == 'interest'){
-                            interest = interest + this.loan_types[getIndex].requirements[i].rate;
-                        }
-                    }
-                }*/
-                return (1 + (interest/100));
+            
+                //return (1 + (interest/100));
+                return 1;
             },
             interestRate(){
                 //let getIndex = this.loan_types.map(object => object.id).indexOf(this.loanData.loan_type_id);

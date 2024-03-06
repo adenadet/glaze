@@ -43,9 +43,9 @@
         <div class="col-md-4 col-sm-6">
             <div class="form-group">
                 <label>State</label>
-                <select class="form-control" id="state_id" name="state_id" placeholder="Enter State / County *" required v-model="AddressData.state_id" :class="{'is-invalid' : AddressData.errors.has('state_id') }">
+                <select class="form-control" id="state_id" name="state_id" placeholder="Enter State / County *" required v-model="AddressData.state_id" :class="{'is-invalid' : AddressData.errors.has('state_id') }" @change="updateLGAs">
                     <option value="">--Select State--</option>
-                    <option v-for="state in states" v-bind:key="state.id" :value="state.id" >{{state.name}}</option>
+                    <option v-for="state in states" :key="state.StateCode" :value="state.StateCode" >{{state.StateName}}</option>
                 </select>
             </div>
         </div>
@@ -54,7 +54,7 @@
                 <label>LGA</label>
                 <select class="form-control" id="area_id" name="area_id" required v-model="AddressData.area_id" :class="{'is-invalid' : AddressData.errors.has('area_id') }">
                     <option value="">--Select area--</option>
-                    <option v-for="area in areas" v-bind:key="area.id" :value="area.id" >{{area.name}}</option>
+                    <option v-for="area in lgas" :key="area.LGANo" :value="area.LGANo" >{{area.LGAName}}</option>
                 </select>
             </div>
         </div>
@@ -79,6 +79,7 @@ export default {
                 user_id: '',
                 type: '',
             }),
+            lgas: [],
         }
     },
     mounted() {
@@ -95,18 +96,12 @@ export default {
             .then(response =>{
                 this.$Progress.finish();
                 Fire.$emit('Reload', response);
-                Swal.fire({
-                    icon: 'success',
-                    title: 'The Address details has been created',
-                    showConfirmButton: false,
-                    timer: 1500
-                    });
-                })
+                Swal.fire({icon: 'success', title: 'The Address details has been created', showConfirmButton: false, timer: 1500});
+            })
             .catch(()=>{
                 Swal.fire({icon: 'error', title: 'Oops...', text: 'Something went wrong!', footer: 'Please try again later!'});
                 this.$Progress.fail();
-                });  
-                    
+            });          
         },
         updateAddressData(){
             this.AddressData.user_id = this.user.id;
@@ -120,13 +115,25 @@ export default {
                     title: 'The Address details has been updated',
                     showConfirmButton: false,
                     timer: 1500
-                    });
-                })
+                });
+            })
             .catch(()=>{
                 Swal.fire({icon: 'error', title: 'Oops...', text: 'Something went wrong!', footer: 'Please try again later!'});
                 this.$Progress.fail();
-                });  
+            });  
                     
+        },
+        updateLGAs(){
+            this.$Progress.start();
+            axios.get('/api/ums/profile/states/'+this.AddressData.state_id)
+            .then(response =>{
+                this.$Progress.finish();
+                this.lgas = response.data.lgas;
+            })
+            .catch(()=>{
+                Swal.fire({icon: 'error', title: 'Oops...', text: 'Something went wrong!', footer: 'Please try again later!'});
+                this.$Progress.fail();
+            });
         },
     },
     props:{

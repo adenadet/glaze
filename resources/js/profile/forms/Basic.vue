@@ -105,7 +105,7 @@ export default {
     methods:{
         updateBioData(){
             this.$Progress.start();
-            this.BioData.post('/api/ums/bios')
+            this.BioData.post('/api/ums/profile')
             .then(response =>{
                 this.$Progress.finish();
                 Fire.$emit('Reload', response);

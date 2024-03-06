@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class AllBank extends Model
 {
     protected $primaryKey = 'id';
-    protected $table = 'finance_all_banks';
+    protected $table = 'all_banks';
     protected $fillable = array('name', 'status',  'deleted_by', 'deleted_at');
 }

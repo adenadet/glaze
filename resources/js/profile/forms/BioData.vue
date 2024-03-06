@@ -46,7 +46,7 @@
         </div>
         <div class="col-md-3 col-sm-6">
             <div class="form-group">
-                <label>State</label>
+                <label>State*</label>
                 <select class="form-control" id="state_id" name="state_id" placeholder="Enter State / County *" required v-model="BioData.state_id" :class="{'is-invalid' : BioData.errors.has('state_id') }">
                     <option value="">--Select State--</option>
                     <option v-for="state in states" v-bind:key="state.id" :value="state.id" >{{state.name}}</option>
@@ -162,7 +162,7 @@ export default {
     methods:{
         updateBioData(){
             this.$Progress.start();
-            this.BioData.post('/api/ums/bios')
+            this.BioData.post('/api/ums/profile')
             .then(response =>{
                 this.$Progress.finish();
                 Fire.$emit('Reload', response);

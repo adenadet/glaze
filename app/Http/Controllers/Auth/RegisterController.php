@@ -50,13 +50,6 @@ class RegisterController extends Controller
             'bvn' => $data['bvn'],
         ]);
 
-        /*$wallet = Wallet::create([
-            'user_id' => $user->id,
-            'balance' => 0.00,
-            'created_by' => $user->id,
-            'updated_by' => $user->id, 
-            'status' => 1,
-        ]);*/
         $customer = Customer::create([
             'user_id' => $user->id,
             'status' => 1,

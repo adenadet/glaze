@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Mail;
 trait GuarantorTrait{
 
     public function create_guarantor($request){
+        $guarantor_request = GuarantorRequest::where('id', '=', $request->input('request_id'))->first();
         $guarantor = Guarantor::create([
             'loan_id'=> $guarantor_request->loan_id,
             'request_id'=> $request->input('request_id'),

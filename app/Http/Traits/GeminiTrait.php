@@ -1,12 +1,15 @@
 <?php
 namespace App\Http\Traits;
 
+use App\Models\Area;
 use App\Models\Finance\AllBank;
 use App\Models\Loans\Account;
 use App\Models\Loans\GeminiCustomerGroup;
 use App\Models\Loans\Type;
 use App\Models\Ums\Customer;
+use App\Models\State;
 use App\Models\User;
+
 use Illuminate\Support\Facades\Http;
 
 trait GeminiTrait{
@@ -147,7 +150,7 @@ trait GeminiTrait{
 
     public function get_gemini_customer_active_loan_accounts($id){
         $customer = Customer::where('unique_id', '=', $id)->first();
-        $feedback = Http::Http::withToken(config('app.gemini_strain'))->withOptions(['verify' => false])->get(config('app.gemini_url').'/getloanrequest/'.$id);
+        $feedback = Http::withToken(config('app.gemini_strain'))->withOptions(['verify' => false])->get(config('app.gemini_url').'/getloanrequest/'.$id);
         if ($feedback->status() != 200){
             $customer_group = Account::where('user_id', '=', $customer->user_id)->orderBy('created_at', 'ASC')->orderBy('status', 'DESC')->get();
         }
@@ -158,12 +161,12 @@ trait GeminiTrait{
     }
 
     public function get_gemini_customer_by_bvn($id){
-        $feedback = Http::Http::withToken(config('app.gemini_strain'))->withOptions(['verify' => false])->get(config('app.gemini_url').'/accountofficer/'.$id);
+        $feedback = Http::withToken(config('app.gemini_strain'))->withOptions(['verify' => false])->get(config('app.gemini_url').'/accountofficer/'.$id);
         return json_decode($feedback);
     }
 
     public function get_gemini_customer_group(){
-        $feedback = Http::Http::withToken(config('app.gemini_strain'))->withOptions(['verify' => false])->get(config('app.gemini_url').'/customergroup');
+        $feedback = Http::withToken(config('app.gemini_strain'))->withOptions(['verify' => false])->get(config('app.gemini_url').'/customergroup');
         if ($feedback->status() != 200){
             $customer_group = GeminiCustomerGroup::select('cust_group_code', 'cust_group_name')->orderBy('bank_name', 'ASC')->get();
         }
@@ -175,7 +178,7 @@ trait GeminiTrait{
 
     public function get_gemini_customer_loan_requests($id){
         $customer = Customer::where('id', '=', $id)->first();
-        $feedback = Http::Http::withToken(config('app.gemini_strain'))->withOptions(['verify' => false])->get(config('app.gemini_url').'/getloanrequest/'.$customer->gemini_id);
+        $feedback = Http::withToken(config('app.gemini_strain'))->withOptions(['verify' => false])->get(config('app.gemini_url').'/getloanrequest/'.$customer->gemini_id);
         if ($feedback->status() != 200){
             $customer_group = Account::where('user_id', '=', $customer->user_id)->orderBy('created_at', 'ASC')->orderBy('status', 'DESC')->get();
         }
@@ -190,7 +193,7 @@ trait GeminiTrait{
     }
 
     public function get_gemini_employer_sectors(){
-        $feedback = Http::Http::withToken(config('app.gemini_strain'))->withOptions(['verify' => false])->get(config('app.gemini_url').'/sectors');
+        $feedback = Http::withToken(config('app.gemini_strain'))->withOptions(['verify' => false])->get(config('app.gemini_url').'/sectors');
         
         if($feedback->status() != 200){
             echo $feedback->status();
@@ -199,6 +202,30 @@ trait GeminiTrait{
         
         $notes =  json_decode($feedback->body());
         return $notes->Sectors;
+    }
+
+    public function get_gemini_lgas($id){
+        $feedback = Http::withOptions(['verify' => false])->withToken(config('app.gemini_strain'))->get(config('app.gemini_url').'/lga/{$id}');
+
+        if($feedback->status() != 200){
+            $state_id = State::where('StateCode', '=', $id)->first()->pluck('id');
+            return Area::where('state_id', '=', $state_id)->select('LGAName', 'LGANo')->get();
+        }
+        else{
+            $notes =  json_decode($feedback->body());
+            if (count($notes->LGAs) == 0){
+                $state = State::select('id')->where('StateCode', '=', $id)->first();
+                if($state){
+                    return Area::where('state_id', '=', $state->id)->select('LGAName', 'LGANo')->get(); 
+                }
+                else{
+                    return Area::select('LGAName', 'LGANo')->get(); 
+                }
+            }
+            else{
+                return $notes->LGAs;
+            }
+        }
     }
 
     public function get_gemini_loan_products(){
@@ -217,6 +244,17 @@ trait GeminiTrait{
     public function get_gemini_loan_repayment_methods(){}
 
     public function get_gemini_loan_repayment_schedule($id){}
+
+    public function get_gemini_states(){
+        $feedback = Http::withOptions(['verify' => false])->withToken(config('app.gemini_strain'))->get(config('app.gemini_url').'/states');
+        
+        if ($feedback->status() != 200){
+            return State::where('status', '=', 1)->select('StateName', 'StateCode')->get();
+        }
+
+        $notes = json_decode($feedback->body());
+        return $notes->States;
+    }
 
     public function update_gemini_customer(){} 
 

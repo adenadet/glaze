@@ -25,7 +25,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-3">
             <div class="form-group">
                 <label>Address</label>
                 <input type="text" required class="form-control" id="employer_address" name="employer_address" placeholder="Employer's Address" v-model="EmploymentData.employer_address" :class="{'is-invalid' : EmploymentData.errors.has('address') }">
@@ -34,9 +34,12 @@
         </div>
         <div class="col-sm-3">
             <div class="form-group">
-                <label>City</label>
-                <input type="text" class="form-control" id="city" name="city" v-model="EmploymentData.city" :class="{'is-invalid' : EmploymentData.errors.has('city') }"/>
-                <has-error :form="EmploymentData" field="city"></has-error> 
+                <label>State</label>
+                <select class="form-control" id="employer_state_id" name="employer_state_id" placeholder="Last Name *" required v-model="EmploymentData.employer_state_id" :class="{'is-invalid' : EmploymentData.errors.has('employer_state_id') }" @change="updateLGAs">
+                    <option value="">--Select Local Government</option>
+                    <option v-for="state in states" :value="state.StateCode" :key="state.StateCode">{{ state.StateName }}</option> 
+                </select>
+                <has-error :form="EmploymentData" field="employment_state_id"></has-error> 
             </div>
         </div>
         <div class="col-sm-3">
@@ -44,10 +47,17 @@
                 <label>Local Government Area</label>
                 <select class="form-control" id="employer_lga_id" name="employer_lga_id" placeholder="Last Name *" required v-model="EmploymentData.employer_lga_id" :class="{'is-invalid' : EmploymentData.errors.has('employer_lga_id') }">
                     <option value="">--Select Local Government</option>
-                    <option v-for="area in area_id" :value="area.id">{{ area.name }}</option> 
+                    <option v-for="area in lgas" :value="area.LGANo" :key="area.LGANo">{{ area.LGAName }}</option> 
                 </select>
             </div>
         </div>
+        <div class="col-sm-3">
+            <div class="form-group">
+                <label>City</label>
+                <input type="text" class="form-control" id="city" name="city" v-model="EmploymentData.city" :class="{'is-invalid' : EmploymentData.errors.has('city') }"/>
+                <has-error :form="EmploymentData" field="city"></has-error> 
+            </div>
+        </div>  
     </div>
     <div class="row">
         <div class="col-md-4 col-sm-12">
@@ -67,7 +77,7 @@
             <div class="form-group">
                 <select name="employer_sector_code" id="employer_sector_code" class="form-control" v-model="EmploymentData.employer_sector_code" :class="{'is-invalid' : EmploymentData.errors.has('employer_sector_code') }">
                     <option value="">--Select Employer Sector--</option>
-                    <option v-for="sector_code in sector_codes" :value="sector.SectorCode">{{ SectorName }}</option>
+                    <option v-for="sector in sectors" :value="sector.SectorCode" :key="sector.SectorCode">{{ sector.SectorName }}</option>
                 </select>
             </div>
         </div>
@@ -83,18 +93,6 @@
             <div class="form-group">
                 <label>Pension Number</label>
                 <input type="text" name="pension_number" id="pension_number" class="form-control" placeholder="Birth Date" v-model="EmploymentData.pension_number" :class="{'is-invalid' : EmploymentData.errors.has('pension_number') }">
-            </div>
-        </div>
-        <div class="col-md-6 col-sm-12">
-            <label>Profile Picture</label>
-            <div class="form-group">
-                <input type="file" class="form-control" placeholder="Birth Date" @change="updateProfilePic">
-            </div>
-        </div>
-        <div class="col-md-6 col-sm-12">
-            <label>&nbsp;</label>
-            <div class="form-group">
-                <div type="file" class="form-control">{{ EmploymentData.image }}</div>
             </div>
         </div>
         <input type="hidden" name="id" id="id" v-model="EmploymentData.id">
@@ -115,6 +113,7 @@ export default {
                 educational_level:'',
                 employment_status:'',
                 employer_lga_id:'',
+                employer_state_id: '',
                 landmark:'',
                 monthly_income:'',
                 pay_day:'',
@@ -129,6 +128,7 @@ export default {
                 status:'',
                 end_date:'',
             }),
+            lgas: {},
         }
     },
     mounted() {
@@ -138,7 +138,11 @@ export default {
         });
     },
     methods:{
-        updateEmploymentData(){
+        getProfilePic(){
+            let photo = (this.EmploymentData.image.length >= 150) ? this.EmploymentData.image : "./"+this.EmploymentData.image;
+            return photo;
+            },
+            updateEmploymentData(){
             this.$Progress.start();
             this.EmploymentData.post('/api/ums/bios')
             .then(response =>{
@@ -154,24 +158,19 @@ export default {
             .catch(()=>{
                 Swal.fire({icon: 'error', title: 'Oops...', text: 'Something went wrong!', footer: 'Please try again later!'});
                 this.$Progress.fail();
-                });  
-                    
+            });          
         },
-        getProfilePic(){
-            let photo = (this.EmploymentData.image.length >= 150) ? this.EmploymentData.image : "./"+this.EmploymentData.image;
-            return photo;
-            },
-        updateProfilePic(e){
-            let file = e.target.files[0];
-            let reader = new FileReader();
-            if (file['size'] < 2000000){
-                reader.onloadend = (e) => {this.EmploymentData.image = reader.result}
-                reader.readAsDataURL(file)
-                //alert(reader.result)
-            }
-            else{
-                Swal.fire({type: 'error', title: 'File is too large'});
-            }
+        updateLGAs(){
+            this.$Progress.start();
+            axios.get('/api/ums/profile/states/'+this.EmploymentData.employer_state_id)
+            .then(response =>{
+                this.$Progress.finish();
+                this.lgas = response.data.lgas;
+            })
+            .catch(()=>{
+                Swal.fire({icon: 'error', title: 'Oops...', text: 'Something went wrong!', footer: 'Please try again later!'});
+                this.$Progress.fail();
+            });
         },
     },
     props:{

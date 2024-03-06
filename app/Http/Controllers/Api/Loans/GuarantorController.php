@@ -17,6 +17,8 @@ use App\Models\Loans\Type;
 
 class GuarantorController extends Controller
 {
+    use GuarantorTrait;
+    
     public function display($id)
     {
         return response()->json([
