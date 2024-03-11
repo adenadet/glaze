@@ -24,17 +24,16 @@ class ConfirmationController extends Controller
             
             $matrix_levels = [
                 'matrix_id' => $matrix[$i],
-                'status' => ConfirmationMatrixItem::whereIn('role_id', $roles)->pluck('stage_number')
+                'status' => ConfirmationMatrixItem::whereIn('role_id', $roles)->pluck('stage_number'),
             ];
 
             array_push($matrices, $matrix_levels);
         }
 
-        $loans = Account::where('loan_accounts.status', '<', 6);
+        $loans = Account::where('loan_accounts.status', '>=', 6);
         for ($j = 0; $j < count($matrices); $j++){
             $loan_types = Type::where('matrix_id', '=', $matrices[$j]['matrix_id'])->pluck('id'); 
             $loans_by_type = Account::whereIn('type_id', $loan_types)->whereIn('status', $matrices[$j]['status']);
-
             $loans = $loans->union($loans_by_type);
         }
 
@@ -82,6 +81,7 @@ class ConfirmationController extends Controller
             'updated_by' => auth('api')->id(),
         ]);
 
+        $loan->status_date = date('Y-m-d H:i:s');
         $loan->status = $request->input('action');
         $loan->updated_by = auth('api')->id();
         $loan->updated_at = date('Y-m-d H:i:s');

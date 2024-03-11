@@ -489,7 +489,6 @@
                                             <p>Please take your time to evaluate this request, and if you have any questions or concerns, do not hesitate to reach out to {{$loan->user->first_name}} {{$loan->user->last_name}} directly at {{$loan->user->email}} or {{$loan->user->phone}}.</p>
                                             <p>Thank you for considering this request. Your support could make a significant difference in {{$loan->user->first_name}} {{$loan->user->last_name}}'s financial journey.</p>
                                             <p>Best regards,
-                                                <br />Ahmed Olatunji,
                                                 <br />Chief Operations Officer,
                                                 <br />{{config('app.name')}}
                                             </p>

@@ -14,7 +14,7 @@
                     <label>Staff</label>
                     <select class="form-control" name="staff_id" id="staff_id" v-model="loanAssignData.staff_id" required>
                         <option value="">--Select Staff--</option>
-                        <option v-for="user in users" :value="user.id"> {{user | FullName}} </option>
+                        <option v-for="user in users" :value="user.id" :key="user.id"> {{user | FullName}} </option>
                     </select>  
                 </div>
             </div>

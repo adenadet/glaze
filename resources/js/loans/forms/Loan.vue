@@ -63,6 +63,27 @@
                             <input type="text" class="form-control" id="acct_number" name="acct_number" placeholder="Account Number *" v-model="loanData.acct_number" required>
                         </div>
                     </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label>Signature Type</label>
+                            <select class="form-control" id="signature_type" name="signature_type" placeholder="Name *" v-model="loanData.signature_type" required>
+                                <option value=''>--Select Signature Type--</option>
+                                <option value="upload">Upload Signature Image</option>
+                                <option value="manual">Sign Manually</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group" v-if="loanData.signature_type == 'manual'">
+                            <label>Signature</label>
+                            <VueSignaturePad :options="options" class="signature" ref="signaturePad" v-model="loanData.signature" required />
+                            <button @click="undo" class="btn btn-sm btn-default">Undo</button>
+                        </div>
+                        <div class="form-group" v-else>
+                            <label>Signature</label>
+                            <input type="file" class="form-control" name="signature" id="signature" required @change="updateSignature"/>
+                        </div>
+                    </div>
                 </div>
                 <input type="submit" name="submit" class="submit btn btn-success" value="Submit" />
             </form>
@@ -73,17 +94,17 @@
             <thead>
                 <tr>
                     <th style="width: 10px">#</th>
+                    <th>Principal</th>
+                    <th>Interest</th>
                     <th>Repayment</th>
-                    <th>Outstanding Principal</th>
-                    <th>Outstanding Balance</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="(n, index) in loanData.duration" :key="index">
                     <td>{{ index | addOne }}.</td>
+                    <td>{{ loanData.amount / loanData.duration | currency}}</td>
+                    <td>{{ emi.toFixed(2) - ((loanData.amount / loanData.duration).toFixed(2)) | currency}}</td>
                     <td>{{ emi.toFixed(2) | currency}}</td>
-                    <td>{{ totalPayment.toFixed(2) - ((index)*emi.toFixed(2)) | currency}}</td>
-                    <td>{{ totalPayment.toFixed(2) - ((index + 1)*emi.toFixed(2)) | currency}}</td>
                 </tr>
             </tbody>
         </table>
@@ -101,21 +122,17 @@
                 //return (1 + (interest/100));
                 return 1;
             },
-            interestRate(){
-                //let getIndex = this.loan_types.map(object => object.id).indexOf(this.loanData.loan_type_id);
-                //let interest = this.loanData.frequency == "weeks" ? this.loan_types[getIndex].percentage / 52 / 100 : this.loan_types[getIndex].percentage / 12 / 100;
-                let interest = (this.loanData.frequency == "weeks") ? (60 / 52 / 100) : (60 / 12 / 100);
-                return Number(interest);
-            },
             tenureMonths(){return Number(this.loanData.duration);},
             emi(){
-                var x = Math.pow(1 + this.interestRate, this.tenureMonths);
-                var emiMonthly =  ((this.loanData.amount * this.adminInterestRate)  * x * this.interestRate) / (x-1);
+                var emiMonthly = this.newTotalPayment / this.loanData.duration;
                 return Number(emiMonthly);
             },
             totalPayment(){return Number(this.emi * this.tenureMonths);},
             totalInterest(){return Number(this.totalPayment - this.loanAmount);},
-            
+            newTotalPayment(){
+                var tenure = this.loanData.frequency == "weeks" ? (this.loanData.duration/52) : (this.loanData.duration/12);
+                return Number(this.loanData.amount * (1 + (0.6 * tenure)));
+            }
         },
         data(){
             return {
@@ -134,21 +151,24 @@
                     acct_name: '', 
                     acct_number: '',
                     payable: '',
-                    emi: '',  
+                    emi: '', 
+                    signature: '', 
                 }),
+                options:{
+                    penColor:"rgb(0,0,255)",
+                    backgroundColor:"rgb(255,255,255)",
+                },
+                pad: 0,
             }
         },
         methods:{
+            change() {this.options = {penColor: "#00f",};},
             createLoan(){
                 this.$Progress.start();
                 this.loanData.post('/api/loans/accounts')
                 .then(response=>{
-                    //Fire.$emit('GetCourse', response);
                     this.$Progress.finish();
-                    Swal.fire({
-                        icon: 'success',
-                        title: response.data.message,
-                    });
+                    Swal.fire({icon: 'success', title: response.data.message,});
                     Fire.$emit('getGuarantors', response);
                     //this.$route.push('/loans/'+response.data.loan.id+'/guarantor_request');
                 })
@@ -169,6 +189,13 @@
                     toast.fire({icon: 'error', title: 'Loan Form Initialization failed',})
                 });
             },
+            resume() {this.options = {penColor: "#00f",};},
+            save() {
+                const { isEmpty, data } = this.$refs.signaturePad.saveSignature();
+            },
+            undo() {
+                    this.$refs.signaturePad.undoSignature();
+            },
             updateLoan(id){
                 this.loanData.put('/api/loans/accounts/'+this.loanData.id)
                 .then(response=>{
@@ -178,6 +205,25 @@
                     this.$Progress.fail();
                     Swal.fire({icon: 'error', title: 'Your form was not sent try again later!',});
                 });
+            },
+            updateSignature(e){
+                let file = e.target.files[0];
+                let image_types = ['image/bmp', 'image/jpg', 'image/jpeg', 'image/png']; 
+                let reader = new FileReader();
+                if (file['size'] >= 2000000) {Swal.fire({icon: 'error', title: 'File is too large'});}
+                else if (!(image_types.includes(file['type']))){Swal.fire({icon: 'error', title: 'File is not an image'});}
+                else if (file['size'] < 2000000){
+                    reader.onloadend = (e) => {
+                        this.loanData.signature = reader.result;
+                    }
+                    reader.readAsDataURL(file)
+                }
+                else{
+                    Swal.fire({
+                        type: 'error',
+                        title: 'File is too large'
+                    })
+                }
             }, 
         },
         mounted() {
@@ -204,3 +250,25 @@
         },
     }
 </script>
+<style>
+.signature {
+	border: double 3px transparent;
+	border-radius: 5px;
+	background-image: linear-gradient(white, white), radial-gradient(circle at top left, #4bc5e8, #9f6274);
+	background-origin: border-box;
+	background-clip: content-box, border-box;
+	height: 300px;
+}
+
+.container {
+  width: "100%";
+  padding: 8px 16px;
+}
+
+.buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 8px;
+}
+</style>

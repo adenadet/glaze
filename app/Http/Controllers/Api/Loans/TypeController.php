@@ -43,7 +43,8 @@ class TypeController extends Controller
         $type = Type::create([
             'name' => $request->input('name'),
             'category_id' => $request->input('category_id'),
-            'percentage' => $request->input('percentage'),
+            'interest_type'=> $request->input('interest_type') ?? 'Flat',
+            'percentage' => $request->input('percentage') ?? 0.6,
             'min_duration' => $request->input('min_duration'),
             'max_duration' => $request->input('max_duration'),
             'start_date' => $request->input('state_date'),
@@ -74,7 +75,6 @@ class TypeController extends Controller
         ]);
     }
 
-    
     public function update(Request $request, $id)
     {
         $this->validate($request, [

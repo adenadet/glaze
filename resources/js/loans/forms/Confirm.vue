@@ -13,7 +13,11 @@
                         <label>Action</label>
                         <select type="text" class="form-control" id="action" name="action"  v-model="loanConfirmationData.action" required>
                             <option value=''>---Select Action---</option>
-                            <option v-for="(action,index) in actions" :value="action.stage_number">{{ index == 0 ? 'Send To' : 'Return To' }} {{ action.role.name }}</option>
+                            <option value="8" v-if="current.role != null && current.role.name == 'Account Officer'">Send To Risk Officer</option>
+                            <option value="11" v-if="current.role != null && current.role.name == 'Group Head'">Send To Directorate Head</option>
+                            <option value="12" v-if="current.role != null && current.role.name == 'Group Head'">Send To Enterprise Risk Manager</option>
+                            <option value="16" v-if="current.role != null && current.role.name == 'Managing Director'">Confirm Loan</option> 
+                            <option v-for="(action,index) in actions" :value="action.stage_number" :key="action.stage_number">{{ index == 0 ? 'Send To' : 'Return To' }} {{ action.role.name }}</option>
                         </select>
                     </div>
                 </div>

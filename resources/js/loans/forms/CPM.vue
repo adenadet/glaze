@@ -3,13 +3,13 @@
         <div class="row" v-show="!final">
             <div class="col-md-12">
                 <form @submit.prevent="createTemplate()">
-                    <div class="row" v-for="(list, index) in cpmTemplateData.lists">
+                    <div class="row" v-for="(list, index) in cpmTemplateData.lists" :key="index">
                         <div class="col-md-5">
                             <div class="form-group">
                                 <label>{{ index | addOne }} Module</label>
                                 <select class="form-control" v-model="cpmTemplateData.lists[index].module_id" required
                                     @change="updateTemplate(index)">
-                                    <option v-for="(module_unit, indent) in modules" :value="indent">{{ module_unit.name }}
+                                    <option v-for="(module_unit, indent) in modules" :value="indent" :key="indent">{{ module_unit.name }}
                                     </option>
                                 </select>
                             </div>
@@ -19,7 +19,7 @@
                                 <label>Template</label>
                                 <select class="form-control" v-model="cpmTemplateData.lists[index].template_id">
                                     <option v-for="(template, inner) in cpmTemplateData.lists[index].templates"
-                                        :value="inner">{{ template.name }}</option>
+                                        :value="inner" :key="inner">{{ template.name }}</option>
                                 </select>
                             </div>
                         </div>

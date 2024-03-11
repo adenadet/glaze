@@ -26,10 +26,12 @@ use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;
 
 use App\Http\Traits\GeminiTrait;
+use App\Http\Traits\LoanAccountTrait;
+use App\Http\Traits\LogTrait;
 
 class AccountController extends Controller{
 
-    use GeminiTrait;
+    use GeminiTrait, LoanAccountTrait, LogTrait;
 
     public function credit_scores($id)
     {
@@ -59,14 +61,14 @@ class AccountController extends Controller{
     public function index()
     {
         return response()->json([      
-            'accounts' => Account::where('user_id', auth('api')->id())->with([ 'guarantor_requests', 'repayments', 'user', 'type', ])->latest()->paginate(20),
+            'accounts' => $this->account_all('mine', $_GET['page']),
         ]);
     }
 
     public function pending()
     {
         return response()->json([      
-            'accounts' => Account::where('status','<', 5)->with(['user', 'type',])->paginate(20),
+            'accounts' => $this->account_all('pending', $_GET['page']),
         ]);
     }
 
@@ -79,24 +81,39 @@ class AccountController extends Controller{
             'bank_id' => 'required|numeric',
             'acct_name' => 'required',
             'acct_number' => 'required|numeric',
+            'frequency' => 'required',
         ]);
 
         $loan_type = Type::where('ProductCode', '=', $request['loan_type_id'])->with('requirements')->first();
+            
+        if ($loan_type->interest_type == 'Flat'){
+            $principal = $request->input('amount');
+            $rate = 0.6 ;
+            $time = $request->input('frequency') == 'weeks' ? ($request->input('duration') / 52) : ($request->input('duration') / 12);
+            $totalPayment = $request->input('amount') * (1 + ($rate * $time));
+            $emiMonthly =  $totalPayment / $request->input('duration');
+        }
 
-        $principal = $request->input('amount');
-        
-        $interest = $loan_type->percentage / 5200;
-        
-        $x = pow(1 + $interest, $request->input('duration'));
-        
-        $emiMonthly =  ($principal  * $x * $interest) / ($x-1);
-        
+        else if($loan_type->interest_type == 'Reducing'){    
+            $principal = $request->input('amount');
+            $interest = $request->input('frequency') == 'weeks' ? $loan_type->percentage / 5200 : $loan_type->percentage / 1200;
+            $x = pow(1 + $interest, $request->input('duration'));
+            $emiMonthly =  ($principal  * $x * $interest) / ($x-1);    
+        }
+
         $bank = AllBank::where('bank_code', '=', $request->input('bank_id'))->first();
 
+        $signaturePad = NULL;
+        if (!is_null($request->input('signature'))){
+            $signature_pad = time().".".explode('/',explode(':', substr( $request->input('signature'), 0, strpos($request->input('signature'), ';')))[1])[1];
+            \Image::make($request->input('signature'))->save(public_path('img/consents/').$signature_pad);
+            $signaturePad = $signature_pad;
+        }
+
         $loan = Account::create([
-            'type_id' => $request['loan_type_id'],
+            'type_id' => $loan_type->id,
             'user_id' => $request->input('user_id') ?? auth('api')->id(),
-            'amount' => $request['amount'],
+            'amount' => $request->input('amount'),
             'payable' => round(($emiMonthly * $request->input('duration')), 2),
             'emi' => round(($emiMonthly), 2),
             'balance' => round(($emiMonthly), 2),
@@ -106,6 +123,7 @@ class AccountController extends Controller{
             'bank_id' => $bank->id,
             'acct_name' => $request->input('acct_name'),
             'acct_number' => $request->input('acct_number'),
+            'signature' => $signaturePad,
             'total_paid' => 0,
             'status' => 2,
             'status_date' => date('Y-m-d H:i:s'),
@@ -116,11 +134,11 @@ class AccountController extends Controller{
         ]);
 
         $loan->unique_id =  config('app.short_code').sprintf('%08d', $loan->id);
-
         $loan->save();
 
         $user = User::find($request->input('user_id'));
 
+        $this->createNewLoanActivity($user, $loan);
         return response()->json([
             'current_loan' => $loan,       
             'message' => 'Successfully created, kindly add guarantors',
@@ -130,7 +148,7 @@ class AccountController extends Controller{
     public function show($id)
     {
         return response()->json([
-            'account' => Account::where('id', '=', $id)->with(['account_officer.staff', 'user', 'type', 'guarantors'])->first(),
+            'account' => $this->account_details($id),
             'repayments' => Repayment::where('loan_id', '=', $id)->with(['bank'])->latest()->paginate(20),     
         ]);    
     }

@@ -32,6 +32,7 @@ Route::group(['prefix'=>'loans'], function () {
         '/cpms'             => 'CPMController',
         '/credit_scores'    => 'CreditScoreController',
         '/disbursements'    => 'DisbursementController',
+        '/files'            => 'FileController',
         '/guarantors'       => 'GuarantorController',
         '/others'           => 'OtherController',
         '/repayments'       => 'RepaymentController',

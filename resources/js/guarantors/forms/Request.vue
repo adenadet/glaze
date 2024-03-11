@@ -127,7 +127,6 @@ export default {
             this.loan = response.data.account;
         },
     },
-    props:{
-    },
+    props:{},
 }
 </script>

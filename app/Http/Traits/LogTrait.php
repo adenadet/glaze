@@ -17,4 +17,15 @@ trait LogTrait{
             'user_id' => $user ? $user->id : 0,
         ]);
     }
+
+    public function createNewLoanActivity($user, $status){
+        $activity = Activity::create([
+            'subject' => ($user ? $user->first_name.' '.$user->last_name: 'Unknown user').' has requested for a loan',
+            'url' => 'New Loan Request',
+            'method' => 'create', 
+            'ip' => \Illuminate\Support\Facades\Request::ip(), 
+            'agent' => \Illuminate\Support\Facades\Request::header('User-Agent'), 
+            'user_id' => $user ? $user->id : 0,
+        ]);
+    }
 }

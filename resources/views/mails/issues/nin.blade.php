@@ -368,17 +368,19 @@ table{
                                 <td class="bg_dark email-section" style="text-align:center;">
                                     <div class="heading-section heading-section-white text-left">
                                         <span class="subheading">Invalid/Incomplete Documentation</span>
-                                        <h2>Invalid Bank Verification Number</h2>
+                                        <h2>Invalid National Identification Number</h2>
                                         <h3 class="green-light">Dear {{$user->first_name}},</h3>
-                                        <p>I hope this message finds you well. We appreciate your interest in our loan services and would like to assist you in completing your registration process. However, we noticed that the Bank Verification Number (BVN) you provided during registration appears to be incorrect.</p>
-                                        <p>The BVN is a crucial part of our verification process, and it's necessary for us to validate your identity and proceed with your loan application. To retrieve your correct BVN using your mobile phone, please follow these simple steps:
+                                        <p>I hope this message finds you well. We appreciate your interest in our loan services and would like to assist you in completing your registration process. However, we noticed that the National Identification Number (NIN) you provided in your profile appears to be incorrect.</p>
+                                        <p>The NIN is a crucial part of our verification process, and it's necessary for us to validate your identity and proceed with your loan application. To retrieve your correct NIN using your mobile phone, please follow these simple steps:
                                             <ol>
-                                                <li>Dial *565*0# on your registered mobile phone number linked to your bank account.</li>
-                                                <li>Your BVN would then be provided on your screen</li>
+                                                <li>Dial *346# on your registered mobile phone number linked with your NIN.</li>
+                                                <li>from the options displayed, select "NIN Retrieval", by typing in '1', if you are using the same phone number you enrolled with for your NIN</li>
+                                                <li>follow the steps displayed on your screen and provide the required inputs</li>
+                                                <li>Note that using this service attracts a N20 (tweny naira) fee only (deducted from your phone credit balance).</li>
                                             </ol>
                                         </p>
-                                        <p>Once you have obtained your correct BVN, please log in to your account on our platform and update your registration details with the accurate BVN. This will enable us to process your loan application smoothly and efficiently.</p>
-                                        <p>If you encounter any issues or have questions along the way, don't hesitate to reach out to our customer support team at [Customer Support Email or Phone Number]. We're here to assist you every step of the way.</p>
+                                        <p>Once you have obtained your correct NIN, please log in to your account on our platform and update your registration details with the accurate NIN. This will enable us to process your loan application smoothly and efficiently.</p>
+                                        <p>If you encounter any issues or have questions along the way, don't hesitate to reach out to our customer support team at {{config('app.email')}} or {{config('app.phone')}}. We are here to assist you every step of the way.</p>
                                         <p>Thank you for choosing {{config('app.name')}}. We look forward to serving your financial needs and ensuring a seamless loan application process.</p>
                                         <p>Best regards,
                                             <br />Chief Operations Officer,

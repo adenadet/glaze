@@ -485,7 +485,6 @@
                                             <p>If you have any questions or require additional information, please feel free to reach out to our customer service team at {{config('app.email')}} or {{config('app.phone')}}.</p>
                                             <p>Thank you for choosing {{config('app.name_short')}} for your financial needs. We look forward to assisting you further.
                                             <p>Best regards,
-                                                <br />Ahmed Olatunji,
                                                 <br />Chief Operations Officer,
                                                 <br />{{config('app.name')}}
                                             </p>

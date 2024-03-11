@@ -29,8 +29,8 @@
                 </div>
                 <div class="card-body">
                     <div class="tab-content" id="custom-tabs-three-tabContent">
-                        <div v-for="(credit_score, index) in credit_scores.data" :key="credit_score.id" class="tab-pane fade" :class="index==0 ? 'show active': ''" :id="'credit-score-'+index" role="tabpanel" :aria-labelledby="'credit-score-'+index+'-tab'">
-                            <table class="table table-bordered table-striped">
+                        <div v-for="(credit_score, index) in credit_scores.data" :key="credit_score.id" class="tab-pane fade table-responsive p-0" :class="index==0 ? 'show active': ''" :id="'credit-score-'+index" role="tabpanel" :aria-labelledby="'credit-score-'+index+'-tab'">
+                            <table class="table table-bordered table-striped text-no">
                                 <tbody>
                                     <tr>
                                         <td>Provided By:</td>
@@ -49,7 +49,7 @@
                                         <td>{{ credit_score.created_at | excelDate }}</td>
                                     </tr>
                                     <tr>
-                                        <td colspan="2">
+                                        <td colspan="2" class="text-wrap">
                                             {{ credit_score.response }}
                                         </td>
                                     </tr>

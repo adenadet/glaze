@@ -82,6 +82,8 @@ trait GuarantorTrait{
         
         Mail::to($guarantor->email)->send(new ThanksMail($loan, $guarantor));
 
+        return $guarantor;
+
     }
 
     public function guarantor_new_request($loan, $guarantor){

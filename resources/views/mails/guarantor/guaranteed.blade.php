@@ -484,7 +484,6 @@
                                             <p>With the guarantor's confirmation, we are moving ahead with the necessary steps to finalize your loan application. Our team is diligently working to process the application, and we will keep you updated on any further developments.</p>
                                             <p>Thank you for choosing {{config('app.name_short')}} for your financial needs. We look forward to assisting you further.
                                             <p>Best regards,
-                                                <br />Ahmed Olatunji,
                                                 <br />Chief Operations Officer,
                                                 <br />{{config('app.name')}}
                                             </p>

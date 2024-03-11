@@ -4,18 +4,23 @@ namespace App\Http\Controllers\Api\Loans;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+
+use App\Http\Traits\LoanAccountTrait;
 
 use App\Models\Loans\Account;
 use App\Models\Loans\Disbursement;
-use Illuminate\Support\Facades\Mail;
 
 use App\Mail\Loans\DisbursementMail;
+
+
 class DisbursementController extends Controller
 {
+    use LoanAccountTrait;
     public function index()
     {
         return response()->json([      
-            'accounts' => Account::where('status', 3)->with(['account_officer', 'user', 'type'])->paginate(20),
+            'accounts' => $this->account_all('disbursement', $_GET['page']),
         ]);
     }
 

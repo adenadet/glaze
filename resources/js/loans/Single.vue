@@ -21,6 +21,9 @@
             <LoanDetailGuarantors source="Customer"/>
         </div>
         <div class="col-md-6">
+            <LoanDetailFiles source="Customer" :account="account" :files="account.files"/>
+        </div>
+        <div class="col-md-8">
             <LoanDetailRepayments />
         </div>
         <div class="col-md-4"> 

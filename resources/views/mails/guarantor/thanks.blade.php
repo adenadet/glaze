@@ -485,7 +485,6 @@
                                             <p>We want to assure you that we take the responsibility associated with guarantorship seriously and will keep you informed about any developments in the loan application process. If you have any questions or concerns, please don't hesitate to reach out to us.</p>
                                             <p>Once again, thank you for your support. We look forward to a successful collaboration in assisting  {{$loan->user->first_name}} {{$loan->user->last_name}} with their financial needs.</p>
                                             <p>Best regards,
-                                                <br />Ahmed Olatunji,
                                                 <br />Chief Operations Officer,
                                                 <br />{{config('app.name')}}
                                             </p>

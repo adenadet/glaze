@@ -53,9 +53,8 @@ class GuarantorRequestController extends Controller
             'net_income'=> 'required',
         ]);
 
-        $this->guarantor_confirm_request($request);
+        $guarantor = $this->guarantor_confirm_request($request);
 
-        
         return response()->json([
             'guarantor' => $guarantor,
             'status' => 'Guarantorship successfully added',

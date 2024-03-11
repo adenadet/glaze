@@ -26,6 +26,19 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="fileModal">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Upload Statement Modal</h4>
+                    <button type="button" class="close" data-dismiss="modal" @click="closeModal()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <LoanFormFile :editMode="editMode" :type="file_type"/>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="card custom-card"> 
         <div class="card-header justify-content-between"> 
             <div class="card-title"> Loans </div> 
@@ -62,8 +75,9 @@
                                 <div class="dropdown-menu">
                                     <router-link class="btn btn-block dropdown-item" :to="'/loans/'+account.id"><i class="fa fa-eye mr-1 text-primary"></i> View </router-link>
                                     <button v-if="account.status < 5" class="btn btn-block dropdown-item" @click="addGuarantors(account)"><i class="fa fa-user-friends mr-1 text-primary"></i> Add Guarantor </button>
+                                    <button v-if="account.status < 5" class="btn btn-block dropdown-item" @click="addFiles(null, account.id)"><i class="fa fa-copy mr-1"></i> Add Files </button>
                                     <button v-if="account.status > 13" class="btn btn-block dropdown-item" @click="closeLoan()"><i class="fa fa-times mr-1 text-danger"></i> Liquidate Loan</button>
-                                    <button v-else class="btn btn-block dropdown-item" @click="deleteLoan(1)"><i class="fa fa-trash mr-1 text-danger"></i> Delete Loan Request</button>
+                                    <button v-else class="btn btn-block dropdown-item" @click="deleteLoan(account.id)"><i class="fa fa-trash mr-1 text-danger"></i> Delete Loan Request</button>
                                 </div>
                             </td>
                         </tr> 
@@ -85,6 +99,7 @@ export default {
             account: {},
             all_banks: [],
             editMode: false,
+            file_type: '',
             form: new Form({}),
             guarantor: {},
             loan: {},
@@ -110,6 +125,13 @@ export default {
         });
     },
     methods:{
+        addFiles(type = null , id){
+            this.$Progress.start();
+            this.file_type = type,
+            Fire.$emit('FileDataFill', id);
+            $('#fileModal').modal('show');
+            this.$Progress.finish();
+        },
         addGuarantors(account){
             this.$Progress.start();
             Fire.$emit('GuarantorDataFill', account);
@@ -131,7 +153,10 @@ export default {
 
         },
         closeModal(){
+            $('#collateralModal').modal('hide');
+            $('#GuarantorModal').modal('hide');
             $('#loanModal').modal('hide');
+            $('#statementModal').modal('hide');
         },
         deleteLoan(id){
             Swal.fire({
@@ -157,12 +182,12 @@ export default {
                 }
             });
         },
-        getInitials(){
-            this.initial_route = '/api/loans/accounts';
+        getInitials(page=1){
+            this.initial_route = '/api/loans/accounts?page='+page;
             this.option_mode = "customer";
             axios.get(this.initial_route).then(response =>{
                 this.reloadPage(response);
-                toast.fire({icon: 'success', title: 'Loan Accounts loaded successfully',});
+                //toast.fire({icon: 'success', title: 'Loan Accounts loaded successfully',});
             })
             .catch(()=>{
                 this.$Progress.fail();
