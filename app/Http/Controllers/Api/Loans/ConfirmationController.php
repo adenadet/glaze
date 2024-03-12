@@ -80,8 +80,6 @@ class ConfirmationController extends Controller
             'created_by' => auth('api')->id(),
             'updated_by' => auth('api')->id(),
         ]);
-
-        $loan->status_date = date('Y-m-d H:i:s');
         $loan->status = $request->input('action');
         $loan->updated_by = auth('api')->id();
         $loan->updated_at = date('Y-m-d H:i:s');

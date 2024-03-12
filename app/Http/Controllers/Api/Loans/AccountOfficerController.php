@@ -7,12 +7,15 @@ use App\Models\Loans\Account;
 use App\Models\Loans\AccountOfficer;
 use Illuminate\Http\Request;
 
+use App\Http\Traits\LoanAccountTrait;
+
 class AccountOfficerController extends Controller
 {
+    use LoanAccountTrait;
     public function index()
     {
         return response()->json([
-            'accounts' => $this->accounts_all('account_officer', $_GET['page']),
+            'accounts' => $this->account_all('account_officer', $_GET['page']),
         ]);
     }
 
