@@ -76,7 +76,7 @@
                     <div class="col-md-8">
                         <div class="form-group" v-if="loanData.signature_type == 'manual'">
                             <label>Signature</label>
-                            <VueSignaturePad :options="options" class="signature" ref="signaturePad" v-model="loanData.signature" required />
+                            <VueSignaturePad :options="options" class="signature" ref="signaturePad" required />
                             <button @click="undo" class="btn btn-sm btn-default">Undo</button>
                         </div>
                         <div class="form-group" v-else>
@@ -165,12 +165,13 @@
             change() {this.options = {penColor: "#00f",};},
             createLoan(){
                 this.$Progress.start();
+                if (this.loanData.signature_type == 'manual'){this.save();}
+                else{this.updateSignature();}
                 this.loanData.post('/api/loans/accounts')
                 .then(response=>{
                     this.$Progress.finish();
                     Swal.fire({icon: 'success', title: response.data.message,});
                     Fire.$emit('getGuarantors', response);
-                    //this.$route.push('/loans/'+response.data.loan.id+'/guarantor_request');
                 })
                 .catch(()=>{
                     this.$Progress.fail();
@@ -192,6 +193,7 @@
             resume() {this.options = {penColor: "#00f",};},
             save() {
                 const { isEmpty, data } = this.$refs.signaturePad.saveSignature();
+                this.loanData.signature = data;
             },
             undo() {
                     this.$refs.signaturePad.undoSignature();

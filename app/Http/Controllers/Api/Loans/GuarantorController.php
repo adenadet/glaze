@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\FileTrait;
 use App\Http\Traits\GuarantorTrait;
 
 use App\Models\Loans\Account;
@@ -90,7 +91,7 @@ class GuarantorController extends Controller
         $gr = GuarantorRequest::where('id', '=', $id)->first();
         $loan = Account::where('id', '=', $gr->loan_id)->with('user')->first();
 
-        Mail::to($gr->email)->send(new RequestMail( $loan, $gr));
+        Mail::to($gr->email)->send(new RequestMail($loan, $gr));
         
         return response()->json([
             'message' => 'Guarantor added successfully',       

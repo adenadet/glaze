@@ -2,7 +2,7 @@
 <section class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <form class="" action="#">
+            <form class="" method="POST" @submit.prevent="guaranteeLoan()">
                 <div class="card">
                     <div class="card-header">Guarantee A Loan</div>
                     <div class="card-body">
@@ -185,13 +185,12 @@
                                             <label>Signature</label>
                                             <VueSignaturePad :options="options" class="signature" ref="signaturePad" v-model="confirmationData.guarantor_signature" required />
                                             <div class="btn-group mt-2">
-                                                <button @click="save" class="btn btn-sm btn-success">Save</button>
                                                 <button @click="undo" class="btn btn-sm btn-default">Undo</button>
                                             </div>
                                         </div>
                                     </div>   
                                 </div>
-                                <button class="btn btn-success" type="button" @click="guaranteeLoan()">Guarantee Loan</button>
+                                <button class="btn btn-success" type="submit">Guarantee Loan</button>
                                 <button class="btn btn-danger" type="button" @click="rejectLoan()">Reject Request</button>
                             </div>
                         </div> 
@@ -254,39 +253,13 @@ export default {
         this.getInitials();
     },
     methods:{
-        undo() {
-                this.$refs.signaturePad.undoSignature();
+        change() {
+            this.options = {penColor: "#00f",};
         },
-        save() {
-            const { isEmpty, data } = this.$refs.signaturePad.saveSignature();
+		resume() {
+            this.options = {penColor: "#00f",};
         },
-        change() {this.options = {penColor: "#00f",};},
-		resume() {this.options = {penColor: "#00f",};},
-		sign(id){this.$Progress.start();$('#signaturetModal').modal('show');this.$Progress.finish();},
-		ClearFormData()
-		{
-			document.getElementById('SignBtn').disabled = false;
-		},
-        createAddressData(){
-            this.AddressData.user_id = this.user.id;
-            this.$Progress.start();
-            this.AddressData.post('/api/ums/addresses')
-            .then(response =>{
-                this.$Progress.finish();
-                Fire.$emit('Reload', response);
-                Swal.fire({
-                    icon: 'success',
-                    title: 'The Address details has been created',
-                    showConfirmButton: false,
-                    timer: 1500
-                    });
-           })
-            .catch(()=>{
-                Swal.fire({icon: 'error', title: 'Oops...', text: 'Something went wrong!', footer: 'Please try again later!'});
-                this.$Progress.fail();
-            });  
-                    
-        },
+		//sign(id){this.$Progress.start();$('#signaturetModal').modal('show');this.$Progress.finish();},
         getInitials(){
             axios.get('/api/guarantor_requests/'+this.$route.params.id)
             .then(response => {
@@ -300,6 +273,7 @@ export default {
         },
         guaranteeLoan(){
             this.confirmationData.request_id = this.$route.params.id;
+            this.save();
             this.confirmationData.post('/api/guarantor_requests') 
             .then(response =>{
                 this.$Progress.finish();
@@ -323,25 +297,13 @@ export default {
             this.status = response.data.status;
             this.message = response.data.message;
         },
-        updateAddressData(){
-            this.AddressData.user_id = this.user.id;
-            this.$Progress.start();
-            this.AddressData.post('/api/ums/addresses/'+this.AddressData.id)
-            .then(response =>{
-                this.$Progress.finish();
-                Fire.$emit('Reload', response);
-                Swal.fire({
-                    icon: 'success',
-                    title: 'The Address details has been updated',
-                    showConfirmButton: false,
-                    timer: 1500
-                    });
-            })
-            .catch(()=>{
-                Swal.fire({icon: 'error', title: 'Oops...', text: 'Something went wrong!', footer: 'Please try again later!'});
-                this.$Progress.fail();
-            });            
+        save() {
+            const { isEmpty, data } = this.$refs.signaturePad.saveSignature();
+            this.confirmationData.guarantor_signature = data;
         },
+        undo() {
+            this.$refs.signaturePad.undoSignature();
+        }
     },
     props:{},
 }
@@ -357,14 +319,14 @@ export default {
 }
 
 .container {
-  width: "100%";
-  padding: 8px 16px;
+    width: "100%";
+    padding: 8px 16px;
 }
 
 .buttons {
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  margin-top: 8px;
+    display: flex;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 8px;
 }
 </style>

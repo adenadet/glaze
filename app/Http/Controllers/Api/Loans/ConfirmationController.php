@@ -11,6 +11,7 @@ use App\Models\Loans\Type;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+
 class ConfirmationController extends Controller
 {
     public function index()

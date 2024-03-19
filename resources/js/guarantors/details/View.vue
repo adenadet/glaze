@@ -53,8 +53,8 @@
                     <label>Annual Income Range</label>
                     <div class="form-control" id="net_income"  name="net_income" >
                         <span v-if="guarantor.net_income= '<500000'">less than 500,000</span>
-                        <span v-else-if="guarantor.net_income= '500,000 - 2,000,000'">500,000 - 1,000,000</span>
-                        <span v-else-if="guarantor.net_income= '500,000 - 2,000,000'">1,000,000 - 10,000,000</span>
+                        <span v-else-if="guarantor.net_income= '500,000 - 1,000,000'">500,000 - 1,000,000</span>
+                        <span v-else-if="guarantor.net_income= '1,000,000 - 10,000,000'">1,000,000 - 10,000,000</span>
                         <span v-else-if="guarantor.net_income= '>10000000'">greater than 10,000,000</span>
                     </div>
                 </div>
@@ -136,7 +136,7 @@
             <div class="col-sm-6">
                 <div class="form--group">
                     <label>Signature</label>
-                    <img :src="guarantor.signature != null ? confirmation.signature : ''" />
+                    <img :src="guarantor.guarantor_signature != null ? '/'+guarantor.guarantor_signature : ''" />
                 </div>
             </div>   
         </div>
@@ -156,7 +156,6 @@ export default {
     mounted() {
         Fire.$on('GuarantorDataFill', guarantor => {
             this.guarantor = guarantor;
-            alert(guarantor.first_name);
         });
     },
     methods:{

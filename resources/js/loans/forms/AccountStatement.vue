@@ -98,7 +98,6 @@ export default {
                 name: this.policyData.name, 
                 editMode: this.editMode,
             });
-            //console.log(json);
 
             let currentObj = this;
             

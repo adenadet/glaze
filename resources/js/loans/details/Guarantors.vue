@@ -14,7 +14,7 @@
         </div>
     </div>
     <div class="modal fade" id="GuarantorViewModal">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">View Guarantor Details</h4>

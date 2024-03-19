@@ -179,7 +179,6 @@ class AccountController extends Controller{
         
         //Check if the number are still valid
         $user = User::find($loan->user_id);
-        //$saving = Saving::where('user_id', '=', $user->id)->where('name', 'LIKE', '%Contribution%')->where('status', '=', 1)->first();
         
         return response()->json([
             'loan' => $loan,
@@ -188,7 +187,6 @@ class AccountController extends Controller{
             'accounts' => Bank::all(),
             'all_banks' => AllBank::orderBy('bank_name', 'ASC')->get(),
             'branches' => Branch::with('users.savings')->get(),      
-            //'savings' => Saving::where('user_id',  auth('api')->id())->get(),
             'loans' => Account::where('status', '=', 0)->with('user.branch')->with('payment_bank')->with('loan_guarantors.guarantor')->orderBy('requested_date', 'ASC')->get(),      
         ]);
         

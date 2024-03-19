@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api\Loans;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Http\Traits\FileTrait;
+
 use App\Models\Loans\File;
 class FileController extends Controller
 {
@@ -16,20 +18,14 @@ class FileController extends Controller
 
     public function store(Request $request)
     {
-        $upload_path = "uploads/files";
-        $fileName = null;
-        if((is_null($request->file)) || ($request->file == "")){$file_type = null; }
-        else{
-            $fileName = time().'.'.$request->file->getClientOriginalExtension();
-            $request->file->move(public_path($upload_path), $fileName);
-        }
+        $file_name = $this->file_upload_by_type($request->file, 'pdf', 'uploads/files', '');
 
         $data = json_decode($request->input('data'));
         $loan_file = File::create([
             'description' => $data->description,
             'loan_id' => $data->loan_id,
             'file_name' => $data->file_name,
-            'source' => is_null($request->file) ? NULL : $upload_path.'/'.$fileName,
+            'source' => $file_name,
             'file_type' => 'pdf',
             'status' => 0,
             'created_by' => auth('api')->id(),

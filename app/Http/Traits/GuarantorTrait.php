@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Traits;
 
+use App\Http\Traits\FileTrait;
 use App\Models\Loans\Account;
 use App\Models\Loans\Guarantor;
 use App\Models\Loans\GuarantorRequest;
@@ -15,9 +16,10 @@ use App\Models\Loans\Type;
 use Illuminate\Support\Facades\Mail;
 
 trait GuarantorTrait{
-
+    use FileTrait;
     public function create_guarantor($request){
         $guarantor_request = GuarantorRequest::where('id', '=', $request->input('request_id'))->first();
+        $guarantor_signature = $request->input('guarantor_signature') != null ? $this->file_upload_by_type($request->input('guarantor_signature'), 'image', 'img/guarantors', $request->input('request_id')) : null;
         $guarantor = Guarantor::create([
             'loan_id'=> $guarantor_request->loan_id,
             'request_id'=> $request->input('request_id'),
@@ -42,6 +44,7 @@ trait GuarantorTrait{
             'description'=> $request->input('description') ?? NULL,
             'net_income'=> $request->input('net_income'),
             'guarantor_date' => date('Y-m-d H:i:s'),
+            'guarantor_signature' => $guarantor_signature,
         ]);
 
         return $guarantor;
