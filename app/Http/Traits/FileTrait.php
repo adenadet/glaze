@@ -23,8 +23,10 @@ trait FileTrait{
         }
 
         else if ($type == 'pdf'){
-            $new_name = $id."-".time().'.'.$file->getClientOriginalExtension();
-            $file->move(public_path($location), $new_name);
+            $new_name = $id."-".time().'.pdf';
+            //$file->move(public_path($location), $new_name);
+            $bin = base64_decode($file, true);
+            file_put_contents((public_path($location).'/'.$new_name), $bin);
             return $location.'/'.$new_name;
         }
     }

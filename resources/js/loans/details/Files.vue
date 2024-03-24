@@ -1,15 +1,33 @@
 <template>
-    <section class="card">
+    <section>
+        <div class="modal fade" id="fileModal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Upload Files Modal</h4>
+                        <button type="button" class="close" data-dismiss="modal" @click="closeModal()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    </div>
+                    <div class="modal-body">
+                        <LoanFormFile :editMode="editMode" :type="file_type"/>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="card">
             <div class="card-header">
                 <h3 class="card-title">Uploaded Files</h3>
                 <div class="card-tools">
-                    <div class="input-group input-group-sm" style="width: 150px;">
+                    <div class="input-group input-group-sm" style="width: 250px;">
                         <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
                         <div class="input-group-append">
-                            <button type="submit" class="btn btn-default">
-                                <i class="fas fa-search"></i>
-                            </button>
+                            <div class="btn-group">
+                                <button type="submit" class="btn btn-default btn-xs">
+                                    <i class="fas fa-search mr-1"></i> Search
+                                </button>
+                                <button type="button" class="btn btn-primary btn-xs" title="Add File" @click="addLoanFile()">
+                                    <i class="fa fa-file mr-1"></i>Add File
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -34,7 +52,7 @@
                             <td>{{ file.source }}</td>
                             <td>{{ file.created_at | excelDate }}</td>
                             <td>{{ file.status  }}</td>
-                            <td v-if="source == 'Staff'">
+                            <td v-if="source == 'account'">
                                 <button type="button" class="btn btn-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
                                 <div class="dropdown-menu">
                                     <button class="btn btn-block dropdown-item" @click="approveFile(file.id)"><i class="fa fa-check mr-1"></i> Approve</button>
@@ -45,7 +63,7 @@
                     </tbody>
                     <tbody v-else>
                         <tr>
-                            <td :colspan="source==Staff ? 6 : 5">No FIle Has Been Uploaded</td>
+                            <td :colspan="source=='account' ? 6 : 5">No File Has Been Uploaded</td>
                         </tr>
                     </tbody>
                 </table>
@@ -57,32 +75,23 @@
 export default {
     data(){
         return {
-            file_types: [],
+            editMode: false,
+            file_type: '',
             form: new Form({}),
         }
     },
     methods:{
-        addFiles(){
+        addLoanFile(){
             this.$Progress.start();
-            this.loanData.post('/api/loans/accounts')
-            .then(response=>{
-                this.$Progress.finish();
-                Swal.fire({icon: 'success', title: response.data.message,});
-                Fire.$emit('getGuarantors', response);
-                //this.$route.push('/loans/'+response.data.loan.id+'/guarantor_request');
-            })
-            .catch(()=>{
-                this.$Progress.fail();
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Your form was not sent try again later!',
-                });
-            });
+            this.editMode = false;
+            Fire.$emit('FileDataFill', this.account.id);
+            $('#fileModal').modal('show');
+            this.$Progress.finish();
         },
         approveFile(id){},
+        closeModal(){},
         rejectFile(id){},    
     },
-    methods:{},
     mounted() {
         //this.getInitials();     
     },

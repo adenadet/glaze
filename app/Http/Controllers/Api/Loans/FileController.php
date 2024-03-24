@@ -10,7 +10,7 @@ use App\Http\Traits\FileTrait;
 use App\Models\Loans\File;
 class FileController extends Controller
 {
-
+    use FileTrait;
     public function index()
     {
         //
@@ -18,13 +18,12 @@ class FileController extends Controller
 
     public function store(Request $request)
     {
-        $file_name = $this->file_upload_by_type($request->file, 'pdf', 'uploads/files', '');
+        $file_name = $this->file_upload_by_type($request->file, 'pdf', 'uploads/files', $request->loan_id);
 
-        $data = json_decode($request->input('data'));
         $loan_file = File::create([
-            'description' => $data->description,
-            'loan_id' => $data->loan_id,
-            'file_name' => $data->file_name,
+            'description' => $request->description,
+            'loan_id' => $request->loan_id,
+            'file_name' => $request->file_name,
             'source' => $file_name,
             'file_type' => 'pdf',
             'status' => 0,

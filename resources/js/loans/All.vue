@@ -46,7 +46,7 @@
                 <button class="btn btn-sm btn-primary" @click="addNew()"><i class="fa fa-plus mr-1"></i> Request New</button> 
             </div> 
         </div> 
-        <div class="card-body"> 
+        <div class="card-body p-0"> 
             <div class="table-responsive"> 
                 <table class="table" v-if="accounts != null && accounts.data != null && accounts.data.length != 0 "> 
                     <thead>
@@ -75,7 +75,7 @@
                                 <div class="dropdown-menu">
                                     <router-link class="btn btn-block dropdown-item" :to="'/loans/'+account.id"><i class="fa fa-eye mr-1 text-primary"></i> View </router-link>
                                     <button v-if="account.status < 5" class="btn btn-block dropdown-item" @click="addGuarantors(account)"><i class="fa fa-user-friends mr-1 text-primary"></i> Add Guarantor </button>
-                                    <button v-if="account.status < 5" class="btn btn-block dropdown-item" @click="addFiles(null, account.id)"><i class="fa fa-copy mr-1"></i> Add Files </button>
+                                    <button v-if="account.status < 5" class="btn btn-block dropdown-item" @click="addFiles('Statement of Account (6 months)', account.id)"><i class="fa fa-copy mr-1"></i> Add Files </button>
                                     <button v-if="account.status > 13" class="btn btn-block dropdown-item" @click="closeLoan()"><i class="fa fa-times mr-1 text-danger"></i> Liquidate Loan</button>
                                     <button v-else class="btn btn-block dropdown-item" @click="deleteLoan(account.id)"><i class="fa fa-trash mr-1 text-danger"></i> Delete Loan Request</button>
                                 </div>
@@ -98,6 +98,7 @@ export default {
             accounts: {},
             account: {},
             all_banks: [],
+            continue_to: '',
             editMode: false,
             file_type: '',
             form: new Form({}),
@@ -121,8 +122,14 @@ export default {
         Fire.$on('getGuarantors', response => {
             this.closeModal();
             this.account = response.data.current_loan;
+            this.continue_to = "AccountStatement";
             this.addGuarantors(response.data.current_loan);
         });
+        Fire.$emit('addAccountStatement', id => {
+            this.closeModal();
+            this.continue_to = "";
+            this.addFiles("account_statement", id);
+        })
     },
     methods:{
         addFiles(type = null , id){
@@ -150,7 +157,7 @@ export default {
 
         },
         closeLoan(){
-
+            
         },
         closeModal(){
             $('#collateralModal').modal('hide');
@@ -186,6 +193,7 @@ export default {
             this.initial_route = '/api/loans/accounts?page='+page;
             this.option_mode = "customer";
             axios.get(this.initial_route).then(response =>{
+                this.closeModal();
                 this.reloadPage(response);
                 //toast.fire({icon: 'success', title: 'Loan Accounts loaded successfully',});
             })
@@ -195,6 +203,7 @@ export default {
             });
         },
         reloadPage(response){
+            this.closeModal();
             this.accounts = response.data.accounts;
             this.all_banks = response.data.all_banks;
             this.loan_types = response.data.loan_types;

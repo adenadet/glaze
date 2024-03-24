@@ -91,12 +91,8 @@ export default {
             .then(response =>{
                 this.$Progress.finish();
                 Fire.$emit('Reload', response);
-                Swal.fire({
-                    icon: 'success',
-                    title: 'The Guarantors details has been created',
-                    showConfirmButton: false,
-                    timer: 1500
-                });
+                if (this.continue_to == "AccountStatement"){Fire.$emit('addAccountStatement', this.loan);}
+                Swal.fire({icon: 'success', title: 'The Guarantors details has been created', showConfirmButton: false, timer: 1500});
             })
             .catch(()=>{
                 Swal.fire({icon: 'error', title: 'Oops...', text: 'Something went wrong!', footer: 'Please try again later!'});
@@ -127,6 +123,8 @@ export default {
             this.loan = response.data.account;
         },
     },
-    props:{},
+    props:{
+        continue_to: String,
+    },
 }
 </script>

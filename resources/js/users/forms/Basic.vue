@@ -93,7 +93,7 @@
         <div class="col-md-12 col-sm-12">
             <label>Profile Pic</label>
             <div class="form-group">
-                <input type="file" class="form-control" placeholder="Birth Date" @change="updateProfilePic">
+                <input type="file" class="form-control" @change="updateProfilePic">
             </div>
         </div>
     </div>

@@ -24,7 +24,8 @@ class FirstCentralController extends Controller
 {
     public function index()
     {
-        $feedback = Http::post(config('app.first_central_url').'/login', [
+        $feedback = Http::withOptions(['debug' => true, 'verify' => false,])
+        ->post(config('app.first_central_url').'/login', [
             'username' => config('app.first_central_user'),
             'password' => config('app.first_central_password')
         ]);
@@ -33,7 +34,7 @@ class FirstCentralController extends Controller
 
     public function validateToken(Request $request){
         $route = config('app.first_central_url').'/ValidateTicket';
-        $feedback = Http::post($route, [
+        $feedback = Http::withOptions(['verify' => false,])->post($route, [
             'DataTicket' => $request->input('token'),
         ]);
         return json_decode($feedback);
@@ -76,7 +77,7 @@ class FirstCentralController extends Controller
         }
 
         //Get Feedback From First Central
-        $feedback = Http::post( $route, $body);
+        $feedback = Http::withOptions(['verify' => false,])->post( $route, $body);
 
         $test = json_decode($feedback);
 

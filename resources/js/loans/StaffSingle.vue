@@ -5,6 +5,7 @@
         <div class="row">
             <div class="col-md-12"><LoanDetailSummary /></div>
             <div class="col-md-12"><LoanDetailCPM /></div>
+            <div class="col-md-12"><LoanDetailFiles source="staff"/></div>
             <div class="col-md-12"><LoanDetailCheckList /></div>
             <div class="col-md-12"><LoanDetailGuarantors /> </div>
             <div class="col-md-12"><LoanDetailRepayments /> </div>
