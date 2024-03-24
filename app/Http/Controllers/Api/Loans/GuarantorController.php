@@ -20,11 +20,22 @@ class GuarantorController extends Controller
 {
     use GuarantorTrait;
     
+    public function destroy($id)
+    {
+        $loan_id = $this->guarantor_delete_request($id);
+
+        return response()->json([
+            'account' => Account::where('id', '=', $loan_id)->with('guarantor_requests.guarantor')->first(),
+            'message' => 'Guarantor added successfully',
+            'guarantors' => $this->guarantor_get_requests($id),
+        ]);
+    }
+    
     public function display($id)
     {
         return response()->json([
             'account' => Account::where('id', '=', $id)->with('guarantor_requests.guarantor')->first(),
-            'guarantors' => GuarantorRequest::where('loan_id', '=', $id)->with('guarantor')->get(),
+            'guarantors' => $this->guarantor_get_requests($id),
         ]);
     }
 
@@ -60,7 +71,6 @@ class GuarantorController extends Controller
 
         return response()->json([
             'requests' => GuarantorRequest::whereIN('loan_id',$loans)->with(['account', 'guarantor'])->latest()->paginate(10),
-            //'loans' => $loans,
         ]);
     }
 
@@ -140,10 +150,5 @@ class GuarantorController extends Controller
     public function update(Request $request, $id)
     {
         
-    }
-
-    public function destroy($id)
-    {
-        //
     }
 }

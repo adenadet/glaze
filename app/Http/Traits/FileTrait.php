@@ -5,16 +5,14 @@ use App\Models\Loans\Account;
 use App\Models\Loans\Guarantor;
 use App\Models\Loans\GuarantorRequest;
 
-use App\Mail\Guarantor\ConfirmMail;
-use App\Mail\Guarantor\GuaranteedMail;
-use App\Mail\Guarantor\RequestMail;
-use App\Mail\Guarantor\ThanksMail;
-use App\Models\Country;
-use App\Models\Loans\Type;
-
+use App\Models\Loans\File;
 use Illuminate\Support\Facades\Mail;
 
 trait FileTrait{
+    public function file_get_loan_files_by_id($id){
+        return File::where('loan_id', '=', $id)->latest()->get();
+    }
+    
     public function file_upload_by_type($file, $type, $location, $id){
         if($type == 'image'){
             $new_name = $id."-".time().".".explode('/',explode(':', substr( $file, 0, strpos($file, ';')))[1])[1];
@@ -24,9 +22,9 @@ trait FileTrait{
 
         else if ($type == 'pdf'){
             $new_name = $id."-".time().'.pdf';
-            //$file->move(public_path($location), $new_name);
-            $bin = base64_decode($file, true);
-            file_put_contents((public_path($location).'/'.$new_name), $bin);
+            $dent = explode("base64,", $file);
+            $dustbin = base64_decode($dent[1], true);
+            file_put_contents((public_path($location).'/'.$new_name), $dustbin);
             return $location.'/'.$new_name;
         }
     }

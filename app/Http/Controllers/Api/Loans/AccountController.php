@@ -47,6 +47,20 @@ class AccountController extends Controller{
         ]);
     }
 
+    public function destroy($id)
+    {
+        $loan = Account::where('id', '=', $id)->first();
+
+        $loan->status = 3;
+        $loan->deleted_by = auth('api')->id();
+        $loan->deleted_at = date('Y-m-d H:i:s');
+        $loan->save();
+
+        return response()->json([      
+            'accounts' => Account::where('user_id', auth('api')->id())->with([ 'guarantor_requests', 'repayments', 'user', 'type', ])->latest()->paginate(20),
+        ]);
+    }
+
     public function initials()
     {
         return response()->json([
@@ -138,7 +152,7 @@ class AccountController extends Controller{
 
         $user = User::find($request->input('user_id'));
 
-        $this->createNewLoanActivity($user, $loan);
+        $this->log_createNewLoanActivity($user, $loan);
         return response()->json([
             'current_loan' => $loan,       
             'message' => 'Successfully created, kindly add guarantors',
@@ -176,33 +190,61 @@ class AccountController extends Controller{
     public function update(Request $request, $id)
     {
         $loan = Account::find($id);
+        $loan_type = Type::where('ProductCode', '=', $request['loan_type_id'])->with('requirements')->first();
+            
+        if ($loan_type->interest_type == 'Flat'){
+            $principal = $request->input('amount');
+            $rate = 0.6 ;
+            $time = $request->input('frequency') == 'weeks' ? ($request->input('duration') / 52) : ($request->input('duration') / 12);
+            $totalPayment = $request->input('amount') * (1 + ($rate * $time));
+            $emiMonthly =  $totalPayment / $request->input('duration');
+        }
+
+        else if($loan_type->interest_type == 'Reducing'){    
+            $principal = $request->input('amount');
+            $interest = $request->input('frequency') == 'weeks' ? $loan_type->percentage / 5200 : $loan_type->percentage / 1200;
+            $x = pow(1 + $interest, $request->input('duration'));
+            $emiMonthly =  ($principal  * $x * $interest) / ($x-1);    
+        }
+
+        $bank = AllBank::where('bank_code', '=', $request->input('bank_id'))->first();
+
+        $signaturePad = NULL;
+        if (!is_null($request->input('signature'))){
+            $signature_pad = time().".".explode('/',explode(':', substr( $request->input('signature'), 0, strpos($request->input('signature'), ';')))[1])[1];
+            \Image::make($request->input('signature'))->save(public_path('img/consents/').$signature_pad);
+            $signaturePad = $signature_pad;
+        }
+
+        $loan->type_id = $loan_type->id;
+        $loan->user_id = $request->input('user_id') ?? auth('api')->id();
+        $loan->amount = $request->input('amount');
+        $loan->payable = round(($emiMonthly * $request->input('duration')), 2);
+        $loan->emi = round(($emiMonthly), 2);
+        $loan->duration = $request->input('duration');
+        $loan->frequency = $request->input('frequency');
+        $loan->name = $request->input('name') ?? 'Loan';
+        $loan->bank_id = $bank->id;
+        $loan->acct_name = $request->input('acct_name');
+        $loan->acct_number = $request->input('acct_number');
+        $loan->signature = $signaturePad;
+        $loan->total_paid = 0;
+        $loan->status_date = date('Y-m-d H:i:s');
+        $loan->request_by = $request->input('user_id') ?? auth('api')->id();
+        $loan->updated_by = auth('api')->id();
         
-        //Check if the number are still valid
-        $user = User::find($loan->user_id);
+        $loan->save();
+        
+        $this->log_activity_update_loan(auth('api')->user(), $loan);
         
         return response()->json([
             'loan' => $loan,
-            'status' => 'error',
-            'message' => 'Not Yet Guaranteed 1',
+            'status' => 'success',
+            'message' => 'Modifications',
             'accounts' => Bank::all(),
             'all_banks' => AllBank::orderBy('bank_name', 'ASC')->get(),
             'branches' => Branch::with('users.savings')->get(),      
-            'loans' => Account::where('status', '=', 0)->with('user.branch')->with('payment_bank')->with('loan_guarantors.guarantor')->orderBy('requested_date', 'ASC')->get(),      
-        ]);
-        
-    }
-
-    public function destroy($id)
-    {
-        $loan = Account::where('id', '=', $id)->first();
-
-        $loan->status = 3;
-        $loan->deleted_by = auth('api')->id();
-        $loan->deleted_at = date('Y-m-d H:i:s');
-        $loan->save();
-
-        return response()->json([      
-            'accounts' => Account::where('user_id', auth('api')->id())->with([ 'guarantor_requests', 'repayments', 'user', 'type', ])->latest()->paginate(20),
+            'loans' => $this->account_all('mine', 1),
         ]);
     }
 

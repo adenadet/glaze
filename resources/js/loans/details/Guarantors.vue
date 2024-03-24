@@ -26,45 +26,50 @@
             </div>
         </div>
     </div>
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Loan Guarantors</h3>
-            <button class="card-tools btn btn-sm btn-primary" @click="addNew()" v-if="source == 'Customer'">Modify Guarantors</button>
+    <div class="overlay-wrapper">
+        <div class="overlay" v-if="loading">
+            <i class="fas fa-3x fa-sync-alt fa-spin"></i>
         </div>
-        <div class="card-body p-0">
-            <table class="table table-bordered table-stripped ">
-                <thead>
-                    <tr>
-                        <th style="width: 10px">#</th>
-                        <th>Guarantor</th>
-                        <th>Contact</th>
-                        <th>Status</th>
-                        <th>Feedback</th>
-                        <th>&nbsp;</th>
-                    </tr>
-                </thead>
-                <tbody v-if="guarantors != null">
-                    <tr v-for="(guarantor, index) in guarantors" :key="guarantor.id">
-                        <td>{{ index | addOne }}</td>
-                        <td>{{ guarantor.first_name+' '+guarantor.last_name }}</td>
-                        <td>{{ guarantor.email }} | {{ guarantor.phone }}</td>
-                        <td>{{ guarantor.status == 0 ? 'Not Done' : (guarantor.status == 1 ? 'Confirmed': (guarantor.status == 2 ? 'Rejected' : 'Unknown')) }}</td>
-                        <td :title="guarantor.description">{{ guarantor.description }}</td>
-                        <td>
-                            <button type="button" class="btn btn-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
-                            <div class="dropdown-menu">
-                                <button class="btn btn-block dropdown-item" v-if="guarantor.status == 1" @click="viewGuarantor(guarantor.guarantor)"><i class="fa fa-eye mr-1 text-primary"></i> View </button>
-                                <button class="btn btn-block dropdown-item" v-else @click="resendGuarantor(guarantor.id)"><i class="fa fa-reply mr-1"></i> Resend Request</button>
-                                <button v-if="guarantor.status == 0" class="btn btn-block dropdown-item" @click="deleteGuarantor(guarantor.id)"><i class="fa fa-trash mr-1 text-danger"></i> Delete Guarantor Request</button>
-                            </div>
-                        </td>
-                    </tr>    
-                </tbody>
-                <tbody v-else>
-                    <tr><td colspan="6">No Guarantor has been added</td></tr>
-                </tbody>
-            </table>
-        </div> 
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Loan Guarantors</h3>
+                <button class="card-tools btn btn-sm btn-primary" @click="addNew()" v-if="source == 'Customer'">Modify Guarantors</button>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-bordered table-stripped ">
+                    <thead>
+                        <tr>
+                            <th style="width: 10px">#</th>
+                            <th>Guarantor</th>
+                            <th>Contact</th>
+                            <th>Status</th>
+                            <th>Feedback</th>
+                            <th>&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody v-if="guarantors != null">
+                        <tr v-for="(guarantor, index) in guarantors" :key="guarantor.id">
+                            <td>{{ index | addOne }}</td>
+                            <td>{{ guarantor.first_name+' '+guarantor.last_name }}</td>
+                            <td>{{ guarantor.email }} | {{ guarantor.phone }}</td>
+                            <td>{{ guarantor.status == 0 ? 'Not Done' : (guarantor.status == 1 ? 'Confirmed': (guarantor.status == 2 ? 'Rejected' : 'Unknown')) }}</td>
+                            <td :title="guarantor.description">{{ guarantor.description }}</td>
+                            <td>
+                                <button type="button" class="btn btn-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
+                                <div class="dropdown-menu">
+                                    <button class="btn btn-block dropdown-item" v-if="guarantor.status == 1" @click="viewGuarantor(guarantor.guarantor)"><i class="fa fa-eye mr-1 text-primary"></i> View </button>
+                                    <button class="btn btn-block dropdown-item" v-else @click="resendGuarantor(guarantor.id)"><i class="fa fa-reply mr-1"></i> Resend Request</button>
+                                    <button v-if="guarantor.status == 0" class="btn btn-block dropdown-item" @click="deleteGuarantor(guarantor.id)"><i class="fa fa-trash mr-1 text-danger"></i> Delete Guarantor Request</button>
+                                </div>
+                            </td>
+                        </tr>    
+                    </tbody>
+                    <tbody v-else>
+                        <tr><td colspan="6">No Guarantor has been added</td></tr>
+                    </tbody>
+                </table>
+            </div> 
+        </div>
     </div>
 </section>
 </template>
@@ -81,6 +86,7 @@ export default {
             form: new Form({}),
             guarantors: {},
             guarantor: {},
+            loading: true,
         }
     },
     methods:{
@@ -94,6 +100,30 @@ export default {
         closeModal(){
             $('#GuarantorModal').modal('hide');
             $('#GuarantorViewModal').modal('hide');
+        },
+        deleteGuarantor(id){
+            this.loading = true;
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "The guarantor would receive an email requesting his confirmation",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, resend request!'
+                })
+            .then((result) => {
+                if(result.value){
+                    this.form.delete('/api/loans/guarantors/'+id)
+                    .then(response=>{
+                        Swal.fire(response.data.status, response.data.message, response.data.status);
+                    })
+                    .catch(()=>{
+                    Swal.fire({icon: 'error', title: 'Oops...', text: 'Something went wrong!', footer: '<a href>Why do I have this issue?</a>'});
+                    });
+                }
+                this.loading = false;
+            });
         },
         getAllInitials(){
             this.$Progress.start();
@@ -116,9 +146,11 @@ export default {
         reloadPage(response){
             this.account = response.data.account;
             this.guarantors = response.data.guarantors;
+            this.loading = false,
             this.closeModal();
         },
         resendGuarantor(id){
+            this.loading = true;
             Swal.fire({
                 title: 'Are you sure?',
                 text: "The guarantor would receive an email requesting his confirmation",
@@ -138,6 +170,7 @@ export default {
                     Swal.fire({icon: 'error', title: 'Oops...', text: 'Something went wrong!', footer: '<a href>Why do I have this issue?</a>'});
                     });
                 }
+                this.loading = false;
             });
         },
         viewGuarantor(guarantor){

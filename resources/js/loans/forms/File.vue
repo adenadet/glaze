@@ -54,7 +54,7 @@ export default {
                 file_type: '',
                 description: '',
                 source: '',
-                flie: '',
+                file: '',
             }),
             file_types: ['Collateral Documents', 'Guarantor Form', 'Statement of Account (3 months)', 'Statement of Account (6 months)'],
             loading: false,
@@ -62,42 +62,6 @@ export default {
     },
     methods:{
         createFile(){
-            /*this.$Progress.start();
-            //e.preventDefault();
-            const json = JSON.stringify({
-                loan_id: this.fileData.loan_id,
-                file_name: this.fileData.file_name,
-                file_type: this.fileData.file_type,
-                description: this.fileData.description,
-                source: this.fileData.source,
-            });
-            console.log(json);
-
-            let currentObj = this;
-            const config = {
-                headers: {
-                'content-type': 'multipart/form-data',
-                }
-            };
-            // form data
-            let formData = new FormData();
-            formData.append('file', this.file);
-            formData.append('data', json );
-
-            console.log(formData);
-            
-            axios.post('/api/loans/files', formData, config)
-            .then(function (response) {
-                currentObj.success = response.data.success;
-                currentObj.filename = "";
-                Fire.$emit('reloadPolicy', response);
-                var message = editMode ? 'Module was successfully updated!' : 'Module was successfully added!';
-                Swal.fire({
-                    icon: 'success',
-                    title: message,
-                });
-            })
-            .catch(function (error) {currentObj.output = error;});*/
             this.$Progress.start();
             this.loading = true;
             if (this.fileData.file_type == ""){this.fileData.file_type = this.type;} 

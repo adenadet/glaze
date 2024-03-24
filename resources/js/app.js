@@ -168,6 +168,44 @@ Vue.filter('shortDate', function(text){
     return moment(text).format('MMM Do, YY');    
 });
 
+Vue.filter('timeDifference', function(text){
+    var now = moment(text);
+    var end = moment(); // another date
+    var duration = moment.duration(end.diff(now));
+    
+    //Get Days and subtract from duration
+    var days = duration.asDays();
+    duration.subtract(moment.duration(days,'days'));
+    
+    //Get hours and subtract from duration
+    var hours = duration.hours();
+    duration.subtract(moment.duration(hours,'hours'));
+    
+    //Get Minutes and subtract from duration
+    var minutes = duration.minutes();
+    duration.subtract(moment.duration(minutes,'minutes'));
+    
+    //Get seconds
+    var seconds = duration.seconds();
+    //console.log("Days: ",days);
+    //console.log("Hours: ",hours);
+    //console.log("Minutes: ",minutes);
+    //console.log("Seconds: ",seconds);
+    
+    if (days > 0){
+        return Math.floor(days)+' days ago';
+    }
+    else if (hours > 0){
+        return Math.floor(hours)+' hours ago';
+    }
+    else if (minutes > 0){
+        return Math.floor(minutes)+' minutes ago';
+    }
+    else if (seconds > 0){
+        return Math.floor(seconds)+' seconds ago';
+    }
+});
+
 Vue.filter('profilePicture', function (text){
     if (text == null){return '/img/profile/default.png';}
     else{ return '/img/profile/'+text.image ;}

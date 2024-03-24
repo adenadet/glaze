@@ -89,6 +89,24 @@ trait GuarantorTrait{
 
     }
 
+    public function guarantor_delete_request($id){
+        $gr = GuarantorRequest::where('id', '=', $id)->first();
+        
+        $gr->deleted_by = auth('api')->id();
+        $gr->deleted_at = date('Y-m-d H:i:s');
+        $gr->status = 4;
+
+        $gr->save();
+
+        //Mail::to($guarantor['email'])->send(new RequestMail($loan, $gr));
+
+        return $gr->loan_id;
+    }
+
+    public function guarantor_get_requests($loan_id){
+        return GuarantorRequest::where('loan_id', '=', $loan_id)->latest()->get();
+    }
+
     public function guarantor_new_request($loan, $guarantor){
         $gr = GuarantorRequest::create([
             'loan_id' => $loan->id,
@@ -104,5 +122,4 @@ trait GuarantorTrait{
 
         Mail::to($guarantor['email'])->send(new RequestMail($loan, $gr));
     }
-
 }

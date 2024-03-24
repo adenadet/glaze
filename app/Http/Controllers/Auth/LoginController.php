@@ -52,12 +52,12 @@ class LoginController extends Controller
         $fieldType = filter_var($request->username, FILTER_VALIDATE_EMAIL) ? 'email' : 'unique_id';
         if(auth()->attempt(array($fieldType => $input['username'], 'password' => $input['password'])))
         {
-            $log_activity = $this->createLoginActivity(Auth::user(), true);
+            $log_activity = $this->log_createLoginActivity(Auth::user(), true);
             if (Auth::user()->hasRole('Staff')){return redirect()->route('staff.dashboard');}
             else{return redirect()->route('home');}
         }
         else{
-            $log_activity = $this->createLoginActivity( NULL, false);
+            $log_activity = $this->log_createLoginActivity( NULL, false);
             return redirect()->route('login')->with('error','Email-Address And Password Are Wrong.');
         }
           

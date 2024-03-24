@@ -8,15 +8,27 @@ use App\Models\Loans\AccountOfficer;
 use Illuminate\Http\Request;
 
 use App\Http\Traits\LoanAccountTrait;
+use App\Http\Traits\LogTrait;
 
 class AccountOfficerController extends Controller
 {
-    use LoanAccountTrait;
+    use LoanAccountTrait, LogTrait;
+
+    public function destroy($id)
+    {
+        //
+    }
+    
     public function index()
     {
         return response()->json([
             'accounts' => $this->account_all('account_officer', $_GET['page']),
         ]);
+    }
+
+    public function show($id)
+    {
+        //
     }
 
     public function store(Request $request)
@@ -47,18 +59,9 @@ class AccountOfficerController extends Controller
         ]);
     }
 
-    public function show($id)
-    {
-        //
-    }
-
+    
     public function update(Request $request, $id)
     {
         //
-    }
-
-    public function destroy($id)
-    {
-        //
-    }
+    }    
 }

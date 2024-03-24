@@ -17,7 +17,7 @@
             <h3 class="card-title">Repayments </h3> 
         </div>
         <div class="card-body"> 
-            <div class="table-responsive" v-if="repayments != null && repayments.data != null && repayments.data.length != 0">
+            <div class="table-responsive" v-if="repayments != null && repayments.length != null">
                 <table class="table text-nowrap">
                     <thead>
                         <tr>
@@ -78,7 +78,7 @@ export default {
     methods:{
         getAllInitials(){
             this.$Progress.start();
-            axios.get('/api/loans/accounts/'+this.$route.params.id).then(response =>{
+            axios.get('/api/loans/repayments/'+this.$route.params.id).then(response =>{
                 this.reloadPage(response);
                 this.$Progress.finish();
                 toast.fire({
@@ -98,12 +98,6 @@ export default {
             Fire.$emit('RepaymentDataFill', repayment);
             $('#repaymentModal').modal('show');
             this.$Progress.finish();
-        },
-        getPolicy(page=1){
-            axios.get('/api/policies/all/departmental?page='+page)
-            .then(response=>{
-                this.Policys = response.data.Policys;   
-            });
         },
         reloadPage(response){
             this.account = response.data.account;
