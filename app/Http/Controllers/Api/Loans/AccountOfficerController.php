@@ -42,6 +42,8 @@ class AccountOfficerController extends Controller
 
         foreach ($accounts as $account) {
             $account->status = 2;
+            $account->deleted_by = auth('api')->id();
+            $account->deleted_at = date('Y-m-d H:i:s');
             $account->save();
         }
 

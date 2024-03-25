@@ -36,8 +36,8 @@
                 <button class="card-tools btn btn-sm btn-primary" @click="addNew()" v-if="source == 'Customer'">Modify Guarantors</button>
             </div>
             <div class="card-body p-0">
-                <table class="table table-bordered table-stripped ">
-                    <thead>
+                <table class="table table-stripped">
+                    <thead class="bg-dark">
                         <tr>
                             <th style="width: 10px">#</th>
                             <th>Guarantor</th>
@@ -47,7 +47,7 @@
                             <th>&nbsp;</th>
                         </tr>
                     </thead>
-                    <tbody v-if="guarantors != null">
+                    <tbody v-if="(guarantors != null) && (guarantors.length != 0)">
                         <tr v-for="(guarantor, index) in guarantors" :key="guarantor.id">
                             <td>{{ index | addOne }}</td>
                             <td>{{ guarantor.first_name+' '+guarantor.last_name }}</td>
@@ -84,7 +84,7 @@ export default {
             account: {},
             editMode: false,
             form: new Form({}),
-            guarantors: {},
+            guarantors: [],
             guarantor: {},
             loading: true,
         }

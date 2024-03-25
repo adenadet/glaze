@@ -16,8 +16,8 @@
         <div class="card-header">
             <h3 class="card-title">Repayments </h3> 
         </div>
-        <div class="card-body"> 
-            <div class="table-responsive" v-if="repayments != null && repayments.length != null">
+        <div class="card-body p-0"> 
+            <div class="table-responsive">
                 <table class="table text-nowrap">
                     <thead>
                         <tr>
@@ -28,8 +28,8 @@
                             <th scope="col">Status</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr v-for="repayment in repayments.data" :key="repayment.id">
+                    <tbody  v-if="repayments != null && repayments.length != 0">
+                        <tr v-for="repayment in repayments" :key="repayment.id">
                             <td>{{ repayment.date | excelDate }}</td>
                             <td>{{ repayment.payment_mode_id }}</td>
                             <td>{{ repayment.description }}</td>
@@ -37,23 +37,10 @@
                             <td v-if="repayment.status == 3"><span class="badge bg-outline-primary">Confirmed</span></td>
                         </tr>
                     </tbody>
-                </table>
-            </div>
-            <div class="row" v-else>
-                <table class="table text-nowrap">
-                    <thead>
-                        <tr>
-                            <th scope="col">Schedule</th>
-                            <th scope="col">Date</th>
-                            <th scope="col">Payment Method</th>
-                            <th scope="col">Amount</th>
-                            <th scope="col">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                    <tbody v-else>
                         <tr v-for="index in account.duration" :key="index">
                             <td><small>{{ account.frequency == 'weeks' ? 'Week' : 'Month'}} {{index}} </small></td>
-                            <td><small>No Decided Yet</small></td>
+                            <td><small>Not Decided Yet</small></td>
                             <td>CyberPay planned</td>
                             <td>{{account.emi | currency}}</td>
                             <td ><span class="badge bg-outline-primary">Pending</span></td>

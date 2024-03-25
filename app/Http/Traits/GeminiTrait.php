@@ -140,7 +140,7 @@ trait GeminiTrait{
     public function get_gemini_customer($id){
         $customer = Customer::where('id', '=', $id)->with('user')->first();
         $user = User::where('id', '=', $customer->user_id)->with('next_of_kin', 'customer_accounts', 'customer_address.state', 'social_medias', 'kyc_items')->with(['area', 'state',])->first();
-        $customer_details = $this->get_customer_by_bvn($customer->user->bvn)->withToken(config('app.gemini_strain'));
+        $customer_details = $this->get_customer_by_bvn($customer->user->bvn);
         if (!$customer_details){
             $customer_details = $this->create_customer($customer, $user);
         }
@@ -180,16 +180,19 @@ trait GeminiTrait{
         $customer = Customer::where('id', '=', $id)->first();
         $feedback = Http::withToken(config('app.gemini_strain'))->withOptions(['verify' => false])->get(config('app.gemini_url').'/getloanrequest/'.$customer->gemini_id);
         if ($feedback->status() != 200){
-            $customer_group = Account::where('user_id', '=', $customer->user_id)->orderBy('created_at', 'ASC')->orderBy('status', 'DESC')->get();
+            $customer_accounts = Account::where('user_id', '=', $customer->user_id)->orderBy('created_at', 'ASC')->orderBy('status', 'DESC')->get();
         }
         else{
-            $customer_group = json_decode($feedback->body());
+            $customer_requests = json_decode($feedback->body());
+            $customer_accounts = $customer_requests->StatusList->LNStatus;
         }
-        return $customer_group;
+        return $customer_accounts;
     }
 
     public function get_gemini_customer_loan_request($id){
-
+        $customer = Customer::where('id', '=', $id)->first();
+        $feedback = Http::withToken(config('app.gemini_strain'))->withOptions(['verify' => false])->get(config('app.gemini_url').'/getloanrequest/'.$customer->gemini_id);
+        return json_decode($feedback);
     }
 
     public function get_gemini_employer_sectors(){
