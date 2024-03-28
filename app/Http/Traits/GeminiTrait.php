@@ -84,6 +84,7 @@ trait GeminiTrait{
             "Title" => ""
         ]);
         $response = json_decode($feedback->body());
+        echo $response;
         $customer->gemini_id = $response->CustomerID;
 
         $customer->save();
