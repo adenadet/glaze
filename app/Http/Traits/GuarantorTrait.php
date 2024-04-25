@@ -98,13 +98,11 @@ trait GuarantorTrait{
 
         $gr->save();
 
-        //Mail::to($guarantor['email'])->send(new RequestMail($loan, $gr));
-
         return $gr->loan_id;
     }
 
     public function guarantor_get_requests($loan_id){
-        return GuarantorRequest::where('loan_id', '=', $loan_id)->latest()->get();
+        return GuarantorRequest::where('loan_id', '=', $loan_id)->with('guarantor')->latest()->get();
     }
 
     public function guarantor_new_request($loan, $guarantor){

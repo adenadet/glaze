@@ -80,12 +80,12 @@ export default {
         },
         uploadFile(e){
             let file = e.target.files[0];
-            let image_types = ['application/pdf']; 
+            let allowed_types = ['application/pdf']; 
             let reader = new FileReader();
-            alert("Checking")
+            
             if (file['size'] >= 2000000) {Swal.fire({icon: 'error', title: 'File is too large'});}
-            else if (!(image_types.includes(file['type']))){Swal.fire({icon: 'error', title: 'File is not a PDF file'});}
-            else if ((file['size'] < 2000000) && (image_types.includes(file['type']))) {
+            else if (!(allowed_types.includes(file['type']))){Swal.fire({icon: 'error', title: 'File is not a PDF file'});}
+            else if ((file['size'] < 2000000) && (allowed_types.includes(file['type']))) {
                 reader.onloadend = (e) => {
                     this.fileData.file = reader.result;
                 }

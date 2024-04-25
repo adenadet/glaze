@@ -10,6 +10,7 @@ Route::group(['prefix'=>'loans'], function () {
     //Route::get('/accounts/credit_scores/{id}', 'AccountController@credit_scores')->name('accounts.credit_scores');
     Route::get('/accounts/pending', 'AccountController@pending')->name('accounts.pending');
     Route::get('/accounts/undisbursed', 'AccountController@undisbursed')->name('accounts.undisbursed');
+    Route::get('/account_officers/risks', 'AccountOfficerController@risks')->name('officers.risk');
     Route::get('/confirms/initials/{id}', 'ConfirmationController@initials')->name('confirms.initialize');
     Route::get('/cpms/initials', 'CPMController@initials')->name('cpms.initialize');
 

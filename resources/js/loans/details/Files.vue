@@ -60,9 +60,9 @@
                                     <td>{{ file.created_at | excelDate }}</td>
                                     <td>{{ file.status == 0 ? 'Unconfirmed' : (file.status == 1 ? 'Confirmed' : 'Rejected') }}</td>
                                     <td v-if="source == 'account'">
-                                        <button type="button" class="btn btn-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
+                                        <button type="button" class="btn btn-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-if="file.status == 0"><i class="fas fa-ellipsis-v"></i></button>
                                         <div class="dropdown-menu">
-                                            <button :disabled="loading" class="btn btn-block dropdown-item" @click="confirmFile(file)"><i class="fa fa-file mr-1"></i> Confirm File</button>
+                                            <button :disabled="loading" class="btn btn-block dropdown-item" @click="confirmFile(file)" ><i class="fa fa-file mr-1"></i> Confirm File</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -105,7 +105,7 @@ export default {
         confirmFile(file){
             this.$Progress.start();
             this.editMode = false;
-            Fire.$emit('FileDataFill', (file));
+            Fire.$emit('FileDataFill', file);
             $('#confirmFileModal').modal('show');
             this.$Progress.finish();
         },
@@ -162,6 +162,7 @@ export default {
         this.getInitials();
         Fire.$on('reloadLoanFiles', () => {
             this.getInitials();
+            this.closeModal();
         });     
     },
     props:{

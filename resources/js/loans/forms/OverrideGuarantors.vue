@@ -1,27 +1,27 @@
 <template>
     <section class="card">
         <div class="card-header">
-            <h3 class="card-title" v-if="file != null && file.file_name != null">{{ file.file_name }} Confirmation</h3>
+            <h3 class="card-title" v-if="loan != null && loan.unique_id != null">{{ loan.unique_id }}  Guarantor Confirmation</h3>
             <h3 class="card-title" v-else>Something Went Wrong</h3>
         </div>
         <div class="card-body">
-            <form @submit.prevent="createConfirmation() ">
-                <alert-error :form="fileConfirmationData"></alert-error> 
+            <form @submit.prevent="overrideConfirmation()">
+                <alert-error :form="guarantorConfirmationData"></alert-error> 
                 <div class="row">
                     <div class="col-md-12 col-sm-12">
                         <div class="form-group">
                             <label>Action</label>
-                            <select type="text" class="form-control" id="status" name="status"  v-model="fileConfirmationData.status" required>
+                            <select type="text" class="form-control" id="status" name="status"  v-model="guarantorConfirmationData.status" required>
                                 <option value=''>---Select status---</option>
-                                <option value="1">Accept</option>
-                                <option value="2">Reject</option>
+                                <option value="confirm">Confirmed</option>
+                                <option value="reject">Reject</option>
                             </select>
                         </div>
                     </div>
                     <div class="col-md-12">
                         <div class="form-group">
                             <label>Comments</label>
-                            <wysiwyg rows="5" v-model="fileConfirmationData.approved_remarks"></wysiwyg>
+                            <wysiwyg rows="5" v-model="guarantorConfirmationData.approved_remarks"></wysiwyg>
                         </div>
                     </div>
                 </div>
@@ -37,9 +37,8 @@ export default {
             actions: [],
             account: {},
             current: {},
-            file: {},
-            loan_types: [],
-            fileConfirmationData: new Form({
+            loan: {},
+            guarantorConfirmationData: new Form({
                 approved_remarks: '',
                 file_id: '',
                 status: '',
@@ -47,16 +46,16 @@ export default {
         }
     },
     methods:{
-        createConfirmation(){
-            this.fileConfirmationData.file_id = this.file.id;
-            this.fileConfirmationData.put('/api/loans/files/confirm/'+this.file.id)
+        overrideConfirmation(){
+            this.guarantorConfirmationData.file_id = this.file.id;
+            this.guarantorConfirmationData.put('/api/loans/files/confirm/'+this.file.id)
             .then(response=>{
                 Fire.$emit('GetCourse', response);
                 Swal.fire({
                     icon: 'success',
                     title: response.data.message,
                 });
-                this.fileConfirmationData.reset();
+                this.guarantorConfirmationData.reset();
             })
             .catch(()=>{
                 this.$Progress.fail();
@@ -68,8 +67,8 @@ export default {
         },
     },
     mounted() {
-        Fire.$on('FileDataFill', file => {
-            this.file = file;
+        Fire.$on('GuarantorOverrideDataFill', loan => {
+            this.loan = loan;
         });  
     },
     props: {

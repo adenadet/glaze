@@ -26,6 +26,13 @@ class AccountOfficerController extends Controller
         ]);
     }
 
+    public function risks()
+    {
+        return response()->json([
+            'accounts' => $this->account_all('risk_officer', $_GET['page']),
+        ]);
+    }
+
     public function show($id)
     {
         //

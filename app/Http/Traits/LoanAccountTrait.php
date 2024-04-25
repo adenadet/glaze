@@ -8,6 +8,7 @@ use App\Models\Finance\AllBank;
 use App\Models\Loans\Account;
 use App\Models\Loans\AccountOfficer;
 use App\Models\Loans\CreditScore;
+use App\Models\Loans\File;
 use App\Models\Loans\Guarantor;
 use App\Models\Loans\GuarantorRequest;
 use App\Models\Loans\Repayment;
@@ -64,19 +65,18 @@ trait LoanAccountTrait{
             $account_list = AccountOfficer::where([['status', '=', 1], ['staff_id', '=', auth('api')->id()]])->pluck('account_id');
             $query = Account::whereIn('id', $account_list);
         }
+        else if ($status == 'risk_officer'){
+            $query = Account::where('status', '=', 8);
+        }
         else if ($status == 'disbursement'){
             $query = Account::where('status', '=', 16);
         }
          
-        return $query->with(['cpm', 'guarantor_requests', 'repayments', 'user', 'type'])->latest()->paginate(20);
-    }
-    
-    public function account_loan_confirmation(){
-
+        return $query->with(['cpm', 'guarantor_requests', 'repayments', 'user', 'type.matrix'])->latest()->paginate(20);
     }
 
     public function account_details($id){
-        return Account::where('id', '=', $id)->with(['account_officer.staff', 'files', 'guarantors', 'type', 'user'])->first(); 
+        return Account::where('id', '=', $id)->with(['account_officer.staff', 'files', 'guarantors', 'type.matrix', 'user', ])->first(); 
     }
 
     public function account_create_credit_score($request){
@@ -114,14 +114,7 @@ trait LoanAccountTrait{
         }
 
         $bank = AllBank::where('bank_code', '=', $request->input('bank_id'))->first();
-
-        $signaturePad = NULL;
-        if (!is_null($request->input('signature'))){
-            $signature_pad = time().".".explode('/',explode(':', substr( $request->input('signature'), 0, strpos($request->input('signature'), ';')))[1])[1];
-            \Image::make($request->input('signature'))->save(public_path('img/consents/').$signature_pad);
-            $signaturePad = $signature_pad;
-        }
-
+        $signaturePad = !is_null($request->input('signature')) ? ($this->file_upload_by_type($request->input('signature'), 'image', 'img/consents/', NULL)) : NULL;
         $loan = Account::create([
             'type_id' => $loan_type->id,
             'user_id' => $request->input('user_id') ?? auth('api')->id(),
@@ -167,10 +160,12 @@ trait LoanAccountTrait{
         
         $loan_file->save();
 
-        return response()->json([
+        return $loan_file;
+        
+        /*response()->json([
             'message' => $request->input('status') == 1 ? 'Successfully Approved' : 'Successfully Rejected',
             'files' => $this->file_get_loan_files_by_id($loan_file->loan_id),
-        ]);
+        ]);*/
          
     }
 }

@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Api\Loans;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\LoanAccountTrait;
+use App\Mail\Loans\AOConfirmMail;
+use App\Mail\Loans\ERMConfirmMail;
+use App\Mail\Loans\MDConfirmationMail;
 use App\Models\Loans\Account;
 use App\Models\Loans\ConfirmationAction;
 use App\Models\Loans\ConfirmationMatrix;
@@ -10,10 +14,11 @@ use App\Models\Loans\ConfirmationMatrixItem;
 use App\Models\Loans\Type;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Mail;
 
 class ConfirmationController extends Controller
 {
+    use LoanAccountTrait;
     public function index()
     {
         $roles = DB::table('model_has_roles')->where('model_id','=', 1)->pluck('role_id');
@@ -67,7 +72,7 @@ class ConfirmationController extends Controller
             'description' => 'sometimes', 
         ]);
 
-        $loan = Account::where('id', '=', $request->input('loan_id'))->with('type.matrix')->first();
+        $loan = $this->account_details($request->input('loan_id'));
         
         $start_point = ConfirmationMatrixItem::select('role_id')->where('stage_number', '=', $loan->status)->where('matrix_id', '=', $loan->type->matrix->id)->with('role')->first();
         $end_point = ConfirmationMatrixItem::select('role_id')->where('stage_number', '=', $request->input('action'))->where('matrix_id', '=', $loan->type->matrix->id)->with('role')->first();
@@ -79,15 +84,14 @@ class ConfirmationController extends Controller
                 'summary' => 'confirmed the Loan for disbursement',
                 'description' => $request->input('description'),
                 'start_stage' => $loan->status,
-                'end_stage'=> $request->input('action'),
+                'end_stage'=> 16,
                 'created_by' => auth('api')->id(),
                 'updated_by' => auth('api')->id(),
             ]);
 
-            //Send a mail to confirmation to 
-            //1. ERM
-            //2. Marketing Team
-            //
+            //Send a mail to confirmation to 1. ERM and 2. Marketing Team  
+            Mail::to('s.akande@glazecredit.com')->send(new ERMConfirmMail($loan));
+            Mail::to('marketing@glazecredit.com')->send(new AOConfirmMail($loan));
         }
         else{
             $action = ConfirmationAction::create([
@@ -102,7 +106,7 @@ class ConfirmationController extends Controller
             ]);
 
             if ($request->input('action') == 13){
-            //Send mail to MD    
+                Mail::to('o.ambode@glazecredit.com')->send(new MDConfirmationMail($loan));
             }
         }
         

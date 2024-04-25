@@ -13,6 +13,19 @@
             </div>
         </div>
     </div>
+    <div class="modal fade" id="GuarantorOverrideModal">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">View Guarantor Details</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @click="closeModal"><span aria-hidden="true">&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <GuarantorDetailGuarantee />
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal fade" id="GuarantorViewModal">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">

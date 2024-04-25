@@ -13,12 +13,14 @@ import LoanInitiate         from '../loans/Initiate.vue';
 import LoanNew              from '../loans/Initiate.vue';
 import LoanPending          from '../loans/Pending.vue';
 import LoanRequirements     from '../loans/Requirements.vue';
-import LoanUndisbursed      from '../loans/Undisbursed.vue';
+import LoanRisks            from '../loans/Risks.vue';
+import LoanRisk             from '../loans/Risk.vue';
 import LoanSingle           from '../loans/Single.vue';
 import LoanStaff            from '../loans/Staff.vue';
 import LoanStaffSingle      from '../loans/StaffSingle.vue';
 import LoanType             from '../loans/Type.vue';
 import LoanTypes            from '../loans/Types.vue';
+import LoanUndisbursed      from '../loans/Undisbursed.vue';
 
 Vue.component('LoanAll',            LoanAll);
 Vue.component('LoanAdmin',          LoanAdmin);
@@ -32,11 +34,12 @@ Vue.component('LoanInitiate',       LoanInitiate);
 Vue.component('LoanNew',            LoanNew);
 Vue.component('LoanPending',        LoanPending);
 Vue.component('LoanRequirements',   LoanRequirements);
-Vue.component('LoanUndisbursed',    LoanUndisbursed);
+Vue.component('LoanRisks',          LoanRisks);
 Vue.component('LoanSingle',         LoanSingle);
 Vue.component('LoanStaff',          LoanStaff);
 Vue.component('LoanStaffSingle',    LoanStaffSingle);
 Vue.component('LoanTypes',          LoanTypes);
+Vue.component('LoanUndisbursed',    LoanUndisbursed);
 
     import LoanDetailCheckList      from '../loans/details/CheckList.vue';  
     import LoanDetailCreditScore    from '../loans/details/CreditScore.vue';   
@@ -111,6 +114,8 @@ let routes = [
     {path: '/staff/loans/:id',                      component: LoanStaffSingle},
     {path: '/staff/accounts/assigned',              component: LoanAssigned},
     {path: '/staff/accounts/assigned/:id',          component: LoanAssignedSingle},
+    {path: '/staff/accounts/risks',                 component: LoanRisks},
+    {path: '/staff/accounts/risks/:id',             component: LoanRisk},
     {path: '/staff/confirm/loans',                  component: LoanConfirmAll},
     {path: '/staff/confirm/loans/:id',              component: LoanConfirm},
 ];

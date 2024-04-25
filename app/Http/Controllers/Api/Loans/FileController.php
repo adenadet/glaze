@@ -12,13 +12,13 @@ use App\Models\Loans\File;
 
 class FileController extends Controller
 {
-    use FileTrait;
+    use FileTrait, LoanAccountTrait;
     public function confirm(Request $request, $id)
     {
         $loan_file = $this->account_file_confirmation($request, $id);
 
         return response()->json([
-            'message' => 'Successfully Approved',
+            'message' => $request->input('status') == 1 ? 'Successfully Approved' : 'Successfully Rejected',
             'files' => $this->file_get_loan_files_by_id($loan_file->loan_id),
         ]);
          

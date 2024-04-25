@@ -1,10 +1,11 @@
 <template>
 <section class="card">
     <div class="card-header">
-        <h3 class="card-title" v-if="current != null && current.role != null">{{ current.role.name }} Confirmation</h3>
+        <h3 class="card-title" v-if="current.id == 16">Completed Confirmation</h3>
+        <h3 class="card-title" v-else-if="current != null && current.role != null">{{ current.role.name }} Confirmation</h3>
         <h3 class="card-title" v-else>Something Went Wrong</h3>
     </div>
-    <div class="card-body">
+    <div class="card-body" v-if="current != null && current.role != null">
         <form @submit.prevent="createConfirmation() ">
             <alert-error :form="loanConfirmationData"></alert-error> 
             <div class="row">
@@ -30,6 +31,14 @@
             </div>
             <input type="submit" name="submit" class="submit btn btn-success" value="Submit" />
         </form>
+    </div>
+    <div class="card-body" v-else>
+        <div class="row">
+            <div class="col-md-12">
+                <p v-if="current.id == 16">The confirmation process has been completed and can not be reversed.</p>
+                <p v-else>Kindly confirm that all Loan requirements have been fulfilled especially Guarantors and Checklist have been completed.</p>
+            </div>
+        </div>
     </div>
 </section>
 </template>

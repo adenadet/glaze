@@ -13,6 +13,7 @@
                         @if(Auth::user()->hasRole('Risk Officer') || Auth::user()->hasRole('Managing Director') || Auth::user()->hasRole('Group Head') || Auth::user()->hasRole('Super Admin'))<li class="nav-item"><a href="/staff/loans" class="nav-link"><i class="nav-icon fas fa-file"></i><p>All Loans</p></a></li>@endif
                         @if(Auth::user()->hasRole('Managing Director') || Auth::user()->hasRole('Group Head') || Auth::user()->hasRole('Super Admin'))<li class="nav-item"><a href="/staff/loans/undisbursed" class="nav-link"><i class="nav-icon fas fa-file"></i><p>Undisbursed Loans</p></a></li>@endif
                         @if(Auth::user()->hasRole('Account Officer') || Auth::user()->hasRole('Super Admin'))<li class="nav-item"><a href="/staff/accounts/assigned" class="nav-link"><i class="nav-icon fa fa-clipboard"></i><p>My Assigned Loans</p></a></li>@endif
+                        @if(Auth::user()->hasRole('Risk Officer') || Auth::user()->hasRole('Enterprise Risk Manager') || Auth::user()->hasRole('Super Admin'))<li class="nav-item"><a href="/staff/accounts/risks" class="nav-link"><i class="nav-icon fa fa-clipboard"></i><p>Awaiting Risk Analysis</p></a></li>@endif
                         @if(Auth::user()->hasRole('Managing Director') || Auth::user()->hasRole('Group Head') || Auth::user()->hasRole('Super Admin'))<li class="nav-item"><a href="/staff/accounts/pending" class="nav-link"><i class="nav-icon fas fa-file"></i><p>Pending Loans</p></a></li>@endif
                     </ul>
                 </li>

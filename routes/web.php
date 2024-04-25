@@ -39,6 +39,7 @@ Route::group(['prefix' => '/staff', 'middleware' => ['auth', 'role:Staff'],'name
     Route::get('/dashboard',                        'StaffController@dashboard')->name('staff.dashboard');
 
     Route::get('/accounts',                         'StaffController@accounts')->name('staff.accounts');
+    Route::get('/accounts/assigned/{id}',           'StaffController@account_assigned')->name('staff.account_assigned');
     Route::get('/accounts/{any}',                   'StaffController@accounts')->where('any', '.*')->name('staff.accounts.others');
 
     Route::get('/chats',                            'StaffController@chats')->name('staff.chats');

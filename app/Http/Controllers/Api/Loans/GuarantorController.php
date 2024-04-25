@@ -19,6 +19,18 @@ use App\Models\Loans\Type;
 class GuarantorController extends Controller
 {
     use GuarantorTrait;
+
+    public function add(Request $request){
+        $loan = Account::where('id', '=', $request->input('loan_id'))->with('user')->first();
+
+        foreach ($request->input('guarantors') as $guarantor){
+            $this->guarantor_new_request($loan, $guarantor);
+        }
+
+        return response()->json([
+            'message' => 'Guarantor added successfully',       
+        ]);  
+    }
     
     public function destroy($id)
     {
@@ -36,6 +48,15 @@ class GuarantorController extends Controller
         return response()->json([
             'account' => Account::where('id', '=', $id)->with('guarantor_requests.guarantor')->first(),
             'guarantors' => $this->guarantor_get_requests($id),
+        ]);
+    }
+
+    public function index()
+    {
+        $loans = Account::where([['status', '<', 10],['user_id', '=', auth('api')->id()]])->pluck('id');
+
+        return response()->json([
+            'requests' => GuarantorRequest::whereIN('loan_id',$loans)->with(['account', 'guarantor'])->latest()->paginate(10),
         ]);
     }
 
@@ -65,37 +86,6 @@ class GuarantorController extends Controller
         }
     }
 
-    public function index()
-    {
-        $loans = Account::where([['status', '<', 10],['user_id', '=', auth('api')->id()]])->pluck('id');
-
-        return response()->json([
-            'requests' => GuarantorRequest::whereIN('loan_id',$loans)->with(['account', 'guarantor'])->latest()->paginate(10),
-        ]);
-    }
-
-    public function add(Request $request){
-        $loan = Account::where('id', '=', $request->input('loan_id'))->with('user')->first();
-
-        foreach ($request->input('guarantors') as $guarantor){
-            $this->guarantor_new_request($loan, $guarantor);
-        }
-
-        return response()->json([
-            'message' => 'Guarantor added successfully',       
-        ]);  
-    }
-
-
-    public function reset(Request $request, $id)
-    {
-        GuarantorRequest::where('loan_id', '=', $id)->delete();
-        
-        foreach ($request->input('guarantors') as $guarantor){
-            $this->guarantor_new_request($loan, $guarantor);
-        }
-    }
-
     public function resend($id)
     {
         $gr = GuarantorRequest::where('id', '=', $id)->first();
@@ -106,6 +96,22 @@ class GuarantorController extends Controller
         return response()->json([
             'message' => 'Guarantor added successfully',       
         ]);  
+    }
+
+    public function reset(Request $request, $id)
+    {
+        GuarantorRequest::where('loan_id', '=', $id)->delete();
+        $loan = Account::where('id', '=',  $id)->first();
+        foreach ($request->input('guarantors') as $guarantor){
+            $this->guarantor_new_request($loan, $guarantor);
+        }
+    }
+
+    public function show($id)
+    {
+        return response()->json([
+            'guarantor' => Guarantor::where('id', '=', $id)->with(['loan'])->first(),
+        ]);
     }
 
     public function store(Request $request)
@@ -137,13 +143,6 @@ class GuarantorController extends Controller
 
         return response()->json([
             'message' => 'The loan has been successfully guaranteed',
-        ]);
-    }
-
-    public function show($id)
-    {
-        return response()->json([
-            'guarantor' => Guarantor::where('id', '=', $id)->with(['loan'])->first(),
         ]);
     }
 

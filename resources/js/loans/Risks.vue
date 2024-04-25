@@ -17,11 +17,11 @@
     </div>
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Assigned Loan Accounts</h3>
+            <h3 class="card-title">Loan Accounts Awaiting Risk Analysis </h3>
         </div>
-        <div class="card-body">
+        <div class="card-body p-0">
             <table class="table table-striped table-hover">
-                <thead class="th-dark">
+                <thead class="bg-dark">
                     <tr>
                         <th scope="col">Customer Name</th>
                         <th scope="col">Loan Name</th>
@@ -34,7 +34,7 @@
                         <th scope="col"></th>
                     </tr> 
                 </thead> 
-                <tbody>
+                <tbody v-if="accounts.data != null && accounts.data.length != 0">
                     <tr v-for="account in accounts.data" :key="account.id">
                         <td>{{ account.user | FullName }}</td>
                         <th scope="row">{{account.name}} <br /><span class="text-muted">{{ account.unique_id }}</span></th>
@@ -47,16 +47,19 @@
                         <td>
                             <button type="button" class="btn btn-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
                             <div class="dropdown-menu">
-                                <router-link class="btn btn-block dropdown-item" :to="'/staff/accounts/assigned/'+account.id"><i class="fa fa-eye mr-1 text-primary"></i> View Loan Account</router-link>
+                                <router-link class="btn btn-block dropdown-item" :to="'/staff/accounts/risks/'+account.id"><i class="fa fa-eye mr-1 text-primary"></i> View Loan Account</router-link>
                                 <router-link class="btn btn-block dropdown-item" :to="'/staff/confirm/loans/'+account.id"><i class="fa fa-check mr-1"></i> Confirmation</router-link>
                                 <button v-show="account.cpm != null" class="btn btn-block dropdown-item" @click="updateCPM(account)"><i class="fa fa-file mr-1"></i> Update Proposal Memo</button>
                                 <button v-show="account.cpm == null" class="btn btn-block dropdown-item" @click="createCPM(account)"><i class="fa fa-file mr-1"></i> Create Proposal Memo</button>
                                 <router-link class="btn btn-block dropdown-item" :to="'/staff/customers/'+account.user_id"><i class="fa fa-user mr-1 text-success"></i> View Customer</router-link>
-                                <button v-if="account.status > 13" class="btn btn-block dropdown-item" @click="closeLoan()"><i class="fa fa-times mr-1 text-danger"></i> Close Loan</button>
-                                <button v-else class="btn btn-block dropdown-item" @click="deleteLoan(1)"><i class="fa fa-trash mr-1 text-danger"></i> Delete Loan Request</button>
                             </div>
                         </td>
                     </tr> 
+                </tbody>
+                <tbody v-else>
+                    <tr>
+                        <td colspan="9"><h3><i class="fa fa-exclamation text-info mr-1"></i> No loan is awaiting risk analysis</h3></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -121,7 +124,8 @@ export default {
                     this.form.delete('/api/loans/account_officers/'+id)
                     .then(response=>{
                         Swal.fire('Deleted!', 'Loan Account has been deleted.', 'success');
-                        Fire.$emit('CatRefresh', response);   
+                        Fire.$emit('CatRefresh', response);  
+                        this.closeModal(); 
                     })
                     .catch(()=>{
                         Swal.fire({icon: 'error', title: 'Oops...', text: 'Something went wrong!', footer: '<a href>Why do I have this issue?</a>'});
@@ -130,9 +134,8 @@ export default {
             });
         },
         getInitials(page=1){
-            axios.get('/api/loans/account_officers?page='+page).then(response =>{
+            axios.get('/api/loans/account_officers/risks?page='+page).then(response =>{
                 this.reloadPage(response);
-                this.closeModal();
             })
             .catch(()=>{
                 this.$Progress.fail();
@@ -150,10 +153,6 @@ export default {
             Fire.$emit('hidePreCPM', account.cpm);
             $('#loanCPMModal').modal('show');   
         },
-    },
-    props:{
-        mode: String,
-        user: Object,
-    },
+    },    
 }
 </script>

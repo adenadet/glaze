@@ -16,7 +16,7 @@
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Loan Credit Score</h3>
-            <button  v-if="source == 'account'" class="card-tools btn btn-sm btn-primary" @click="addNew">Get New Credit Score</button>
+            <button  v-if="source == 'risk'" class="card-tools btn btn-sm btn-primary" @click="addNew">Get New Credit Score</button>
         </div>
         <div class="card-body">
             <div class="card card-success card-outline card-tabs">
