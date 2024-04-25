@@ -6,21 +6,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Http\Traits\FileTrait;
+use App\Http\Traits\LoanAccountTrait;
 
 use App\Models\Loans\File;
+
 class FileController extends Controller
 {
     use FileTrait;
-    public function accept($id)
+    public function confirm(Request $request, $id)
     {
-        $loan_file = File::where('id', '=', $id)->with('account')->first();
-
-        $loan_file->approved_by = auth('api')->id();
-        $loan_file->updated_by = auth('api')->id(); 
-        $loan_file->approved_date = date('Y-m-d H:i:s');
-        $loan_file->status = 1;
-
-        $loan_file->save();
+        $loan_file = $this->account_file_confirmation($request, $id);
 
         return response()->json([
             'message' => 'Successfully Approved',
@@ -48,22 +43,6 @@ class FileController extends Controller
     public function index()
     {
         //
-    }
-
-    public function reject($id)
-    {
-        $loan_file = File::where('id', '=', $id)->first();
-
-        $loan_file->updated_by = auth('api')->id(); 
-        $loan_file->status = 2;
-
-        $loan_file->save();
-
-        return response()->json([
-            'message' => 'Successfully Approved',
-            'files' => $this->file_get_loan_files_by_id($loan_file->loan_id),
-        ]);
-         
     }
 
     public function show($id)

@@ -10,6 +10,10 @@
         <div class="card-body p-0">
             <table class="table table-sm table-bordered table-hover table-stripped">
                 <tbody>
+                    <tr v-if="source == 'staff'">
+                        <td >Loan Obligor</td>
+                        <td colspan="5"><strong>{{ account.user | FullName }}</strong></td>
+                    </tr>
                     <tr>
                         <td >Loan Name</td>
                         <td colspan="3"><strong>{{ account.name }} [{{ account.unique_id }}]</strong></td>

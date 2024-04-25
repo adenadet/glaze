@@ -117,8 +117,8 @@ export default {
     },
     methods:{
         createAddressData(){
-            console.log("Working book");
             this.$Progress.start();
+            alert("Not supposed to be here");
             this.AddressData.post('/api/ums/users')
             .then(response =>{
                 this.$Progress.finish();
@@ -141,7 +141,7 @@ export default {
             });
         },
         updateAddressData(){
-            console.log("Tested");
+            alert("Working");
             this.$Progress.start();
             this.AddressData.put('/api/ums/users/'+ this.AddressData.id)
             .then(response =>{
@@ -181,7 +181,6 @@ export default {
                 this.$Progress.fail();
             });            
         },
-        
     },
     props:{
         areas: Array,

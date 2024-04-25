@@ -47,8 +47,7 @@ class FirstCentralController extends Controller
             'product_id' => 'required|numeric',
             'loan_id' => 'required|numeric',
         ]);
-        
-        //Get Variables
+
         $product = BureauProduct::where('id', '=', $request->input('product_id'))->first();
         $loan = Account::where('id', '=', $request->input('loan_id'))->first();
         $route = config('app.first_central_url').'/'.$product->link;
@@ -84,9 +83,10 @@ class FirstCentralController extends Controller
         //Create new Credit Score
         $credit_score = CreditScore::create([
             'loan_id' => $request->input('loan_id'), 
-            'credit_score' => $test->score ?? 'No Credit Score Returned', 
+            'credit_score' => $test->score ?? 'No Credit Score Returned 2', 
             'product_id' => $request->input('product_id'), 
-            'response' => $feedback, 
+            'response' => $feedback,
+            'validation_type' => 'automatic',
             'created_by' => auth('api')->id(), 
             'updated_by' => auth('api')->id(),
         ]);

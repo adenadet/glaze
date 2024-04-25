@@ -9,6 +9,7 @@ use App\Models\Loans\Account;
 use App\Models\Loans\GeminiCustomerGroup;
 use App\Models\State;
 use App\Models\Ums\Customer;
+use App\Models\Ums\CustomerAddress;
 use App\Models\Ums\Staff;
 use App\Models\User;
 use Illuminate\Support\Facades\Http;
@@ -131,4 +132,44 @@ trait UserTrait{
 
         return $user;
     }
+
+    public function user_address_create_new($request){
+
+        $state = State::where('StateCode', '=', $request->input('state_id'))->first();
+
+        $customer_address = CustomerAddress::create([
+            'user_id' => $request->input('user_id'),
+            'type' => $request->input('type'),
+            'street' => $request->input('street'),
+            'street_2' => $request->input('street2'),
+            'city' => $request->input('city'),
+            'state_id' => $state->id,
+            'area_id' => $request->input('area_id'),
+            'status' => $request->input('status') ?? 0,
+            'created_by' => auth('api')->id(),
+            'updated_by' => auth('api')->id(),
+        ]);
+
+        return $customer_address;
+    }
+
+    public function user_address_update($request, $id){
+        $state = State::where('StateCode', '=', $request->input('state_id'))->first();
+        $customer_address = CustomerAddress::where('id', '=', $id)->first();
+
+        $customer_address->user_id = $request->input('user_id');
+        $customer_address->type = $request->input('type');
+        $customer_address->street = $request->input('street');
+        $customer_address->street_2 = $request->input('street2');
+        $customer_address->city = $request->input('city');
+        $customer_address->state_id = $state->id;
+        $customer_address->area_id = $request->input('area_id');
+        $customer_address->status = $request->input('status') ?? 0;
+        $customer_address->updated_by = auth('api')->id();
+        
+        $customer_address->save();
+
+        return $customer_address;
+
+    }    
 }

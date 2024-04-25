@@ -81,7 +81,7 @@
                             <PMFormSocials />     
                         </div> 
                         <div class="tab-pane text-muted" id="kyc" role="tabpanel">
-                            <UserFormKYC :user="user" />     
+                            <PMFormKYC :user="user" :editMode="user.kyc != null" />     
                         </div> 
                         <div class="tab-pane text-muted" id="employment" role="tabpanel">
                             <UserFormEmployment :user="user" :areas="areas" :editMode="editMode" :sectors="sectors" :states="states"/>     

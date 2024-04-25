@@ -31,7 +31,7 @@
         <div class="col-md-6 col-sm-12">
             <div class="form-group">
                 <label>Address2</label>
-                <input type="text" class="form-control" id="street2" name="street2" placeholder="Enter Street Desc" v-model="AddressData.street2" :class="{'is-invalid' : AddressData.errors.has('street2') }">
+                <input type="text" class="form-control" id="street_2" name="street_2" placeholder="Enter Street Desc" v-model="AddressData.street_2" :class="{'is-invalid' : AddressData.errors.has('street2') }">
             </div>
         </div>
         <div class="col-md-4 col-sm-6">
@@ -75,17 +75,29 @@ export default {
                 id:'', 
                 state_id:'', 
                 street:'', 
-                street2:'',
-                user_id: '',
+                street_2:'',
                 type: '',
+                user_id: '',
             }),
             lgas: [],
         }
     },
     mounted() {
         Fire.$on('AddressDataFill', base =>{
-            this.address = base;
-            base != null ? this.AddressData.fill(base) : this.AddressData.clear();
+            if (base != null){
+                this.AddressData.area_id = base.area.LGANo;
+                this.AddressData.city = base.city;
+                this.AddressData.id = base.id;
+                this.AddressData.state_id = base.state.StateCode;
+                this.AddressData.street = base.street;
+                this.AddressData.street_2 = base.street_2;
+                this.AddressData.type = base.type;
+                this.AddressData.user_id = base.user_id;
+                
+                this.updateLGAs();
+            } 
+            else{ this.AddressData.clear();}
+            
         });
     },
     methods:{
@@ -103,10 +115,13 @@ export default {
                 this.$Progress.fail();
             });          
         },
+        getInitials(){
+
+        },
         updateAddressData(){
             this.AddressData.user_id = this.user.id;
             this.$Progress.start();
-            this.AddressData.post('/api/ums/addresses/'+this.AddressData.id)
+            this.AddressData.put('/api/ums/addresses/'+this.AddressData.id)
             .then(response =>{
                 this.$Progress.finish();
                 Fire.$emit('Reload', response);

@@ -1,6 +1,6 @@
 <template>
 <section >
-    <div class="modal fade" id="loanModal">
+    <div class="modal fade" id="creditModal">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -50,7 +50,7 @@
                                     </tr>
                                     <tr>
                                         <td colspan="2" class="text-wrap">
-                                            {{ credit_score.response }}
+                                            <wysiwyg v-model="credit_score.response" disabled /> 
                                         </td>
                                     </tr>
                                 </tbody>
@@ -91,17 +91,21 @@ export default {
     },
     mounted(){
         this.getInitials();
-        Fire.$on('AddressDataFill', base =>{
-            this.address = base;
-            base != null ? this.AddressData.fill(base) : this.AddressData.clear();
+        Fire.$on('refreshLoan', response =>{
+            //this.getInitials();
+            this.reloadPage(response);
+            this.closeModals();
         });
     },
     methods:{
         addNew(){
             this.$Progress.start();
             this.editMode = false;
-            $('#loanModal').modal('show');
+            $('#creditModal').modal('show');
             this.$Progress.finish();
+        },
+        closeModals(){
+            $('#creditModal').modal('hide');
         },
         getInitials(){
             this.$Progress.start();

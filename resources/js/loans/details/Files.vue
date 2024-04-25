@@ -5,11 +5,24 @@
                 <div class="overlay" v-if="loading">
                     <i class="fas fa-3x fa-sync-alt fa-spin"></i>
                 </div>
+                <div class="modal fade" id="confirmFileModal">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Confirm File</h4>
+                                <button type="button" class="close" data-dismiss="modal" @click="closeModal()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            </div>
+                            <div class="modal-body">
+                                <LoanFormConfirmFile />
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="modal fade" id="fileModal">
                     <div class="modal-dialog modal-xl">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h4 class="modal-title">Upload Files Modal</h4>
+                                <h4 class="modal-title">Upload Files</h4>
                                 <button type="button" class="close" data-dismiss="modal" @click="closeModal()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                             </div>
                             <div class="modal-body">
@@ -27,7 +40,6 @@
                             </button>
                         </div>
                     </div>
-                    <!-- /.card-header -->
                     <div class="card-body table-responsive p-0">
                         <table class="table table-hover text-nowrap">
                             <thead class="bg-dark">
@@ -50,8 +62,7 @@
                                     <td v-if="source == 'account'">
                                         <button type="button" class="btn btn-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
                                         <div class="dropdown-menu">
-                                            <button :disabled="loading" class="btn btn-block dropdown-item" @click="approveFile(file.id)"><i class="fa fa-check mr-1"></i> Approve</button>
-                                            <button :disabled="loading" class="btn btn-block dropdown-item" @click="rejectFile(file.id)"><i class="fa fa-times mr-1"></i> Reject</button>
+                                            <button :disabled="loading" class="btn btn-block dropdown-item" @click="confirmFile(file)"><i class="fa fa-file mr-1"></i> Confirm File</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -72,6 +83,7 @@ export default {
         return {
             editMode: false,
             file_type: '',
+            file: {},
             files: [],
             form: new Form({}),
             loading: true,
@@ -86,7 +98,18 @@ export default {
             $('#fileModal').modal('show');
             this.$Progress.finish();
         },
-        approveFile(id){
+        closeModal(){
+            $('#confirmFileModal').modal('hide');
+            $('#fileModal').modal('hide');
+        },
+        confirmFile(file){
+            this.$Progress.start();
+            this.editMode = false;
+            Fire.$emit('FileDataFill', (file));
+            $('#confirmFileModal').modal('show');
+            this.$Progress.finish();
+        },
+        /*approveFile(id){
             this.loading = true;
             axios.get('/api/loans/files/accept/'+id).
             then(response =>{
@@ -99,10 +122,7 @@ export default {
                 toast.fire({icon: 'error', title: 'Account Files was not loaded successfully',});
                 this.loading = false;
             });
-        },
-        closeModal(){
-            $('#fileModal').modal('hide');
-        },
+        },*/
         getInitials(){
             this.$Progress.start();
             axios.get('/api/loans/files/'+this.$route.params.id).
@@ -139,7 +159,10 @@ export default {
         },   
     },
     mounted() {
-        this.getInitials();     
+        this.getInitials();
+        Fire.$on('reloadLoanFiles', () => {
+            this.getInitials();
+        });     
     },
     props:{
         account: Object,

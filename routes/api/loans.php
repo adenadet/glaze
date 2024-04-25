@@ -13,9 +13,8 @@ Route::group(['prefix'=>'loans'], function () {
     Route::get('/confirms/initials/{id}', 'ConfirmationController@initials')->name('confirms.initialize');
     Route::get('/cpms/initials', 'CPMController@initials')->name('cpms.initialize');
 
-    Route::get('/files/accept/{id}', 'FileController@accept')->name('files.accept');
-    Route::get('/files/reject/{id}', 'FileController@reject')->name('files.reject');
-
+    Route::put('/files/confirm/{id}', 'FileController@confirm')->name('files.confirm');
+    
     Route::post('/guarantors/add', 'GuarantorController@add')->name('guarantors.add');
     Route::put('/guarantors/reset/{id}', 'GuarantorController@reset')->name('guarantors.reset');
     Route::get('/guarantors/loans/{id}', 'GuarantorController@display')->name('guarantors.loans');

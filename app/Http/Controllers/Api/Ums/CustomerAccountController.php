@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Ums;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\UserTrait;
 use Illuminate\Http\Request;
 
 use App\Models\Ums\CustomerAccount;
@@ -10,6 +11,7 @@ use App\Models\User;
 
 class CustomerAccountController extends Controller
 {
+    use UserTrait;
     public function index()
     {
         //

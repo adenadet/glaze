@@ -9,7 +9,7 @@ class CreditScore extends Model
 {
     protected $primaryKey = 'id';
     protected $table = 'loan_account_credit_scores';
-    protected $fillable = array('loan_id', 'credit_score', 'product_id', 'response', 'created_by', 'updated_by', 'deleted_by', 'created_at', 'updated_at', 'deleted_at');
+    protected $fillable = array('loan_id', 'credit_score', 'product_id', 'response', 'validation_type', 'created_by', 'updated_by', 'deleted_by', 'created_at', 'updated_at', 'deleted_at');
 
     public function creator(){
         return $this->hasOne('App\Models\User', 'id', 'created_by');

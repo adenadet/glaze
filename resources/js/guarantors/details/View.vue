@@ -155,6 +155,7 @@ export default {
     },
     mounted() {
         Fire.$on('GuarantorDataFill', guarantor => {
+            alert("Working");
             this.guarantor = guarantor;
         });
     },

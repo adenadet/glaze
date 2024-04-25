@@ -68,19 +68,44 @@ class ConfirmationController extends Controller
         ]);
 
         $loan = Account::where('id', '=', $request->input('loan_id'))->with('type.matrix')->first();
+        
         $start_point = ConfirmationMatrixItem::select('role_id')->where('stage_number', '=', $loan->status)->where('matrix_id', '=', $loan->type->matrix->id)->with('role')->first();
         $end_point = ConfirmationMatrixItem::select('role_id')->where('stage_number', '=', $request->input('action'))->where('matrix_id', '=', $loan->type->matrix->id)->with('role')->first();
 
-        $action = ConfirmationAction::create([
-            'loan_id' => $request->input('loan_id'),
-            'action'  => $request->input('action'),
-            'summary' => 'from '.$start_point->role->name.' to '.$end_point->role->name,
-            'description' => $request->input('description'),
-            'start_stage' => $loan->status,
-            'end_stage'=> $request->input('action'),
-            'created_by' => auth('api')->id(),
-            'updated_by' => auth('api')->id(),
-        ]);
+        if ($request->input('action') == 14){
+            $action = ConfirmationAction::create([
+                'loan_id' => $request->input('loan_id'),
+                'action'  => $request->input('action'),
+                'summary' => 'confirmed the Loan for disbursement',
+                'description' => $request->input('description'),
+                'start_stage' => $loan->status,
+                'end_stage'=> $request->input('action'),
+                'created_by' => auth('api')->id(),
+                'updated_by' => auth('api')->id(),
+            ]);
+
+            //Send a mail to confirmation to 
+            //1. ERM
+            //2. Marketing Team
+            //
+        }
+        else{
+            $action = ConfirmationAction::create([
+                'loan_id' => $request->input('loan_id'),
+                'action'  => $request->input('action'),
+                'summary' => 'from '.$start_point->role->name.' to '.$end_point->role->name,
+                'description' => $request->input('description'),
+                'start_stage' => $loan->status,
+                'end_stage'=> $request->input('action'),
+                'created_by' => auth('api')->id(),
+                'updated_by' => auth('api')->id(),
+            ]);
+
+            if ($request->input('action') == 13){
+            //Send mail to MD    
+            }
+        }
+        
         $loan->status = $request->input('action');
         $loan->updated_by = auth('api')->id();
         $loan->updated_at = date('Y-m-d H:i:s');

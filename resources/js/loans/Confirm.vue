@@ -7,6 +7,7 @@
                     <div class="col-md-12"><LoanDetailSummary /></div>
                     <div class="col-md-12"><LoanDetailCPM /></div>
                     <div class="col-md-12"><LoanDetailCheckList /></div>
+                    <div class="col-md-12"><LoanDetailFiles source="account"/></div>
                     <div class="col-md-12"><LoanDetailGuarantors /> </div>
                     <div class="col-md-12"><LoanDetailCreditScore source="account" /></div>
                     <div class="col-md-12"><LoanDetailConfirmations /> </div>

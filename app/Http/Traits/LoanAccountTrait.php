@@ -7,6 +7,7 @@ use App\Models\Country;
 use App\Models\Finance\AllBank;
 use App\Models\Loans\Account;
 use App\Models\Loans\AccountOfficer;
+use App\Models\Loans\CreditScore;
 use App\Models\Loans\Guarantor;
 use App\Models\Loans\GuarantorRequest;
 use App\Models\Loans\Repayment;
@@ -70,8 +71,28 @@ trait LoanAccountTrait{
         return $query->with(['cpm', 'guarantor_requests', 'repayments', 'user', 'type'])->latest()->paginate(20);
     }
     
+    public function account_loan_confirmation(){
+
+    }
+
     public function account_details($id){
         return Account::where('id', '=', $id)->with(['account_officer.staff', 'files', 'guarantors', 'type', 'user'])->first(); 
+    }
+
+    public function account_create_credit_score($request){
+        $credit_score = CreditScore::create([
+            'loan_id' => $request->input('loan_id'), 
+            'credit_score' => $request->input('credit_score') ?? 'No Credit Score Returned', 
+            'product_id' => $request->input('product_id'), 
+            'response' => $request->input('response'),
+            'validation_type' => $request->input('validation_type'), 
+            'created_by' => auth('api')->id(), 
+            'updated_by' => auth('api')->id(), 
+            'created_at' => date('Y-m-d H:i:s'), 
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+
+        return $credit_score;
     }
 
     public function account_create_new($request){
@@ -132,5 +153,24 @@ trait LoanAccountTrait{
 
     public function account_get_account_repayments($id){
         return Repayment::where('loan_id', '=', $id)->get();
+    }
+
+    public function account_file_confirmation($request, $id)
+    {
+        $loan_file = File::where('id', '=', $id)->first();
+        
+        $loan_file->approved_remarks    = $request->input('approved_remarks');
+        $loan_file->status              = $request->input('status');
+        $loan_file->approved_by         = auth('api')->id();
+        $loan_file->approved_date       = date('Y-m-d H:i:s');
+        $loan_file->updated_by          = auth('api')->id(); 
+        
+        $loan_file->save();
+
+        return response()->json([
+            'message' => $request->input('status') == 1 ? 'Successfully Approved' : 'Successfully Rejected',
+            'files' => $this->file_get_loan_files_by_id($loan_file->loan_id),
+        ]);
+         
     }
 }

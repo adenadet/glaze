@@ -26,14 +26,14 @@ class ProfileController extends Controller
         )->get();
 
         return response()->json([
-            'areas' => Area::select('id', 'name')->where('state_id', 25)->orderBy('name', 'ASC')->get(),
+            'areas' => Area::select('id', 'name')->orderBy('name', 'ASC')->get(),
             'kyc_items' => $kyc_items,
             'kyc_list' => KYCItem::all(),
             'nok' => NextOfKin::where('user_id', auth('api')->id())->first(),
             'sectors' => $this->get_gemini_employer_sectors(),
             'states' => $this->get_gemini_states(),
             'socials' => SocialMedia::where('user_id', auth('api')->id())->first(),
-            'user' => User::where('id', '=', auth('api')->id())->with('next_of_kin', 'customer_accounts', 'customer_address.state', 'social_medias')->with(['area', 'state',])->first(),
+            'user' => User::where('id', '=', auth('api')->id())->with('next_of_kin', 'customer_accounts', 'customer_address.state', 'customer_address.area', 'social_medias')->with(['area', 'state',])->first(),
         ]);
     }
 

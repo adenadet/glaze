@@ -2,15 +2,20 @@
 
 namespace App\Http\Controllers\Api\Ums;
 
-use App\Http\Controllers\Controller;
-use App\Models\Settings\KYCItem;
-use App\Models\Ums\UserKYC;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 
+use App\Http\Controllers\Controller;
+use App\Http\Traits\FileTrait;
+use App\Http\Traits\UserTrait;
+use App\Models\Settings\KYCItem;
+use App\Models\Ums\UserKYC;
+
+
 class KYCController extends Controller
 {
+    use FileTrait, UserTrait;
     public function index()
     {
         //
@@ -19,11 +24,9 @@ class KYCController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            //'user_id' => 'required|numeric',
             'kyc_items' => 'required|array',
         ]);
 
-        //print_r($request->input('kyc_items'));
         $folder = 'uploads/kyc/';
         $file_name = ''; 
         
@@ -31,7 +34,8 @@ class KYCController extends Controller
             if ($kyc['kyc_file_type'] == "Image"){
                 $name = $request->input('user_id')."-".$kyc['name'].time().".".explode('/',explode(':', substr( $kyc['kyc_file'], 0, strpos($kyc['kyc_file'], ';')))[1])[1];
                 \Image::make($kyc['kyc_file'])->save(public_path($folder).$name);
-                $file_name = 'uploads/kyc/'.$name;
+                $file_name = $folder.$name;
+                $kyc['file_name'] = $file_name;
             }
             else if($kyc['kyc_file_type'] == "PDF"){
                 if (strpos($kyc['kyc_file'], ',') !== false) {
@@ -40,11 +44,11 @@ class KYCController extends Controller
         
                 $base64data = base64_decode($kyc['kyc_file'], true);
                 $file_name = $request->input('user_id')."-".$kyc['name'].time().".".strtolower($kyc['kyc_file_type']);
-                
+
                 $file_path  = "{$folder}{$file_name}";
-        
-                // Return the number of bytes saved, or false on failure
                 $result = file_put_contents("{$file_path}", $base64data);
+
+                $kyc['file_name'] = $file_name;
             }
             else{
                 $file_name = NULL;
@@ -82,7 +86,51 @@ class KYCController extends Controller
 
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'kyc_items' => 'required|array',
+        ]);
+
+        //print_r($request->input('kyc_items'));
+        $folder = 'uploads/kyc/';
+        $file_name = ''; 
+        
+        foreach ($request->input('kyc_items') as $kyc){
+            if ($kyc['kyc_file_type'] == "Image"){
+                $name = $request->input('user_id')."-".$kyc['name'].time().".".explode('/',explode(':', substr( $kyc['kyc_file'], 0, strpos($kyc['kyc_file'], ';')))[1])[1];
+                \Image::make($kyc['kyc_file'])->save(public_path($folder).$name);
+                $file_name = 'uploads/kyc/'.$name;
+            }
+            else if($kyc['kyc_file_type'] == "PDF"){
+                if (strpos($kyc['kyc_file'], ',') !== false) {
+                    @list($encode, $kyc['kyc_file']) = explode(',', $kyc['kyc_file']);
+                }
+        
+                $base64data = base64_decode($kyc['kyc_file'], true);
+                $file_name = $request->input('user_id')."-".$kyc['name'].time().".".strtolower($kyc['kyc_file_type']);
+                
+                $file_path  = "{$folder}{$file_name}";
+        
+                // Return the number of bytes saved, or false on failure
+                $result = file_put_contents("{$file_path}", $base64data);
+            }
+            else{
+                $file_name = NULL;
+            }
+
+            $kyc = UserKYC::create([
+                'user_id' => auth('api')->id(),
+                'item_id' => $kyc['id'],
+                'file' => $file_name,
+                'identification' => $kyc['identification'] ?? NULL,
+                'expiry_date' => $kyc['expiry_date'] ?? NULL,
+                'created_by' => auth('api')->id(),
+                'updated_by' => auth('api')->id(),
+            ]);
+        }
+
+        return response()->json([
+            
+        ]);
     }
 
     public function destroy($id)

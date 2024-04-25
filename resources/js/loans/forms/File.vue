@@ -69,7 +69,7 @@ export default {
             .then(response=>{
                 this.$Progress.finish();
                 Swal.fire({icon: 'success', title: response.data.message,});
-                Fire.$emit('reload');
+                Fire.$emit('reloadLoanFiles');
                 this.loading = false;
             })
             .catch(()=>{
