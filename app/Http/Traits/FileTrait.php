@@ -16,7 +16,7 @@ trait FileTrait{
     public function file_upload_by_type($file, $type, $location, $id){
         if($type == 'image'){
             $new_name = $id."-".time().".".explode('/',explode(':', substr( $file, 0, strpos($file, ';')))[1])[1];
-            \Image::make($file)->save(public_path($location).$new_name);
+            \Image::make($file)->save(public_path($location).'/'.$new_name);
             return $location.'/'.$new_name;
         }
 

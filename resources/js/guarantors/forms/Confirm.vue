@@ -4,13 +4,19 @@
         <div class="col-md-12">
             <form class="" method="POST" @submit.prevent="guaranteeLoan()">
                 <div class="card">
-                    <div class="card-header">Guarantee A Loan</div>
+                    <div class="card-header">
+                        <h3 class="card-title">Guarantee A Loan</h3>
+                        <div class="card-tools">
+                            <button class="btn btn-sm btn-danger" type="button" @click="rejectLoan()">Reject </button>
+                        </div>
+                    </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="card">
                                     <div class="card-header">
                                         <h3 class="card-title">Loan Summary</h3>
+                                        
                                     </div>
                                     <div class="card-body p-0">
                                         <table class="table table-sm table-bordered table-hover table-stripped">
@@ -173,14 +179,38 @@
                                         </div>
                                     </div>   
                                 </div>
+                                
                                 <div class="row">
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-4">
+                                        <div class="form--group">
+                                            <label>Passport Photograph</label>
+                                            <input type="file" class="form-control" @change="addFile('passport', $event)"/>
+                                            <input type="hidden" v-model="confirmationData.passport" id="guarantor_passport" name="guarantor_passport"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form--group">
+                                            <label>Valid Identification</label>
+                                            <input type="file" class="form-control"  @change="addFile('valid_id', $event)" />
+                                            <input type="hidden" v-model="confirmationData.valid_id" id="guarantor_valid_id" name="guarantor_valid_id"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="form--group">
+                                            <label>Proof of Address</label>
+                                            <input type="file" class="form-control"  @change="addFile('address_proof', $event)"/>
+                                            <input type="hidden" v-model="confirmationData.guarantor_valid_id" id="guarantor_address_proof" name="guarantor_address_proof"/>
+                                        </div>
+                                    </div>   
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
                                         <div class="form--group">
                                             <label>Comment</label>
                                             <wysiwyg rows=3 v-model="confirmationData.description" required/>
                                         </div>
                                     </div>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-12">
                                         <div class="form--group">
                                             <label>Signature</label>
                                             <VueSignaturePad :options="options" class="signature" ref="signaturePad" v-model="confirmationData.guarantor_signature" required />
@@ -234,8 +264,9 @@ export default {
                 status: '',
                 description: '',
                 net_income: '',
-                guarantor_passport: '',
-                guarantor_signature: '',
+                passport: '',
+                passport_type: '',
+                signature: '',
             }),
             editMode: false,
             guarantor: {},
@@ -253,6 +284,37 @@ export default {
         this.getInitials();
     },
     methods:{
+        addFile(fileKey, event) {
+            let file = event.target.files[0];
+            let reader = new FileReader();
+            if (file['size'] > 2000000){
+                Swal.fire({icon: 'error', title: 'File is too large'});
+            }
+            else if((file['type'] != 'image/png') && (file['type'] != 'image/jpg') && (file['type'] != 'image/jpeg') && (file['type'] != 'application/pdf')){
+                Swal.fire({icon: 'error', title: 'Invalid File Type'});
+            }
+            else{
+                reader.onloadend = (event) => {
+                    if (fileKey == 'address_proof'){
+                        this.confirmationData.address_proof = reader.result;
+                        this.confirmationData.address_proof_type = ((file['type'] == 'image/png') || (file['type'] == 'image/jpg') || (file['type'] == 'image/jpeg')) ? 'Image': 'PDF';
+                    }
+                    else if (fileKey == 'passport'){
+                        this.confirmationData.passport = reader.result;
+                        this.confirmationData.passport_type = ((file['type'] == 'image/png') || (file['type'] == 'image/jpg') || (file['type'] == 'image/jpeg')) ? 'Image': 'PDF';
+                    }
+                    else if (fileKey == 'valid_id'){
+                        this.confirmationData.valid_id = reader.result;
+                        this.confirmationData.valid_id_type = ((file['type'] == 'image/png') || (file['type'] == 'image/jpg') || (file['type'] == 'image/jpeg')) ? 'Image': 'PDF';
+                    }
+                    console.log(fileKey);
+                    console.log(reader.result);
+                    //this.UserKYCData.kyc_items[fileKey].kyc_file = reader.result;
+                    //this.UserKYCData.kyc_items[fileKey].kyc_file_type = ((file['type'] == 'image/png') || (file['type'] == 'image/jpg') || (file['type'] == 'image/jpeg')) ? 'Image': 'PDF';
+                }
+                reader.readAsDataURL(file)
+            }
+        },
         change() {
             this.options = {penColor: "#00f",};
         },
@@ -301,6 +363,9 @@ export default {
             const { isEmpty, data } = this.$refs.signaturePad.saveSignature();
             this.confirmationData.guarantor_signature = data;
         },
+        uploadAddressProof(){},
+        uploadPassport(){},
+        uploadValidID(){},
         undo() {
             this.$refs.signaturePad.undoSignature();
         }
