@@ -1,45 +1,31 @@
 <template>
 <section class="container-fluid">
-    <div class="card">
-        <div class="card-header">
-            <h3 class="card-title">Unconfirmed Bank Verification Numbers</h3>
+    <div class="card card-primary card-tabs">
+        <div class="card-header p-0 pt-1">
+            <ul class="nav nav-tabs" id="custom-tabs-two-tab" role="tablist">
+                <li class="pt-2 px-3"><h3 class="card-title">Unconfirmed Bank Verification Numbers</h3></li>
+                <li class="nav-item">
+                    <a class="nav-link active" id="custom-tabs-two-home-tab" data-toggle="pill" href="#custom-tabs-two-home" role="tab" aria-controls="custom-tabs-two-home" aria-selected="true">Customers</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="custom-tabs-two-profile-tab" data-toggle="pill" href="#custom-tabs-two-profile" role="tab" aria-controls="custom-tabs-two-profile" aria-selected="false">Guarantors</a>
+                </li>
+            </ul>
         </div>
-        <div class="card-body table-responsive p-0" style="max-height: 500px;" v-if="users.data != null && users.data.length != 0">
-            <table class="table table-head-fixed text-nowrap">
-                <thead>
-                <tr>
-                    <th>Customer</th>
-                    <th>BVN</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Loan Status</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="user in users.data" :key="user.id">
-                        <td>{{ user | FullName  }}</td>
-                        <td>{{ user.bvn }}<br /> {{ user.customer.bvn_status == 0 ? 'Unconfirmed' : 'Rejected' }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.phone }}</td>
-                        <td>{{ user.loans != null && user.loans.length != 0 ? 'Active Loan Request' : 'No Active Loan Request'}}</td>
-                        <td>
-                            <button type="button" class="btn btn-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
-                            <div class="dropdown-menu">
-                                <router-link class="btn btn-block dropdown-item" :to="'/staff/confirm/bvns/'+user.id"><i class="fa fa-check mr-1 text-primary"></i> Confirm </router-link>
-                                <button class="btn btn-block dropdown-item" @click="sendBVNMail(user.id)"><i class="fa fa-envelope mr-1"></i> Customer BVN error mail</button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="card-body" v-else>
-            <img class="card-img-top" src="/dist/img/photo2.png" alt="Dist Photo 2">
-            <div class="card-img-overlay d-flex flex-column justify-content-center">
-                <h5 class="card-title text-white mt-5 pt-2">No Customer Address Yet</h5>
-                <p class="card-text pb-2 pt-1 text-white">Add a new customers <br></p>
-                <button class="btn btn-primary">Add User</button>
+        <div class="card-body">
+            <div class="tab-content" id="custom-tabs-two-tabContent">
+                <div class="tab-pane fade show active" id="custom-tabs-two-home" role="tabpanel" aria-labelledby="custom-tabs-two-home-tab">
+                    <ApproveDetailCustomerBVNUnconfirmed />
+                </div>
+                <div class="tab-pane fade" id="custom-tabs-two-profile" role="tabpanel" aria-labelledby="custom-tabs-two-profile-tab">
+                    <ApproveDetailGuarantorBVNUnconfirmed />
+                </div>
+                <div class="tab-pane fade" id="custom-tabs-two-messages" role="tabpanel" aria-labelledby="custom-tabs-two-messages-tab">
+
+                </div>
+                <div class="tab-pane fade" id="custom-tabs-two-settings" role="tabpanel" aria-labelledby="custom-tabs-two-settings-tab">
+                    
+                </div>
             </div>
         </div>
     </div>

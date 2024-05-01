@@ -11,11 +11,39 @@ Vue.component('ApproveAddress', ApproveAddress);
 Vue.component('ApproveBVNs', ApproveBVNs);
 Vue.component('ApproveBVN', ApproveBvn);
 
-    import ApproveDetailsAddress from '../approvals/details/Address.vue';
-    import ApproveDetailsBvn from '../approvals/details/Bvn.vue';
+    import ApproveDetailAddress from '../approvals/details/Address.vue';
+    import ApproveDetailBvn from '../approvals/details/Bvn.vue';
 
-    Vue.component('ApproveDetailsAddress', ApproveDetailsAddress);
-    Vue.component('ApproveDetailsBvn', ApproveDetailsBvn);
+    import ApproveDetailCustomerAddressConfirmed        from '../approvals/details/CustomerAddressConfirmed.vue';
+    import ApproveDetailCustomerAddressRejected         from '../approvals/details/CustomerAddressRejected.vue';
+    import ApproveDetailCustomerAddressUnconfirmed      from '../approvals/details/CustomerAddressUnconfirmed.vue';
+    import ApproveDetailCustomerBVNConfirmed            from '../approvals/details/CustomerBVNConfirmed.vue';
+    import ApproveDetailCustomerBVNRejected             from '../approvals/details/CustomerBVNRejected.vue';
+    import ApproveDetailCustomerBVNUnconfirmed          from '../approvals/details/CustomerBVNUnconfirmed.vue';
+
+    import ApproveDetailGuarantorAddressConfirmed       from '../approvals/details/GuarantorAddressConfirmed.vue';
+    import ApproveDetailGuarantorAddressRejected        from '../approvals/details/GuarantorAddressRejected.vue';
+    import ApproveDetailGuarantorAddressUnconfirmed     from '../approvals/details/GuarantorAddressUnconfirmed.vue';
+    import ApproveDetailGuarantorBVNConfirmed           from '../approvals/details/GuarantorBVNConfirmed.vue';
+    import ApproveDetailGuarantorBVNRejected            from '../approvals/details/GuarantorBVNRejected.vue';
+    import ApproveDetailGuarantorBVNUnconfirmed         from '../approvals/details/GuarantorBVNUnconfirmed.vue';
+
+    Vue.component('ApproveDetailAddress',                       ApproveDetailAddress);
+    Vue.component('ApproveDetailBvn',                           ApproveDetailBvn);
+
+    Vue.component('ApproveDetailCustomerAddressConfirmed',      ApproveDetailCustomerAddressConfirmed);
+    Vue.component('ApproveDetailCustomerAddressRejected',       ApproveDetailCustomerAddressRejected);
+    Vue.component('ApproveDetailCustomerAddressUnconfirmed',    ApproveDetailCustomerAddressUnconfirmed);
+    Vue.component('ApproveDetailCustomerBVNConfirmed',          ApproveDetailCustomerBVNConfirmed);
+    Vue.component('ApproveDetailCustomerBVNRejected',           ApproveDetailCustomerBVNRejected);
+    Vue.component('ApproveDetailCustomerBVNUnconfirmed',        ApproveDetailCustomerBVNUnconfirmed);
+
+    Vue.component('ApproveDetailGuarantorAddressConfirmed',     ApproveDetailGuarantorAddressConfirmed);
+    Vue.component('ApproveDetailGuarantorAddressRejected',      ApproveDetailGuarantorAddressRejected);
+    Vue.component('ApproveDetailGuarantorAddressUnconfirmed',   ApproveDetailGuarantorAddressUnconfirmed);
+    Vue.component('ApproveDetailGuarantorBVNConfirmed',         ApproveDetailGuarantorBVNConfirmed);
+    Vue.component('ApproveDetailGuarantorBVNRejected',          ApproveDetailGuarantorBVNRejected);
+    Vue.component('ApproveDetailGuarantorBVNUnconfirmed',       ApproveDetailGuarantorBVNUnconfirmed);
 
 
     import ApproveFormAddress from '../approvals/forms/Address.vue';
