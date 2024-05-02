@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Ums;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\KYCTrait;
 use App\Http\Traits\UserTrait;
 use App\Models\Ums\CustomerAddress;
 use App\Models\User;
@@ -11,11 +12,14 @@ use App\Models\User;
 
 class CustomerAddressController extends Controller
 {
-    use UserTrait;
+    use KYCTrait, UserTrait;
 
     public function index()
     {
-        
+        return response()->json([
+            'unconfirmed_customer_addresses' => $this->kyc_address_unconfirmed_customer_addresses(null, true, true, $_GET['page'] ?? 1),
+            'user' => User::where('id', '=', $request->input('user_id'))->with('next_of_kin', 'customer_accounts', 'customer_addresses', 'social_medias', 'customer_kyc')->with(['area', 'state',])->get(),
+        ]);
     }
 
     public function store(Request $request)

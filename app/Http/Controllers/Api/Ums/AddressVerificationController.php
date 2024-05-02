@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Ums;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\KYCTrait;
 use App\Models\Ums\Customer;
 use App\Models\Ums\CustomerAddress;
 use App\Models\Ums\CustomerAddressVerification;
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
 
 class AddressVerificationController extends Controller
 {   
+    use KYCTrait;
     public function awaiting_confirmation()
     {
         return response()->json([
@@ -37,7 +39,6 @@ class AddressVerificationController extends Controller
         return response()->json([
             'message' => "Updated awaiting COO confirmation",
         ]);
-
     }
 
     public function coo(Request $request, $id)
@@ -64,8 +65,14 @@ class AddressVerificationController extends Controller
 
     public function index()
     {
+        if($_GET['point'] == 'customer'){
+            $unverified_addresses = $this->kyc_address_customer_addresses('unconfirmed', true, true, $_GET['page'] ?? 1);
+        }
+        else if($_GET['point'] == 'guarantor'){
+            $unverified_addresses = $this->kyc_address_guarantor_addresses('unconfirmed', true, true, $_GET['page'] ?? 1);
+        }
         return response()->json([
-            'unverified' => CustomerAddress::where('status', '=', 0)->whereNull('confirmed_by')->with(['area', 'customer', 'state'])->paginate(20),
+            'unverified_addresses' => $unverified_addresses,
         ]);
     }
 

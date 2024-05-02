@@ -50,4 +50,19 @@ trait LogTrait{
             'user_id' => $user ? $user->id : 0,
         ]);
     }
+
+    public function log_activity_user_activity($user, $type, $status, $item_id){
+        switch ($type){
+            case 'Address Verification':
+                $activity = Activity::create([
+                    'subject' => ($user ? $user->first_name.' '.$user->last_name: 'Unknown user').($status ? ' has successfully verified' : 'failed to verify').' a Customer Address with id: '.$item_id,
+                    'url' => 'Verification',
+                    'method' => 'verify', 
+                    'ip' => \Illuminate\Support\Facades\Request::ip(), 
+                    'agent' => \Illuminate\Support\Facades\Request::header('User-Agent'), 
+                    'user_id' => $user ? $user->id : 0,
+                ]);
+            break;
+        }
+    }
 }
