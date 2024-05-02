@@ -1,6 +1,5 @@
 <template>
 <section>
-    
     <form id="password_form" @submit.prevent="editMode ? updateAddressVerification() : createAddressVerification()">
         <div class="row">
             <div class="col-md-6 col-sm-12">
@@ -106,6 +105,7 @@ export default {
             AddressConfirmationData: new Form({
                 id: '',
                 address_id: '',
+                address_type: '',
                 alternate_address: '',
                 description: '',
                 location_ease: '',
@@ -114,6 +114,7 @@ export default {
                 met_with_relations: '',
                 met_with_phone: '',
                 remarks: '',
+                type: '',
                 visit_update: '',
                 visit_date: '',
                 visit_date_2: '',
@@ -123,6 +124,8 @@ export default {
     },
     methods:{
         createAddressVerification(){
+            this.AddressConfirmationData.address_type = this.$route.params.type;
+            this.AddressConfirmationData.type = this.type
             this.$Progress.start();
             this.AddressConfirmationData.address_id = this.address.id
             this.AddressConfirmationData.post('/api/ums/address_verifications')

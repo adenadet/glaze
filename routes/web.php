@@ -101,7 +101,7 @@ Route::group(['prefix' => '/requests', 'namespace' => 'App\Http\Controllers',],f
 
 
 Route::get('/clear-cache', function() {
-    //$exitCode = Artisan::call('cache:clear');
+    $exitCode = Artisan::call('migrate');
     $exitCode = Artisan::call('config:cache');
     $exitCode = Artisan::call('route:cache');
     $exitCode = Artisan::call('cache:clear');    

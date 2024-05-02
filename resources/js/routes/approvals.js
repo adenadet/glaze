@@ -5,12 +5,13 @@ import ApproveAddresses from '../approvals/Addresses.vue';
 import ApproveAddress from '../approvals/Address.vue';
 import ApproveBVNs from '../approvals/BVNs.vue';
 import ApproveBvn from '../approvals/BVN.vue';
+import ApproveGuarantorAddress from '../approvals/GuarantorAddress.vue';
 
 Vue.component('ApproveAddresses', ApproveAddresses);
 Vue.component('ApproveAddress', ApproveAddress);
 Vue.component('ApproveBVNs', ApproveBVNs);
 Vue.component('ApproveBVN', ApproveBvn);
-
+Vue.component('ApproveGuarantorAddress', ApproveGuarantorAddress);
     
     import ApproveDetailsAddress from '../approvals/details/Address.vue';
     import ApproveDetailsBvn from '../approvals/details/Bvn.vue';
@@ -23,6 +24,11 @@ Vue.component('ApproveBVN', ApproveBvn);
     
     Vue.component('ApproveDetailsAddress', ApproveDetailsAddress);
     Vue.component('ApproveDetailsCustomerAddressLists', ApproveDetailsCustomerAddressLists);
+    Vue.component('ApproveDetailsCustomerBVNLists', ApproveDetailsCustomerBVNLists);
+    Vue.component('ApproveDetailsCustomerNINLists', ApproveDetailsCustomerNINLists);
+    Vue.component('ApproveDetailsGuarantorAddressLists', ApproveDetailsGuarantorAddressLists);
+    Vue.component('ApproveDetailsGuarantorBVNLists', ApproveDetailsGuarantorBVNLists);
+    Vue.component('ApproveDetailsGuarantorNINLists', ApproveDetailsGuarantorNINLists);
     Vue.component('ApproveDetailsBvn', ApproveDetailsBvn);
 
     import ApproveFormAddress from '../approvals/forms/Address.vue';
@@ -37,6 +43,8 @@ let routes = [
     {path: '/staff/confirm/address/:id', component: ApproveAddress},
     {path: '/staff/confirm/bvns', component: ApproveBVNs},
     {path: '/staff/confirm/bvns/:id', component: ApproveBvn},
+    {path: '/staff/confirm/guarantor_address/:type/:id', component: ApproveGuarantorAddress},
+    
 ];
 
 export default routes

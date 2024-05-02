@@ -3,24 +3,21 @@
         <thead class="bg-dark">
             <tr>
                 <th>Guarantor</th>
-                <th>Type</th>
-                <th>Address</th>
-                <th>City</th>
-                <th>Status</th>
+                <th>Employer Address</th>
+                <th>Residential Address</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            <tr v-for="address in unverified_addresses.data" :key="address.id">
-                <td>{{ address.customer | FullName  }}</td>
-                <td>{{ address.type | firstUp }}</td>
-                <td>{{ address.street }}</td>
-                <td>{{ address.city | firstUp }} {{ address.area ? address.area.name+', ': '' }} {{ address.state ? address.state.name+', ': '' }}</td>
-                <td>Unapproved</td>
+            <tr v-for="guarantor in unverified_addresses.data" :key="address.id">
+                <td>{{ guarantor.last_name}}, {{ guarantor.first_name}} {{ guarantor.middle_name != null ? guarantor.middle_name : ''}}</td>
+                <td><span class="badge" :class="guarantor.employer_address_status == 1 ? ' bg-success' : (guarantor.employer_address_status == 2 ? 'bg-danger' : 'bg-warning') ">{{ guarantor.employer_address }}</span></td>
+                <td><span class="badge" :class="guarantor.residential_address_status == 1 ? ' bg-success' : (guarantor.residential_address_status == 2 ? 'bg-danger' : 'bg-warning') ">{{ guarantor.residential_address }}</span></td>
                 <td>
                     <button type="button" class="btn btn-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
                     <div class="dropdown-menu">
-                        <router-link class="btn btn-block dropdown-item" :to="'/staff/confirm/address/'+address.id"><i class="fa fa-check mr-1 text-primary"></i> Confirm </router-link>
+                        <router-link class="btn btn-block dropdown-item" v-if="guarantor.employer_address_status != 1 || guarantor.employer_address_status != 2" :to="'/staff/confirm/guarantor_address/business/'+guarantor.id"><i class="fa fa-check mr-1 text-primary"></i> Confirm Employer</router-link>
+                        <router-link class="btn btn-block dropdown-item" v-if="guarantor.residential_address_status != 1 || guarantor.residential_address_status != 2" :to="'/staff/confirm/guarantor_address/residential/'+guarantor.id"><i class="fa fa-check mr-1 text-info"></i> Confirm Residential</router-link>
                     </div>
                 </td>
             </tr>

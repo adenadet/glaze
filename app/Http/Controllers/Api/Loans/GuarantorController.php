@@ -110,7 +110,7 @@ class GuarantorController extends Controller
     public function show($id)
     {
         return response()->json([
-            'guarantor' => Guarantor::where('id', '=', $id)->with(['loan'])->first(),
+            'guarantor' => Guarantor::where('id', '=', $id)->with(['loan', 'residential_address_verification', 'employer_address_verification'])->first(),
         ]);
     }
 

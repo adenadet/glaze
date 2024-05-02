@@ -78,29 +78,13 @@ class AddressVerificationController extends Controller
 
     public function store(Request $request)
     {
-        $verification = CustomerAddressVerification::create([
-            'address_id' => $request->input('address_id'),
-            'alternate_address' => $request->input('alternate_address') ?? NULL,
-            'description' => $request->input('description') ?? NULL,
-            'location_ease' => $request->input('location_ease'),
-            'met_with' => $request->input('met_with'),
-            'met_with_name' => $request->input('met_with_name') ?? NULL,
-            'met_with_relations' => $request->input('met_with_relations') ?? NULL,
-            'met_with_phone' => $request->input('met_with_phone') ?? NULL,
-            'remarks' => $request->input('remarks'),
-            'visit_update' => $request->input('visit_update'),
-            'visit_date' => $request->input('visit_date'),
-            'visit_date_2' => $request->input('visit_date') ?? NULL,
-            'created_by' => auth('api')->id(),
-            'updated_by' => auth('api')->id(),
-        ]);
-
-        $address = CustomerAddress::where('id', '=', $request->input('address_id'))->first();
-        $address->status = 1;
-        $address->confirmed_by = auth('api')->id();
-        $address->confirmed_at = date('Y-m-d');
-        $address->save();
-
+        if (is_null($request->input('type'))){
+            $verification = $this->kyc_address_customer_address_confirm($request);
+        }
+        else if($request->input('type') == 'guarantor'){
+            $verification = $this->kyc_address_guarantor_address_confirm($request);
+        } 
+        
         return response()->json([
             'unverified' => CustomerAddress::where('status', '=', 0)->whereNull('confirmed_by')->get(),
         ]); 

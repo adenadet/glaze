@@ -6,11 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class UpdateCustomerAddressVerificationMakeMultiuse extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::table('customer_address_verifications', function (Blueprint $table) {
