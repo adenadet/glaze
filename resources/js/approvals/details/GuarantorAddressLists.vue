@@ -2,7 +2,7 @@
     <table class="table table-hover text-nowrap" v-if="unverified_addresses.data != null && unverified_addresses.data.length != 0">
         <thead class="bg-dark">
             <tr>
-                <th>Customer</th>
+                <th>Guarantor</th>
                 <th>Type</th>
                 <th>Address</th>
                 <th>City</th>

@@ -15,6 +15,11 @@ Vue.component('ApproveBVN', ApproveBvn);
     import ApproveDetailsAddress from '../approvals/details/Address.vue';
     import ApproveDetailsBvn from '../approvals/details/Bvn.vue';
     import ApproveDetailsCustomerAddressLists from '../approvals/details/CustomerAddressLists.vue';
+    import ApproveDetailsCustomerBVNLists from '../approvals/details/CustomerBVNLists.vue';
+    import ApproveDetailsCustomerNINLists from '../approvals/details/CustomerNINLists.vue';
+    import ApproveDetailsGuarantorAddressLists from '../approvals/details/GuarantorAddressLists.vue';
+    import ApproveDetailsGuarantorBVNLists from '../approvals/details/GuarantorBVNLists.vue';
+    import ApproveDetailsGuarantorNINLists from '../approvals/details/GuarantorNINLists.vue';
     
     Vue.component('ApproveDetailsAddress', ApproveDetailsAddress);
     Vue.component('ApproveDetailsCustomerAddressLists', ApproveDetailsCustomerAddressLists);
