@@ -20,7 +20,7 @@ Route::group(['prefix'=>'ums'], function () {
     Route::apiResources([
         '/addresses'                => 'CustomerAddressController',
         '/address_verifications'    => 'AddressVerificationController',
-        '/bvn_verifications'        => 'ConfirmationController',
+        '/bvn_verifications'        => 'BVNVerificationController',
         '/branches'                 => 'BranchController',
         '/bios'                     => 'BioController',
         '/customers'                => 'CustomerController',

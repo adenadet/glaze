@@ -145,9 +145,64 @@ trait KYCTrait{
             $this->log_activity_user_activity(Auth::user(), 'Guarantor Verification'.$request->input('address_type'), false, $request->input('guarantor_id'));  
         }
     }
-    public function kyc_bvn_confirm($user_id, $request){}
+    
+    public function kyc_bvn_customer_confirm($user_id, $request){
+        $customer = Customer::where('user_id', '=', $request->input('user_id'))->first();
+        $customer->bvn_status = $request->input('bvn_status');
+        $customer->bvn_confirmed_by = auth('api')->id();
+        $customer->updated_by = auth('api')->id();
+        $customer->bvn_confirmed_at = date('Y-m-d H:i:s');
+        $customer->confirmation_channel = $request->input('confirmation_channel');
 
-    public function kyc_bvn_reject($user_id, $request){}
+        $customer->save();
+
+    }
+
+    public function kyc_bvn_customer_get_all($type, $paginated, $detailed, $page){
+        switch($type){
+            case 'confirmed':
+                $query = Customer::where('bvn_status', '=', 1);
+                $query = $detailed ? $query->with(['user']) : $query;
+                $query = $paginated ? $query->paginate(50) : $query->get();
+            break;
+            case 'rejected':
+                $query = Customer::where('bvn_status', '=', 0);
+                $query = $detailed ? $query->with(['user']) : $query;
+                $query = $paginated ? $query->paginate(50) : $query->get();
+            break;
+            case 'unconfirmed':
+                $query = Customer::where('bvn_status', '=', 0)->orWhereNull('bvn_status');
+                $query = $detailed ? $query->with(['user']) : $query;
+                $query = $paginated ? $query->paginate(50) : $query->get();
+            break;
+        }
+        
+        return $query;
+    }
+
+    public function kyc_bvn_customer_reject($user_id, $request){}
+
+    public function kyc_bvn_guarantor_get_all($type, $paginated, $detailed, $page){
+        switch($type){
+            case 'confirmed':
+                $query = Guarantor::where('bvn_status', '=', 1);
+                //$query = $detailed ? $query->with(['user']) : $query;
+                $query = $paginated ? $query->paginate(50) : $query->get();
+            break;
+            case 'rejected':
+                $query = Guarantor::where('bvn_status', '=', 0);
+                //$query = $detailed ? $query->with(['user']) : $query;
+                $query = $paginated ? $query->paginate(50) : $query->get();
+            break;
+            case 'unconfirmed':
+                $query = Guarantor::where('bvn_status', '=', 0)->orWhereNull('bvn_status');
+                //$query = $detailed ? $query->with(['user']) : $query;
+                $query = $paginated ? $query->paginate(50) : $query->get();
+            break;
+        }
+        
+        return $query;
+    }
 
     public function kyc_bvn_remind($user_id){}
 
