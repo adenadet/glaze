@@ -30,7 +30,7 @@ class UpdateGuarantorsTableAddFiles extends Migration
             $table->string('nin')->nullable()->after('bvn_confirmed_at');
             $table->string('nin_status')->nullable()->after('nin');
             $table->string('nin_confirmed_by')->nullable()->after('nin_status');
-            $table->string('nin_confirmed_at')->nullable()->after('nin_confirmed_at');
+            $table->string('nin_confirmed_at')->nullable()->after('nin_confirmed_by');
         });
     }
 

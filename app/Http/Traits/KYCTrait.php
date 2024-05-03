@@ -8,21 +8,22 @@ use App\Models\Finance\AllBank;
 use App\Models\Loans\Account;
 use App\Models\Loans\GeminiCustomerGroup;
 use App\Models\Loans\Guarantor;
+use App\Models\Loans\GuarantorAddressVerification;
 use App\Models\State;
 use App\Models\Ums\Customer;
 use App\Models\Ums\CustomerAddress;
 use App\Models\Ums\CustomerAddressVerification;
 use App\Models\Ums\Staff;
 use App\Models\User;
+use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+
 
 trait KYCTrait{
     use LogTrait;
     
-    public function kyc_address_reject($user_id, $address_id, $request){
-
-    }
-
     public function kyc_address_customer_addresses($type, $detailed, $paginated, $page){
         switch($type){
             case 'confirmed':
@@ -72,11 +73,30 @@ trait KYCTrait{
                 'updated_by' => auth('api')->id(),
             ]);
 
-            $this->log_activity_user_activity(Auth::user(), 'Address Verification', true, $address_id);
+            $this->log_activity_user_activity(Auth::user(), 'Address Verification', true, $address->id);
             DB::commit();
         }
         catch(Exception $e){
             DB::rollBack();
+            $this->log_activity_user_activity(Auth::user(), 'Address Verification', true, $address->id);
+        }
+    }
+
+    public function kyc_address_customer_address_reject($user_id, $address_id, $request){
+        try{
+            DB::beginTransaction();
+            $address = CustomerAddress::where('id', '=', $request->input('address_id'))->first();
+            $address->confirmed_by = auth('api')->id();
+            $address->confirmed_at = date('Y-m-d H:i:s');
+            $address->status = 2;
+            $address->updated_by = auth('api')->id();
+            $address->save();
+            $this->log_activity_user_activity(Auth::user(), 'Address Rejection', true, $address_id);
+            DB::commit();
+        }
+        catch(Exception $e){
+            DB::rollBack();
+            $this->log_activity_user_activity(Auth::user(), 'Address Rejection', true, $address_id);
         }
     }
 
@@ -84,17 +104,14 @@ trait KYCTrait{
         switch($type){
             case 'confirmed':
                 $query = Guarantor::where('residential_address_status', '=', 1);
-                //$query = $detailed ? $query->with(['area', 'customer', 'state']) : $query;
                 $query = $paginated ? $query->paginate(50) : $query->get();
             break;
             case 'rejected':
                 $query = Guarantor::where('residential_address_status', '=', 2);
-                //$query = $detailed ? $query->with(['area', 'customer', 'state']) : $query;
                 $query = $paginated ? $query->paginate(50) : $query->get();
             break;
             case 'unconfirmed':
                 $query = Guarantor::where('residential_address_status', '=', 0)->orWhere('employer_address_status', '=', 0)->orWhereNull('employer_address_status')->orWhereNull('residential_address_status');
-                //$query = $detailed ? $query->with(['area', 'customer', 'state']) : $query;
                 $query = $paginated ? $query->paginate(50) : $query->get();
             break;
         }
@@ -137,12 +154,13 @@ trait KYCTrait{
                 $guarantor->residential_address_status = 1;
                 $guarantor->save();
             }
-            $this->log_activity_user_activity(Auth::user(), 'Guarantor Verification'.$request->input('address_type'), true, $guarantor->id);
+            $this->log_activity_user_activity(Auth::user(), 'Guarantor Verification '.$request->input('address_type'), true, $guarantor->id);
             DB::commit();
         }
         catch(Exception $e){
             DB::rollBack();
-            $this->log_activity_user_activity(Auth::user(), 'Guarantor Verification'.$request->input('address_type'), false, $request->input('guarantor_id'));  
+            $this->log_activity_user_activity(Auth::user(), 'Guarantor Verification'.$request->input('address_type'), false, $request->input('guarantor_id')); 
+            print_r($e); 
         }
     }
     

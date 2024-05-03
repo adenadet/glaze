@@ -78,6 +78,7 @@ class AddressVerificationController extends Controller
 
     public function store(Request $request)
     {
+        //dd($request->input('type'));
         if (is_null($request->input('type'))){
             $verification = $this->kyc_address_customer_address_confirm($request);
         }

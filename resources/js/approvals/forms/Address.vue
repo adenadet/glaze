@@ -118,6 +118,7 @@ export default {
                 visit_update: '',
                 visit_date: '',
                 visit_date_2: '',
+                guarantor_id: '',
             }),
             editMode: false,
         }
@@ -126,6 +127,8 @@ export default {
         createAddressVerification(){
             this.AddressConfirmationData.address_type = this.$route.params.type;
             this.AddressConfirmationData.type = this.type
+            this.AddressConfirmationData.guarantor_id = this.$route.params.id;
+            this.AddressConfirmationData.address_id = this.$route.params.id;
             this.$Progress.start();
             this.AddressConfirmationData.address_id = this.address.id
             this.AddressConfirmationData.post('/api/ums/address_verifications')
@@ -164,5 +167,9 @@ export default {
             if (requirement != null){this.AddressConfirmationData.fill(requirement);}
         });  
     },
+    props:{
+        type: String,
+
+    }
 }
 </script>
