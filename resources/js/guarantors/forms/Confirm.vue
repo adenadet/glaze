@@ -339,10 +339,10 @@ export default {
             this.confirmationData.post('/api/guarantor_requests') 
             .then(response =>{
                 this.$Progress.finish();
-                this.loadPage(response);
+                //this.loadPage(response);
                 Swal.fire({
                     icon: 'success',
-                    title: 'The Address details has been updated',
+                    title: 'The Loan has been guaranteed',
                     showConfirmButton: false,
                     timer: 1500
                 });
