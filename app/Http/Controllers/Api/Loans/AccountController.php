@@ -86,27 +86,6 @@ class AccountController extends Controller{
         ]);
     }
 
-    public function store(Request $request)
-    {
-        $this->validate($request, [
-            'loan_type_id' => 'required|numeric',
-            'amount'=> 'required|numeric',
-            'duration'=> 'required|numeric',
-            'bank_id' => 'required|numeric',
-            'acct_name' => 'required',
-            'acct_number' => 'required|numeric',
-            'frequency' => 'required',
-        ]);
-
-        $loan = $this->account_create_new($request);
-
-        $this->log_createNewLoanActivity(auth('api')->user(), $loan);
-        
-        return response()->json([
-            'current_loan' => $loan, 'message' => 'Successfully created, kindly add guarantors',
-        ]);
-    }
-    
     public function show($id)
     {
         return response()->json([
@@ -135,6 +114,27 @@ class AccountController extends Controller{
         ]);
     }
 
+    public function store(Request $request)
+    {
+        $this->validate($request, [
+            'loan_type_id' => 'required|numeric',
+            'amount'=> 'required|numeric',
+            'duration'=> 'required|numeric',
+            'bank_id' => 'required|numeric',
+            'acct_name' => 'required',
+            'acct_number' => 'required|numeric',
+            'frequency' => 'required',
+        ]);
+
+        $loan = $this->account_create_new($request);
+
+        $this->log_createNewLoanActivity(auth('api')->user(), $loan);
+        
+        return response()->json([
+            'current_loan' => $loan, 'message' => 'Successfully created, kindly add guarantors',
+        ]);
+    }
+    
     public function update(Request $request, $id)
     {
         $loan = Account::find($id);

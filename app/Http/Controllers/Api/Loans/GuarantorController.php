@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
 use App\Http\Traits\FileTrait;
 use App\Http\Traits\GuarantorTrait;
+use App\Http\Traits\LogTrait;
 
 use App\Models\Loans\Account;
 use App\Models\Loans\Guarantor;
@@ -18,15 +19,11 @@ use App\Models\Loans\Type;
 
 class GuarantorController extends Controller
 {
-    use GuarantorTrait;
+    use GuarantorTrait, LogTrait;
 
     public function add(Request $request){
-        $loan = Account::where('id', '=', $request->input('loan_id'))->with('user')->first();
-
-        foreach ($request->input('guarantors') as $guarantor){
-            $this->guarantor_new_request($loan, $guarantor);
-        }
-
+        $this->guarantor_new_request($request);
+        
         return response()->json([
             'message' => 'Guarantor added successfully',       
         ]);  

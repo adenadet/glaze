@@ -31,9 +31,7 @@ trait UserTrait{
 
     public function create_new_staff($request){
         $user = $this->create_new_user($request);
-
         $user->assignRole('Staff');
-
         $staff = Staff::create([
             'user_id' => $user->id,
             'unique_id' => $request->input('unique_id'),
@@ -171,5 +169,23 @@ trait UserTrait{
 
         return $customer_address;
 
-    }    
+    } 
+    
+    public function user_get_by_id($id, $detailed){
+        $query = User::where('id', '=', $id);
+
+        if ($detailed){
+            $query = $query->with(['customer', 'staff']);
+        }
+
+        $user = $query->first();
+
+        return $user;
+    }
+
+    public function user_get_customer_by_user_id($id){
+        $user = User::where('id', '=', $id)->with(['customer'])->first();
+
+        return $user;
+    }
 }

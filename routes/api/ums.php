@@ -25,6 +25,7 @@ Route::group(['prefix'=>'ums'], function () {
         '/bios'                     => 'BioController',
         '/customers'                => 'CustomerController',
         '/departments'              => 'DepartmentController',
+        '/nin_verifications'        => 'NINVerificationController',
         '/nok'                      => 'NOKController',
         '/profile'                  => 'ProfileController',
         '/roles'                    => 'RoleController',

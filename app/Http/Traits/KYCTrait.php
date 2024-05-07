@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Traits;
 use App\Http\Traits\LogTrait;
+use App\Http\Traits\UserTrait;
 use App\Models\Area;
 use App\Models\Branch;
 use App\Models\Department;
@@ -22,7 +23,7 @@ use Illuminate\Support\Facades\Http;
 
 
 trait KYCTrait{
-    use LogTrait;
+    use LogTrait, UserTrait;
     
     public function kyc_address_customer_addresses($type, $detailed, $paginated, $page){
         switch($type){
@@ -79,6 +80,39 @@ trait KYCTrait{
         catch(Exception $e){
             DB::rollBack();
             $this->log_activity_user_activity(Auth::user(), 'Address Verification', true, $address->id);
+        }
+
+    }
+
+    public function kyc_address_customer_address_confirm_update($request, $id){
+        try{
+            DB::beginTransaction();
+            $verification = CustomerAddressVerification::where('id', '=', $id)->first();
+            
+            $verification->alternate_address = $request->input('alternate_address');
+            $verification->description = $request->input('description');
+            $verification->location_ease = $request->input('location_ease');
+            $verification->met_with = $request->input('met_with');
+            $verification->met_with_name = $request->input('met_with_name');
+            $verification->met_with_relations = $request->input('met_with_relations');
+            $verification->met_with_phone = $request->input('met_with_phone');
+            $verification->remarks = $request->input('remarks');
+            $verification->visit_update = $request->input('visit_update');
+            $verification->visit_date = $request->input('visit_date');
+            $verification->visit_date_2 = $request->input('visit_date_2');
+            $verification->updated_by = auth('api')->id();
+            
+            $verification->save();
+
+            $address = CustomerAddress::where('id', '=', $request->input('address_id'))->first();
+            $address->status = 1;
+            $address->confirmed_by = auth('api')->id();
+            $address->confirmed_at = date('Y-m-d');
+            $address->save();
+        }
+        catch(Exception $e){
+            DB::rollBack();
+            $this->log_activity_user_activity(Auth::user(), 'Address Verification', false, $address->id);
         }
     }
 

@@ -8,32 +8,32 @@ use App\Http\Traits\KYCTrait;
 use App\Http\Traits\GuarantorTrait;
 use App\Http\Traits\UserTrait;
 
-class BVNVerificationController extends Controller
+class ninVerificationController extends Controller
 {
     use KYCTrait, GuarantorTrait, UserTrait;
     public function index()
     {
         if($_GET['point'] == 'customer'){
-            $unverified_bvns = $this->kyc_bvn_customer_get_all('unconfirmed', true, true, $_GET['page'] ?? 1);
+            $unverified_nins = $this->kyc_nin_customer_get_all('unconfirmed', true, true, $_GET['page'] ?? 1);
         }
         else if($_GET['point'] == 'guarantor'){
-            $unverified_bvns = $this->kyc_bvn_guarantor_get_all('unconfirmed', true, true, $_GET['page'] ?? 1);
+            $unverified_nins = $this->kyc_nin_guarantor_get_all('unconfirmed', true, true, $_GET['page'] ?? 1);
         }
         return response()->json([
-            'unverified_bvns' => $unverified_bvns,
+            'unverified_nins' => $unverified_nins,
         ]);
     }
 
     public function store(Request $request)
     {
         if($_GET['point'] == 'customer'){
-            $unverified_bvns = $this->kyc_bvn_customer_get_all('unconfirmed', true, true, $_GET['page'] ?? 1);
+            $unverified_nins = $this->kyc_nin_customer_get_all('unconfirmed', true, true, $_GET['page'] ?? 1);
         }
         else if($_GET['point'] == 'guarantor'){
-            $unverified_bvns = $this->kyc_bvn_guarantor_get_all('unconfirmed', true, true, $_GET['page'] ?? 1);
+            $unverified_nins = $this->kyc_nin_guarantor_get_all('unconfirmed', true, true, $_GET['page'] ?? 1);
         }
         return response()->json([
-            'unverified_bvns' => $unverified_bvns,
+            'unverified_nins' => $unverified_nins,
         ]);
     }
 

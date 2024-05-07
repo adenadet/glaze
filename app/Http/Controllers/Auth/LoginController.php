@@ -18,7 +18,6 @@ class LoginController extends Controller
     //protected $redirectTo = RouteServiceProvider::HOME;
     public function redirectTo() {
         $role = Auth::user()->user_type; 
-        dd($role);
         switch ($role) {
             case 'SuperAdmin':
                 return '/admin/dashboard'; break;

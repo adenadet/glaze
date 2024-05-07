@@ -54,15 +54,29 @@ trait LogTrait{
     public function log_activity_user_activity($user, $type, $status, $item_id){
         switch ($type){
             case 'Address Verification':
-                $activity = Activity::create([
-                    'subject' => ($user ? $user->first_name.' '.$user->last_name: 'Unknown user').($status ? ' has successfully verified' : 'failed to verify').' a Customer Address with id: '.$item_id,
-                    'url' => 'Verification',
-                    'method' => 'verify', 
-                    'ip' => \Illuminate\Support\Facades\Request::ip(), 
-                    'agent' => \Illuminate\Support\Facades\Request::header('User-Agent'), 
-                    'user_id' => $user ? $user->id : 0,
-                ]);
+                $subject = ($user ? $user->first_name.' '.$user->last_name: 'Unknown user').($status ? ' has verified' : 'failed to verify').' a Customer Address with id: '.$item_id;
+                $method = 'verify';
+            break;
+            case 'Guarantor Request Create':
+                $subject =  ($user ? $user->first_name.' '.$user->last_name: 'Unknown user').($status ? ' has created' : 'failed to create').' a Guarantor for Loan of id: '.$item_id;
+                $method = 'delete';
+            break;
+            case 'Guarantor Request Delete':
+                $subject =  ($user ? $user->first_name.' '.$user->last_name: 'Unknown user').($status ? ' has deleted' : 'failed to delete').' a Guarantor Request with id: '.$item_id;
+                $method = 'delete';
+            break;
+            default:
+                $subject = ($user ? $user->first_name.' '.$user->last_name: 'Unknown user').($status ? ' has acted' : ' action failed on ').' an Element with id: '.$item_id;
+                $method = 'action';
             break;
         }
+        Activity::create([
+            'subject' => $subject,
+            'url' => 'Delete',
+            'method' => $method, 
+            'ip' => \Illuminate\Support\Facades\Request::ip(), 
+            'agent' => \Illuminate\Support\Facades\Request::header('User-Agent'), 
+            'user_id' => $user ? $user->id : 0,
+        ]);
     }
 }

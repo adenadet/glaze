@@ -2,6 +2,7 @@
 namespace App\Http\Traits;
 
 use App\Http\Traits\FileTrait;
+use App\Http\Traits\LogTrait;
 use App\Models\Loans\Account;
 use App\Models\Loans\Guarantor;
 use App\Models\Loans\GuarantorRequest;
@@ -12,11 +13,14 @@ use App\Mail\Guarantor\RequestMail;
 use App\Mail\Guarantor\ThanksMail;
 use App\Models\Country;
 use App\Models\Loans\Type;
-
+use Exception;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 trait GuarantorTrait{
-    use FileTrait;
+    use FileTrait, LogTrait;
     public function create_guarantor($request){
         $guarantor_request = GuarantorRequest::where('id', '=', $request->input('request_id'))->first();
         $address_proof = $request->input('address_proof') != null ? $this->file_upload_by_type($request->input('address_proof'), $request->input('address_proof_type'), 'uploads/guarantors', $request->input('request_id')) : null;
@@ -24,35 +28,41 @@ trait GuarantorTrait{
         $passport = $request->input('passport') != null ? $this->file_upload_by_type($request->input('passport'), $request->input('passport_type'), 'uploads/guarantors', $request->input('request_id')) : null;
         $valid_id = $request->input('valid_id') != null ? $this->file_upload_by_type($request->input('valid_id'), $request->input('valid_id_type'), 'uploads/guarantors', $request->input('request_id')) : null;
         
-        $guarantor = Guarantor::create([
-            'loan_id'=> $guarantor_request->loan_id,
-            'request_id'=> $request->input('request_id'),
-            'title'=> $request->input('title'),
-            'first_name'=> $request->input('first_name'),
-            'middle_name'=> $request->input('middle_name'),
-            'last_name'=> $request->input('last_name'),
-            'relationship'=> $request->input('relationship'),
-            'email'=> $request->input('email'),
-            'phone'=> $request->input('phone'),
-            'employer'=> $request->input('employer'),
-            'employer_address'=> $request->input('employer_address'),
-            'employer_phone'=> $request->input('employer_phone'),
-            'employer_email'=> $request->input('employer_email'),
-            'marital_status'=> $request->input('marital_status'),
-            'relationship'=> $request->input('relationship'),
-            'address'=> $request->input('address'),
-            'bvn'=> $request->input('bvn'),
-            'status'=> 1,
-            'nationality_id' => $request->input('nationality_id'),
-            'dob' => $request->input('dob'),
-            'description'=> $request->input('description') ?? NULL,
-            'net_income'=> $request->input('net_income'),
-            'guarantor_date' => date('Y-m-d H:i:s'),
-            'guarantor_signature' => $guarantor_signature,
-            'address_proof' => $address_proof,
-            'valid_id' => $valid_id,
-            'passport' => $passport,
-        ]);
+        try{
+            $guarantor = Guarantor::create([
+                'loan_id'=> $guarantor_request->loan_id,
+                'request_id'=> $request->input('request_id'),
+                'title'=> $request->input('title'),
+                'first_name'=> $request->input('first_name'),
+                'middle_name'=> $request->input('middle_name'),
+                'last_name'=> $request->input('last_name'),
+                'relationship'=> $request->input('relationship'),
+                'email'=> $request->input('email'),
+                'phone'=> $request->input('phone'),
+                'employer'=> $request->input('employer'),
+                'employer_address'=> $request->input('employer_address'),
+                'employer_phone'=> $request->input('employer_phone'),
+                'employer_email'=> $request->input('employer_email'),
+                'marital_status'=> $request->input('marital_status'),
+                'relationship'=> $request->input('relationship'),
+                //'address'=> $request->input('address'),
+                'residential_address'=> $request->input('address'),
+                'bvn'=> $request->input('bvn'),
+                'status'=> 1,
+                'nationality_id' => $request->input('nationality_id'),
+                'dob' => $request->input('dob'),
+                'description'=> $request->input('description') ?? NULL,
+                'net_income'=> $request->input('net_income'),
+                'guarantor_date' => date('Y-m-d H:i:s'),
+                'guarantor_signature' => $guarantor_signature,
+                'address_proof' => $address_proof,
+                'valid_id' => $valid_id,
+                'passport' => $passport,
+            ]);
+        }
+        catch (Exception $e){
+            print_r ($e->getMessage());
+        }
 
         return $guarantor;
     }
@@ -97,34 +107,66 @@ trait GuarantorTrait{
     }
 
     public function guarantor_delete_request($id){
-        $gr = GuarantorRequest::where('id', '=', $id)->first();
-        
-        $gr->deleted_by = auth('api')->id();
-        $gr->deleted_at = date('Y-m-d H:i:s');
-        $gr->status = 4;
+        try{
+            DB::beginTransaction();
 
-        $gr->save();
+            $gr = GuarantorRequest::where('id', '=', $id)->first();
+            $gr->deleted_by = auth('api')->id();
+            $gr->deleted_at = date('Y-m-d H:i:s');
+            $gr->status = 4;
+            $gr->save();
 
-        return $gr->loan_id;
+            $guarantor = Guarantor::where('request_id', '=', $gr->id)->first();
+            if ($guarantor){
+                $guarantor->deleted_at = date('Y-m-d H:i:s');
+                $guarantor->deleted_by = auth('api')->id();
+                $guarantor->save();
+            }
+            $this->log_activity_user_activity(Auth::user(), 'Guarantor Request Delete', true, $id);
+            DB::commit();
+            return $gr->loan_id;
+
+        }
+        catch (Exception $e){
+            DB::rollback();
+            $this->log_activity_user_activity(Auth::user(), 'Guarantor Request Delete', false, $id);
+        }
     }
 
     public function guarantor_get_requests($loan_id){
         return GuarantorRequest::where('loan_id', '=', $loan_id)->with('guarantor')->latest()->get();
     }
 
-    public function guarantor_new_request($loan, $guarantor){
-        $gr = GuarantorRequest::create([
-            'loan_id' => $loan->id,
-            'first_name' => $guarantor['first_name'],
-            'last_name' => $guarantor['last_name'],
-            'email' => $guarantor['email'],
-            'phone' => $guarantor['phone'],
-            'status' => $guarantor['status'] ?? 0,
-            'description' => $guarantor['description'] ?? NULL,
-            'created_by' => auth('api')->id(),
-            'updated_by' => auth('api')->id(),
-        ]);
+    public function guarantor_get_guarantor_by_id($id){
+        return Guarantor::where('id', '=', $id)->first();
+    }
 
-        Mail::to($guarantor['email'])->send(new RequestMail($loan, $gr));
+    public function guarantor_new_request($request){
+        try{
+            DB::beginTransaction();
+            $loan = Account::where('id', '=', $request->input('loan_id'))->with('user')->first();
+            foreach ($request->input('guarantors') as $guarantor){
+                $gr = GuarantorRequest::create([
+                    'loan_id' => $loan->id,
+                    'first_name' => $guarantor['first_name'],
+                    'last_name' => $guarantor['last_name'],
+                    'email' => $guarantor['email'],
+                    'phone' => $guarantor['phone'],
+                    'status' => $guarantor['status'] ?? 0,
+                    'description' => $guarantor['description'] ?? NULL,
+                    'created_by' => auth('api')->id(),
+                    'updated_by' => auth('api')->id(),
+                ]);
+                Mail::to($guarantor['email'])->send(new RequestMail($loan, $gr));
+            }
+            $this->log_activity_user_activity(Auth::user(), 'Guarantor Request Create', false, $request->input('loan_id'));
+            DB::commit();
+
+            return 'Completed';
+        }
+        catch(Exception $e){
+            DB::rollBack();
+            $this->log_activity_user_activity(Auth::user(), 'Guarantor Request Create', false, $request->input('loan_id'));
+        }
     }
 }
