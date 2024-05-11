@@ -96,6 +96,13 @@ class GuarantorRequestController extends Controller
 
     public function destroy($id)
     {
-        //
+        $loan_id =$this->guarantor_delete_request($id);
+
+        return response()->json([
+            'status' => 'Success',
+            'loan_id' => $loan_id,
+            //'guarantors' => GuarantorRequest::where('loan_id', '=', $id)->get(),
+            //'nations' => Country::select('id', 'name')->orderBy('name', 'ASC')->get(),
+        ]);
     }
 }

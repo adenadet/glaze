@@ -12,6 +12,7 @@ Vue.component('ContactStaff',   ContactStaff);
 let routes = [
     {path: '/contacts',           component:ContactAll},
     {path: '/contacts/staff/:id', component:ContactStaff},
+    {path: '/staff/contacts/:id', component:ContactStaff},
 ];
 
 export default routes

@@ -54,15 +54,15 @@ trait LogTrait{
     public function log_activity_user_activity($user, $type, $status, $item_id){
         switch ($type){
             case 'Address Verification':
-                $subject = ($user ? $user->first_name.' '.$user->last_name: 'Unknown user').($status ? ' has verified' : 'failed to verify').' a Customer Address with id: '.$item_id;
+                $subject = ($user ? $user->first_name.' '.$user->last_name: 'Unknown user').($status ? ' has verified' : ' failed to verify').' a Customer Address with id: '.$item_id;
                 $method = 'verify';
             break;
             case 'Guarantor Request Create':
-                $subject =  ($user ? $user->first_name.' '.$user->last_name: 'Unknown user').($status ? ' has created' : 'failed to create').' a Guarantor for Loan of id: '.$item_id;
+                $subject =  ($user ? $user->first_name.' '.$user->last_name: 'Unknown user').($status ? ' has created' : ' failed to create').' a Guarantor for Loan of id: '.$item_id;
                 $method = 'delete';
             break;
             case 'Guarantor Request Delete':
-                $subject =  ($user ? $user->first_name.' '.$user->last_name: 'Unknown user').($status ? ' has deleted' : 'failed to delete').' a Guarantor Request with id: '.$item_id;
+                $subject =  ($user ? $user->first_name.' '.$user->last_name: 'Unknown user').($status ? ' has deleted' : ' failed to delete').' a Guarantor Request with id: '.$item_id;
                 $method = 'delete';
             break;
             default:

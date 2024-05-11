@@ -241,32 +241,36 @@ export default {
         return  {
             account: {},
             confirmationData: new Form({
+                address: '',
+                address_proof: '',
+                address_proof_type: '',
+                bvn: '',
+                description: '',
+                dob: '',
+                email: '',
+                employer: '',
+                employer_address: '',
+                employer_email: '',
+                employer_phone: '',
+                first_name: '',
+                gender: '',
                 id: '',
                 loan_id: '',
-                request_id: '',
-                bvn: '',
-                dob: '',
-                title: '',
-                first_name: '',
-                middle_name: '',
                 last_name: '',
-                relationship: '',
-                address: '',
-                email: '',
-                phone: '',
-                employer: '',
-                employer_email: '',
-                employer_address: '',
                 marital_status: '',
-                gender: '',
-                address: '',
-                employer_phone: '',
-                status: '',
-                description: '',
+                middle_name: '',
                 net_income: '',
                 passport: '',
                 passport_type: '',
+                phone: '',
+                relationship: '',
+                request_id: '',
+                residential_address: '',
                 signature: '',
+                status: '',
+                title: '',
+                valid_id: '',
+                valid_id_type: '',
             }),
             editMode: false,
             guarantor: {},
@@ -309,8 +313,6 @@ export default {
                     }
                     console.log(fileKey);
                     console.log(reader.result);
-                    //this.UserKYCData.kyc_items[fileKey].kyc_file = reader.result;
-                    //this.UserKYCData.kyc_items[fileKey].kyc_file_type = ((file['type'] == 'image/png') || (file['type'] == 'image/jpg') || (file['type'] == 'image/jpeg')) ? 'Image': 'PDF';
                 }
                 reader.readAsDataURL(file)
             }

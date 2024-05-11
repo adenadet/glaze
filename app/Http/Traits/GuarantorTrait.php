@@ -59,12 +59,14 @@ trait GuarantorTrait{
                 'valid_id' => $valid_id,
                 'passport' => $passport,
             ]);
+
+            
+        return $guarantor;
         }
         catch (Exception $e){
             print_r ($e->getMessage());
+            return null;
         }
-
-        return $guarantor;
     }
 
     public function guarantor_confirm_request($request){
@@ -111,12 +113,14 @@ trait GuarantorTrait{
             DB::beginTransaction();
 
             $gr = GuarantorRequest::where('id', '=', $id)->first();
+            
             $gr->deleted_by = auth('api')->id();
             $gr->deleted_at = date('Y-m-d H:i:s');
             $gr->status = 4;
             $gr->save();
 
             $guarantor = Guarantor::where('request_id', '=', $gr->id)->first();
+            
             if ($guarantor){
                 $guarantor->deleted_at = date('Y-m-d H:i:s');
                 $guarantor->deleted_by = auth('api')->id();
@@ -124,8 +128,8 @@ trait GuarantorTrait{
             }
             $this->log_activity_user_activity(Auth::user(), 'Guarantor Request Delete', true, $id);
             DB::commit();
+            
             return $gr->loan_id;
-
         }
         catch (Exception $e){
             DB::rollback();

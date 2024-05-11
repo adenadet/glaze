@@ -8,7 +8,6 @@ Route::namespace('App\Http\Controllers\Api\Loans')->middleware('auth:api')->name
 Route::namespace('App\Http\Controllers\Api\Settings')->middleware(['auth:api', 'role:Super Admin'])->name('api.settings.')->group(base_path('routes/api/settings.php'));
 Route::namespace('App\Http\Controllers\Api\Ticketing')->middleware('auth:api')->name('api.tickets.')->group(base_path('routes/api/ticket.php'));
 Route::namespace('App\Http\Controllers\Api\ToDo')->name('api.todos.')->group(base_path('routes/api/todo.php'));
-
 Route::namespace('App\Http\Controllers\Api\Ums')->middleware('auth:api')->name('api.ums.')->group(base_path('routes/api/ums.php'));
 
 Route::apiResources([
@@ -16,5 +15,4 @@ Route::apiResources([
     'guarantor_requests'    => 'App\Http\Controllers\Api\Loans\GuarantorRequestController',
     'notices'               => 'App\Http\Controllers\Api\NoticeController',
     'policies'              => 'App\Http\Controllers\Api\PolicyController',
-    //'scheduler'     => 'App\Http\Controllers\Api\EMR\RegistrationController',
 ]);

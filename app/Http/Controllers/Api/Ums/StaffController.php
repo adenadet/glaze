@@ -74,8 +74,11 @@ class StaffController extends Controller
 
     public function show($id)
     {
+        $user = User::where('id', '=', $id)->first();
+
         return response()->json([
-            'staff' => Staff::where('id', '=', $id)->with(['user', 'branch', 'department'])->first(),
+            'staff' => Staff::where('user_id', '=', $user->id)->with(['branch', 'department', 'user'])->first(),
+            'user'  => $user,
         ]);
     }
 

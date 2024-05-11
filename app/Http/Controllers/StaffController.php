@@ -41,6 +41,14 @@ class StaffController extends Controller
         return view('home')->with($params);
     }
 
+    public function contacts()
+    {
+        $params = [
+            'page' => 'Staff', 'page_title' => 'Contacts',
+        ];
+        return view('home')->with($params);
+    }
+
     public function chats()
     {
         $params = [

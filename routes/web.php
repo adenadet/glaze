@@ -48,6 +48,9 @@ Route::group(['prefix' => '/staff', 'middleware' => ['auth', 'role:Staff'],'name
     Route::get('/confirm',                          'StaffController@confirmations')->name('staff.confirm');
     Route::get('/confirm/{any}',                    'StaffController@confirmations')->where('any', '.*')->name('staff.confirmations.others');
 
+    Route::get('/contacts',                         'StaffController@contacts')->name('staff.contacts');
+    Route::get('/contacts/{any}',                   'StaffController@contacts')->where('any', '.*')->name('staff.contacts.others');
+
     Route::get('/customers',                        'StaffController@customers')->name('staff.customers');
     Route::get('/customers/{any}',                  'StaffController@customers')->where('any', '.*')->name('staff.customers.others');
 
