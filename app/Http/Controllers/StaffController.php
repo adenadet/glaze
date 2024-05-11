@@ -33,6 +33,14 @@ class StaffController extends Controller
         }
     }
 
+    public function chats()
+    {
+        $params = [
+            'page' => 'Staff', 'page_title' => 'Chats',
+        ];
+        return view('home')->with($params);
+    }
+
     public function confirmations()
     {
         $params = [
@@ -45,14 +53,6 @@ class StaffController extends Controller
     {
         $params = [
             'page' => 'Staff', 'page_title' => 'Contacts',
-        ];
-        return view('home')->with($params);
-    }
-
-    public function chats()
-    {
-        $params = [
-            'page' => 'Staff', 'page_title' => 'Chats',
         ];
         return view('home')->with($params);
     }

@@ -6,6 +6,14 @@ use Illuminate\Http\Request;
 
 class ModulesController extends Controller
 {
+    public function chats()
+    {
+        $params = [
+            'page' => 'Customer', 'page_title' => 'Chats',
+        ];
+        return view('home')->with($params);
+    }
+
     public function dashboard()
     {
         $params = [

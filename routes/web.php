@@ -13,6 +13,8 @@ Route::get('/test', [App\Http\Controllers\ModulesController::class, 'test'])->na
 //Main Area Link
 
 Route::group(['middleware' => 'auth','namespace' => 'App\Http\Controllers',],function(){
+    Route::get('/chats',                    'ModulesController@chats')->name('chats');
+
     Route::get('/dashboard',                'ModulesController@dashboard')->name('dashboard');
 
     Route::get('/guarantors',               'ModulesController@guarantors')->name('guarantors');
@@ -35,7 +37,7 @@ Route::group(['middleware' => 'auth','namespace' => 'App\Http\Controllers',],fun
 });
 
 Route::group(['prefix' => '/staff', 'middleware' => ['auth', 'role:Staff'],'namespace' => 'App\Http\Controllers',],function(){
-
+    
     Route::get('/dashboard',                        'StaffController@dashboard')->name('staff.dashboard');
 
     Route::get('/accounts',                         'StaffController@accounts')->name('staff.accounts');
