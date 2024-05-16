@@ -3,26 +3,32 @@
 namespace App\Http\Controllers\Api\Servers;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\PericulumTrait;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
-use GuzzleHttp\Client;
-
 class PericulumController extends Controller
 {
+    use PericulumTrait;
+
+    public function bvn_query(Request $request)
+    {
+        echo ("Working");
+        $feedback = $this->periculum_bvn_verification($request);
+        return json_decode($feedback);
+    }
+
+    public function destroy($id)
+    {
+        //
+    }
+
     public function index()
     {
-        /*$feedback = Http::withHeaders([
-            'Content-Type'  => 'application/x-www-form-urlencoded',
-        ])
-        ->post(config('app.periculum_url').'realms/prod/protocol/openid-connect/token', [
-            'client_id' => config('app.periculum_user'),
-            'password' => config('app.periculum_clientr_secret'),
-            'grant_type' => 'client_credentials',
-        ]);
-        return json_decode($feedback);*/
-
-        $feedback = new Client();
+        $feedback = $this->periculum_validation();
+        return $feedback;
+        /*$feedback = new Client();
 
         $response = $feedback->request('POST', config('app.periculum_url').'/realms/prod/protocol/openid-connect/token', [
             'headers' => ['Content-type: application/x-www-form-urlencoded'],
@@ -35,7 +41,7 @@ class PericulumController extends Controller
             'connect_timeout' => 20, // Connection timeout
         ]);
          
-        return($response->getBody()->getContents());
+        return($response->getBody()->getContents());*/
     }
 
     public function login()
@@ -51,33 +57,10 @@ class PericulumController extends Controller
         return json_decode($feedback);
     }
 
-
-    public function bvn_query(Request $request)
+    public function nin_query(Request $request)
     {
-        $feedback = Http::withHeaders([
-            'Authorization' => 'Bearer '.$request->input('et'),
-            'Content-Type'  => 'application/json',
-        ])
-        ->accept('application/json')
-        ->put('https://api.insights-periculum.com/verify/bvn', [
-            'statementKey' => 1,
-            'bvn' => $request->input('bvn'),
-        ]);
+        $feedback = $this->periculum_nin_verification();
         return json_decode($feedback);
-    }
-
-    public function validateToken(Request $request){
-        $route = config('app.periculum_url').'/ValidateTicket';
-        $feedback = Http::post($route, [
-            'DataTicket' => $request->input('token'),
-        ]);
-        return json_decode($feedback);
-    }
-
-
-    public function store(Request $request)
-    {
-        //
     }
 
     public function show($id)
@@ -85,14 +68,19 @@ class PericulumController extends Controller
         return "Something went wrong";
     }
 
+    public function store(Request $request)
+    {
+        $feedback = $this->periculum_validation();
+        return $feedback;
+    }
+
     public function update(Request $request, $id)
     {
         //
     }
-
-
-    public function destroy($id)
-    {
-        //
+    
+    public function validateToken(Request $request){
+        $feedback = $this->periculum_validation();
+        return $feedback;
     }
 }

@@ -35,9 +35,9 @@ return [
     'gemini_url' => 'https://glazecredit.geminiapp.net/service/Request.svc/api',
     'gemini_strain' => 'yP5lnti7wDChJxwmBYz7dpbgbzGqQRG1dyvAZihesrA=',
 
-    'periculum_url' => 'https://insightsb2b.auth-periculum.com',
+    'periculum_url' => 'https://api.insights-periculum.io',
     'periculum_user' => 'insights-glazecredit-api',
-    'periculum_client_secret' => 'anewSQqfl9X1eMda4OUVGUHeqbm7bQ2X',
+    'periculum_client_strain' => 'anewSQqfl9X1eMda4OUVGUHeqbm7bQ2X',
     
     'providers' => [
         Illuminate\Auth\AuthServiceProvider::class,

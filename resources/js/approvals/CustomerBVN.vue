@@ -5,14 +5,7 @@
             <ApproveDetailsUserCard :user="user" type="customer" />
         </div>
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">Confirm {{ type | firstUp }} BVN</h3>
-                </div>
-                <div class="card-body">
-                    <ApproveFormBvn :user="user" type="customer"/>
-                </div>
-            </div>
+            <ApproveFormBvn :user="user" type="customer"/>
         </div>
     </div>
 </section>
@@ -42,10 +35,7 @@ export default {
             })
             .catch(()=>{
                 this.$Progress.fail();
-                toast.fire({
-                    icon: 'error',
-                    title: 'Accounts was not loaded successfully',
-                })
+                toast.fire({icon: 'error', title: 'Accounts was not loaded successfully',});
             });
         },
         reloadPage(response){

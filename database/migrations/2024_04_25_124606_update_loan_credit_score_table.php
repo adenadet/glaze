@@ -8,7 +8,7 @@ class UpdateLoanCreditScoreTable extends Migration
 {
     public function up()
     {
-        Schema::create('loan_account_credit_scores', function (Blueprint $table) {
+        /*Schema::create('loan_account_credit_scores', function (Blueprint $table) {
             $table->id();
             $table->integer('loan_id'); 
             $table->string('credit_score'); 
@@ -20,6 +20,10 @@ class UpdateLoanCreditScoreTable extends Migration
             $table->integer('deleted_by')->nullable();
             $table->timestamps();
             $table->softDeletes();
+        });*/
+
+        Schema::table('loan_account_credit_scores', function (Blueprint $table) {
+            $table->string('validation_type')->after('response');
         });
     }
 
