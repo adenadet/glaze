@@ -24,6 +24,10 @@ class BVNVerificationController extends Controller
         ]);
     }
 
+    public function reject(Request $request, $id){
+
+    }
+
     public function store(Request $request)
     {
         if($_GET['point'] == 'customer'){

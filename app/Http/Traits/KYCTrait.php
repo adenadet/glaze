@@ -256,11 +256,97 @@ trait KYCTrait{
         return $query;
     }
 
-    public function kyc_bvn_remind($user_id){}
+    public function kyc_nin_customer_confirm($user_id, $request){
+        $customer = Customer::where('user_id', '=', $request->input('user_id'))->first();
+        $customer->bvn_status = $request->input('nin_status');
+        $customer->bvn_confirmed_by = auth('api')->id();
+        $customer->updated_by = auth('api')->id();
+        $customer->bvn_confirmed_at = date('Y-m-d H:i:s');
+        $customer->confirmation_channel = $request->input('confirmation_channel');
 
+        $customer->save();
+
+    }
+
+    public function kyc_nin_customer_get_all($type, $paginated, $detailed, $page){
+        switch($type){
+            case 'confirmed':
+                $query = Customer::where('nin_status', '=', 1);
+                $query = $detailed ? $query->with(['user']) : $query;
+                $query = $paginated ? $query->paginate(50) : $query->get();
+            break;
+            case 'rejected':
+                $query = Customer::where('nin_status', '=', 0);
+                $query = $detailed ? $query->with(['user']) : $query;
+                $query = $paginated ? $query->paginate(50) : $query->get();
+            break;
+            case 'unconfirmed':
+                $query = Customer::where('nin_status', '=', 0)->orWhereNull('nin_status');
+                $query = $detailed ? $query->with(['user']) : $query;
+                $query = $paginated ? $query->paginate(50) : $query->get();
+            break;
+        }
+        
+        return $query;
+    }
+
+    public function kyc_nin_customer_reject($user_id, $request){}
+
+    public function kyc_nin_guarantor_get_all($type, $paginated, $detailed, $page){
+        switch($type){
+            case 'confirmed':
+                $query = Guarantor::where('nin_status', '=', 1);
+                //$query = $detailed ? $query->with(['user']) : $query;
+                $query = $paginated ? $query->paginate(50) : $query->get();
+            break;
+            case 'rejected':
+                $query = Guarantor::where('nin_status', '=', 0);
+                //$query = $detailed ? $query->with(['user']) : $query;
+                $query = $paginated ? $query->paginate(50) : $query->get();
+            break;
+            case 'unconfirmed':
+                $query = Guarantor::where('nin_status', '=', 0)->orWhereNull('nin_status');
+                //$query = $detailed ? $query->with(['user']) : $query;
+                $query = $paginated ? $query->paginate(50) : $query->get();
+            break;
+        }
+        
+        return $query;
+    }
+
+    public function kyc_nin_remind($user_id){}
+
+    public function kyc_nin_send_mail($type, $id){
+        if ($type == 'user'){
+            $user = User::where('id', '=', $id)->first();
+
+            if (is_null($user->email) || (!filter_var($user->email, FILTER_VALIDATE_EMAIL))){
+                return response()->json([
+                    'message' => 'User does not have a valid email address',
+                    'status' => 'error',
+                ]);
+            }
+            else{
+                Mail::to($user->email)->send(new BVNIssueMail($user));
+            }
+        }
+        else if ($type == 'guarantor'){
+            $guarantor = Guarantor::where('id', '=', $id)->first();
+
+            if (is_null($guarantor->email) || (!filter_var($guarantor->email, FILTER_VALIDATE_EMAIL))){
+                return response()->json([
+                    'message' => 'Guarantor does not have a valid email address',
+                    'status' => 'error',
+                ]);
+            }
+            else{
+                Mail::to($guarantor->email)->send(new NINIssueMail($guarantor));
+            }
+        }
+        
+    }
     public function kyc_nin_confirm($user_id, $request){}
 
     public function kyc_nin_reject($user_id, $request){}
 
-    public function kyc_nin_remind($user_id){}
 }

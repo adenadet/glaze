@@ -43,9 +43,11 @@ Vue.component('ApproveNINs', ApproveNINs);
 
     import ApproveFormAddress from '../approvals/forms/Address.vue';
     import ApproveFormBvn from '../approvals/forms/Bvn.vue';
+    import ApproveFormNin from '../approvals/forms/NIN.vue';
 
     Vue.component('ApproveFormAddress', ApproveFormAddress);
     Vue.component('ApproveFormBvn', ApproveFormBvn);
+    Vue.component('ApproveFormNin', ApproveFormNin);
 
 
 let routes = [

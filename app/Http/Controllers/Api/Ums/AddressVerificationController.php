@@ -75,6 +75,20 @@ class AddressVerificationController extends Controller
             'unverified_addresses' => $unverified_addresses,
         ]);
     }
+    
+    public function reject(Request $request){
+        return response()->json([
+            'address_verification' => 'Rejected',
+        ]);
+    }
+
+    public function show($id)
+    {
+        return response()->json([
+            'address_verification' => CustomerAddress::where('id', '=', $id)->first(),
+        ]);
+    }
+
 
     public function store(Request $request)
     {
@@ -89,13 +103,6 @@ class AddressVerificationController extends Controller
         return response()->json([
             'unverified' => CustomerAddress::where('status', '=', 0)->whereNull('confirmed_by')->get(),
         ]); 
-    }
-
-    public function show($id)
-    {
-        return response()->json([
-            'address_verification' => CustomerAddress::where('id', '=', $id)->first(),
-        ]);
     }
 
     public function update(Request $request, $id)

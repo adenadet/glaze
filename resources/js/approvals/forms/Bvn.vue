@@ -27,6 +27,14 @@
                         </div>
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <button class="btn btn-success" type="button" @click="createConfirmation">Confirm NIN</button>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-danger"  type="button" @click="rejectConfirmation">Reject NIN</button>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -128,6 +136,25 @@ export default {
                     icon: 'error',
                     title: 'Accounts was not loaded successfully',
                 })
+            });
+        },
+        rejectConfirmation(){
+            this.bvnConfirmationData.loan_id = this.user.id;
+            this.bvnConfirmationData.post('/api/ums/bvn_confirmations/reject')
+            .then(response=>{
+                Swal.fire({
+                    icon: 'success',
+                    title: 'New Requirement was created successfully',
+                });
+                this.bvnConfirmationData.reset();
+                this.$router.push('/staff/confirm/loans');
+            })
+            .catch(()=>{
+                this.$Progress.fail();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Your form was not sent try again later!',
+                });
             });
         },
         reloadPage(response){

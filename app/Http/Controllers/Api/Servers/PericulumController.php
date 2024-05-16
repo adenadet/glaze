@@ -14,7 +14,6 @@ class PericulumController extends Controller
 
     public function bvn_query(Request $request)
     {
-        echo ("Working");
         $feedback = $this->periculum_bvn_verification($request);
         return json_decode($feedback);
     }
@@ -28,20 +27,6 @@ class PericulumController extends Controller
     {
         $feedback = $this->periculum_validation();
         return $feedback;
-        /*$feedback = new Client();
-
-        $response = $feedback->request('POST', config('app.periculum_url').'/realms/prod/protocol/openid-connect/token', [
-            'headers' => ['Content-type: application/x-www-form-urlencoded'],
-            'form_params' => [
-                'client_id' => config('app.periculum_user'),
-                'client_secret' => config('app.periculum_client_secret'),
-                'grant_type' => 'client_credentials',
-            ],
-            'timeout' => 20, // Response timeout
-            'connect_timeout' => 20, // Connection timeout
-        ]);
-         
-        return($response->getBody()->getContents());*/
     }
 
     public function login()
