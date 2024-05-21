@@ -33,8 +33,7 @@
     </div>
     <div class="row">
         <div class="col-md-6">
-            All Repayments in Card Form
-            <!--AdminRepayments /-->
+            <LoanDetailRepayments point="unconfirmed"/>
         </div>
         <div class="col-md-6">
             <LoanStaff />

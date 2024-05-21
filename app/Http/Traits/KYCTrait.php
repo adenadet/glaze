@@ -199,13 +199,14 @@ trait KYCTrait{
     }
     
     public function kyc_bvn_customer_confirm($user_id, $request){
-        $customer = Customer::where('user_id', '=', $request->input('user_id'))->first();
-        $customer->bvn_status = $request->input('bvn_status');
+        $customer = Customer::where('user_id', '=', $request->input('validation_id'))->first();
+        $customer->bvn_status = 1;
         $customer->bvn_confirmed_by = auth('api')->id();
-        $customer->updated_by = auth('api')->id();
         $customer->bvn_confirmed_at = date('Y-m-d H:i:s');
         $customer->confirmation_channel = $request->input('confirmation_channel');
-
+        $customer->confirmation = auth('api')->user()->first_name.' '.auth('api')->user()->last_name.' commented: '.$request->input('comment').'<br />\n verification response: '.$request->input('response');
+        $customer->updated_by = auth('api')->id();
+        
         $customer->save();
 
     }
@@ -238,17 +239,14 @@ trait KYCTrait{
         switch($type){
             case 'confirmed':
                 $query = Guarantor::where('bvn_status', '=', 1);
-                //$query = $detailed ? $query->with(['user']) : $query;
                 $query = $paginated ? $query->paginate(50) : $query->get();
             break;
             case 'rejected':
                 $query = Guarantor::where('bvn_status', '=', 0);
-                //$query = $detailed ? $query->with(['user']) : $query;
                 $query = $paginated ? $query->paginate(50) : $query->get();
             break;
             case 'unconfirmed':
                 $query = Guarantor::where('bvn_status', '=', 0)->orWhereNull('bvn_status');
-                //$query = $detailed ? $query->with(['user']) : $query;
                 $query = $paginated ? $query->paginate(50) : $query->get();
             break;
         }
@@ -257,13 +255,16 @@ trait KYCTrait{
     }
 
     public function kyc_nin_customer_confirm($user_id, $request){
-        $customer = Customer::where('user_id', '=', $request->input('user_id'))->first();
-        $customer->bvn_status = $request->input('nin_status');
-        $customer->bvn_confirmed_by = auth('api')->id();
+        echo 
+        $customer = Customer::where('user_id', '=', $request->input('validation_id'))->first();
+        $customer->nin_status = 1;
+        $customer->nin_confirmation = $request->input('confirmation');
+        $customer->nin_confirmed_by = auth('api')->id();
+        $customer->nin_confirmed_at = date('Y-m-d H:i:s');
+        $customer->nin_confirmation_channel = $request->input('confirmation_channel');
+        $customer->nin_confirmation = auth('api')->user()->first_name.' '.auth('api')->user()->last_name.' commented: '.$request->input('comment').'<br />\n verification response: '.$request->input('response');
         $customer->updated_by = auth('api')->id();
-        $customer->bvn_confirmed_at = date('Y-m-d H:i:s');
-        $customer->confirmation_channel = $request->input('confirmation_channel');
-
+        
         $customer->save();
 
     }
@@ -296,17 +297,14 @@ trait KYCTrait{
         switch($type){
             case 'confirmed':
                 $query = Guarantor::where('nin_status', '=', 1);
-                //$query = $detailed ? $query->with(['user']) : $query;
                 $query = $paginated ? $query->paginate(50) : $query->get();
             break;
             case 'rejected':
                 $query = Guarantor::where('nin_status', '=', 0);
-                //$query = $detailed ? $query->with(['user']) : $query;
                 $query = $paginated ? $query->paginate(50) : $query->get();
             break;
             case 'unconfirmed':
                 $query = Guarantor::where('nin_status', '=', 0)->orWhereNull('nin_status');
-                //$query = $detailed ? $query->with(['user']) : $query;
                 $query = $paginated ? $query->paginate(50) : $query->get();
             break;
         }
@@ -327,7 +325,7 @@ trait KYCTrait{
                 ]);
             }
             else{
-                Mail::to($user->email)->send(new BVNIssueMail($user));
+                Mail::to($user->email)->send(new NINIssueMail($user));
             }
         }
         else if ($type == 'guarantor'){

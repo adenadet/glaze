@@ -48,6 +48,8 @@ class SocialController extends Controller
         $social_media->instagram_url = $request->input('instagram_url');
         $social_media->updated_by = auth('api')->id();
 
+        $social_media->save();
+
         return response()->json([
             'user' => User::where('id', '=', $request->input('user_id'))->with('next_of_kin', 'customer_accounts', 'customer_addresses', 'social_medias', 'customer_kyc')->with(['area', 'state',])->get(),
         ]);

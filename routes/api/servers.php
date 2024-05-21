@@ -11,6 +11,7 @@ Route::group(['prefix'=>'servers'], function () {
 
     Route::post('periculum/bvn_check', 'PericulumController@bvn_query')->name('periculum.bvn_check');
     Route::post('periculum/login', 'PericulumController@login')->name('periculum.login');
+    Route::post('periculum/nin_check', 'PericulumController@nin_query')->name('periculum.nin_check');
     Route::post('periculum/validate', 'PericulumController@validateToken')->name('periculum.validate');
     
     Route::apiResources([

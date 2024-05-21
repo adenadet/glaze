@@ -5,7 +5,7 @@
             <ApproveDetailsUserCard :user="user" type="customer" />
         </div>
         <div class="col-md-8">
-            <ApproveFormNin :user="user" type="customer"/>
+            <ApproveFormBvn type="customer" :user="user" verify="NIN" />
         </div>
     </div>
 </section>
@@ -28,7 +28,7 @@ export default {
     methods:{
         getInitials(){
             this.$Progress.start();
-            axios.get('/api/ums/nin_verifications/'+this.$route.params.id+'/?point=customer')
+            axios.get('/api/ums/nin_verifications/'+this.$route.params.id+'?point=customer')
             .then(response =>{
                 this.reloadPage(response);
                 this.$Progress.finish();

@@ -37,13 +37,19 @@
                 <input type="text" class="form-control" id="email" name="email" placeholder="Enter Email Address *" required v-model="BioData.email" :class="{'is-invalid' : BioData.errors.has('email') }">
             </div>
         </div>
-        <div class="col-md-4 col-sm-12">
+        <div class="col-md-3 col-sm-12">
             <label>BVN</label>
             <div class="form-group">
                 <input name="bvn" id="bvn" type="number" class="form-control" placeholder="Bank Verification Number" v-model="BioData.bvn" :class="{'is-invalid' : BioData.errors.has('bvn') }" required>
             </div>
         </div>
-        <div class="col-md-4 col-sm-12">
+        <div class="col-md-3 col-sm-12">
+            <label>NIN</label>
+            <div class="form-group">
+                <input name="nin" id="nin" type="number" class="form-control" placeholder="National Identification Number" v-model="BioData.nin" :class="{'is-invalid' : BioData.errors.has('bvn') }" required>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-12">
             <div class="form-group">
                 <label>Sex</label>
                 <select class="form-control" id="sex" name="sex" required v-model="BioData.sex" :class="{'is-invalid' : BioData.errors.has('sex') }">
@@ -53,13 +59,13 @@
                 </select>
             </div>
         </div>
-        <div class="col-md-4 col-sm-12">
+        <div class="col-md-3 col-sm-12">
             <label>Date of Birth</label>
             <div class="form-group">
                 <input name="dob" id="dob" type="date" data-provide="datepicker" data-date-autoclose="true" class="form-control" placeholder="Birth Date" v-model="BioData.dob" :class="{'is-invalid' : BioData.errors.has('dob') }">
             </div>
         </div>
-        <div class="col-md-6 col-sm-12">
+        <div class="col-md-3 col-sm-12">
             <label>Profile Picture</label>
             <div class="form-group">
                 <input type="file" class="form-control" placeholder="Birth Date" @change="updateProfilePic">
@@ -91,6 +97,7 @@ export default {
                 image:'', 
                 last_name:'', 
                 middle_name:'', 
+                nin: '',
                 phone:'', 
                 sex:'', 
             }),
@@ -99,7 +106,6 @@ export default {
     mounted() {
         Fire.$on('BasicDataFill', user =>{
             this.BioData.fill(user);
-            console.log("Get Here");
         });
     },
     methods:{

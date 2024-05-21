@@ -2,50 +2,106 @@
 <section class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            <form class="" method="POST" @submit.prevent="guaranteeLoan()">
-                <div class="card">
-                    <div class="card-header">
-                        <h3 class="card-title">Guarantee A Loan</h3>
-                        <div class="card-tools">
-                            <button class="btn btn-sm btn-danger" type="button" @click="rejectLoan()">Reject </button>
-                        </div>
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Guarantee A Loan</h3>
+                    <div class="card-tools">
+                        <button class="btn btn-sm btn-danger" type="button" @click="toggleRequest()" v-if="!reject">Reject Request</button>
+                        <button class="btn btn-sm btn-success" type="button" @click="toggleRequest()" v-if="reject">Approve Request</button>
                     </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h3 class="card-title">Loan Summary</h3>
-                                        
-                                    </div>
-                                    <div class="card-body p-0">
-                                        <table class="table table-sm table-bordered table-hover table-stripped">
-                                            <tbody>
-                                                <tr>
-                                                    <td >Loan Name</td>
-                                                    <td colspan="3"><strong>{{ account.name }} [{{ account.unique_id }}]</strong></td>
-                                                    <td>Loan Type</td>
-                                                    <td><strong>{{ account.type ? account.type.name : 'Old Type' }}</strong></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Requested By</td>
-                                                    <td colspan="3"><strong>{{ account.user | fullName }}</strong></td>
-                                                    <td>Requested On</td>
-                                                    <td><strong>{{ account.created_at | excelDate }}</strong></td>
-                                                </tr>
-                                                <tr>
-                                                    <td colspan="2">Amount</td>
-                                                    <td colspan="2"><strong>{{ account.amount | currency }}</strong></td>
-                                                    <td>Estimated Monthly Installment</td>
-                                                    <td><strong>{{ account.emi | currency }}</strong></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Loan Summary</h3>
+                                    
+                                </div>
+                                <div class="card-body p-0">
+                                    <table class="table table-sm table-bordered table-hover table-stripped">
+                                        <tbody>
+                                            <tr>
+                                                <td >Loan Name</td>
+                                                <td colspan="3"><strong>{{ account.name }} [{{ account.unique_id }}]</strong></td>
+                                                <td>Loan Type</td>
+                                                <td><strong>{{ account.type ? account.type.name : 'Old Type' }}</strong></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Requested By</td>
+                                                <td colspan="3"><strong>{{ account.user | fullName }}</strong></td>
+                                                <td>Requested On</td>
+                                                <td><strong>{{ account.created_at | excelDate }}</strong></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">Amount</td>
+                                                <td colspan="2"><strong>{{ account.amount | currency }}</strong></td>
+                                                <td>Estimated Monthly Installment</td>
+                                                <td><strong>{{ account.emi | currency }}</strong></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>
-                        <div class="card" v-if="status == 'Pending'">
+                    </div>
+                    <div class="card" v-if="status == 'Pending'">
+                        <form class="" method="POST" @submit.prevent="rejectLoan()" v-if="reject">
+                            <div class="card-header">Guarantor's Information</div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label>Title *</label>
+                                            <input type="text" required class="form-control" id="title" name="title" placeholder="Title *" v-model="rejectData.title" >
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label>First Name *</label>
+                                            <input type="text" required class="form-control" id="first_name" name="first_name" placeholder="First Name *" v-model="rejectData.first_name" >
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label>Other Name </label>
+                                            <input type="text" class="form-control" id="middle_name" name="middle_name" placeholder="Middle Name *" v-model="rejectData.middle_name" >
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <div class="form-group">
+                                            <label>Last Name*</label>
+                                            <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name *" required v-model="rejectData.last_name"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Email</label>
+                                            <input type="text" class="form-control" id="email" name="email" placeholder="EMail address" v-model="rejectData.email" required/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>Phone Number</label>
+                                            <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone Number" v-model="rejectData.phone" required/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form--group">
+                                            <label>Comment</label>
+                                            <wysiwyg rows=3 v-model="rejectData.description" required/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-danger" type="submit">Reject Request</button>
+                                <button class="btn btn-success" type="button" @click="toggleRequest()">Approve Request</button>
+                            </div>
+                        </form>
+                        <form class="" method="POST" @submit.prevent="guaranteeLoan()" v-if="!reject">
                             <div class="card-header">Guarantor's Information</div>
                             <div class="card-body">
                                 <div class="row">
@@ -133,7 +189,7 @@
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label>Email</label>
-                                                    <input type="text" class="form-control" id="email" name="email" placeholder="e" v-model="confirmationData.email" required/>
+                                                    <input type="text" class="form-control" id="email" name="email" placeholder="Personal EMail Address" v-model="confirmationData.email" required/>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
@@ -155,19 +211,19 @@
                                             <div class="col-sm-12">
                                                 <div class="form-group">
                                                     <label>Employer</label>
-                                                    <input type="text" class="form-control" id="employer" name="employer" v-model="confirmationData.employer" required/>
+                                                    <input type="text" class="form-control" id="employer" name="employer" v-model="confirmationData.employer" placeholder="Employer / Business Name" required/>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="form-group">
                                                     <label>Office Email Address</label>
-                                                    <input type="email" class="form-control" id="employer_email" name="employer_email" v-model="confirmationData.employer_email" required/>
+                                                    <input type="email" class="form-control" id="employer_email" name="employer_email" v-model="confirmationData.employer_email" placeholder="Office EMail Address" required/>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="form-group">
                                                     <label>Office Phone Number</label>
-                                                    <input type="number" class="form-control" id="employer_phone" name="employer_phone" v-model="confirmationData.employer_phone" required/>
+                                                    <input type="number" class="form-control" id="employer_phone" name="employer_phone" v-model="confirmationData.employer_phone"  placeholder="Office Phone NUmber" required/>
                                                 </div>
                                             </div>
                                             <div class="col-sm-12">
@@ -184,21 +240,21 @@
                                     <div class="col-sm-4">
                                         <div class="form--group">
                                             <label>Passport Photograph</label>
-                                            <input type="file" class="form-control" @change="addFile('passport', $event)"/>
+                                            <input type="file" class="form-control" @change="addFile('passport', $event)" required/>
                                             <input type="hidden" v-model="confirmationData.passport" id="guarantor_passport" name="guarantor_passport"/>
                                         </div>
                                     </div>
                                     <div class="col-sm-4">
                                         <div class="form--group">
                                             <label>Valid Identification</label>
-                                            <input type="file" class="form-control"  @change="addFile('valid_id', $event)" />
+                                            <input type="file" class="form-control" @change="addFile('valid_id', $event)" required/>
                                             <input type="hidden" v-model="confirmationData.valid_id" id="guarantor_valid_id" name="guarantor_valid_id"/>
                                         </div>
                                     </div>
                                     <div class="col-sm-4">
                                         <div class="form--group">
                                             <label>Proof of Address</label>
-                                            <input type="file" class="form-control"  @change="addFile('address_proof', $event)"/>
+                                            <input type="file" class="form-control" @change="addFile('address_proof', $event)" required/>
                                             <input type="hidden" v-model="confirmationData.guarantor_valid_id" id="guarantor_address_proof" name="guarantor_address_proof"/>
                                         </div>
                                     </div>   
@@ -221,16 +277,16 @@
                                     </div>   
                                 </div>
                                 <button class="btn btn-success" type="submit">Guarantee Loan</button>
-                                <button class="btn btn-danger" type="button" @click="rejectLoan()">Reject Request</button>
+                                <button class="btn btn-danger" type="button" @click="toggleRequest()">Reject Request</button>
                             </div>
-                        </div> 
-                        <div class="card" v-else>
-                            <div class="card-header">Processed Request</div>
-                            <div class="card-body" v-html="message"></div>
-                        </div>
+                        </form>
                     </div> 
-                </div>
-            </form>
+                    <div class="card" v-else>
+                        <div class="card-header">Processed Request</div>
+                        <div class="card-body" v-html="message"></div>
+                    </div>
+                </div> 
+            </div> 
         </div>
     </div>
 </section>
@@ -281,6 +337,17 @@ export default {
 				backgroundColor:"rgb(255,255,255)",
 			},
             pad: 0,
+            reject: false,
+            rejectData: new Form({
+                comment: '',
+                email: '',
+                first_name: '',
+                last_name: '',
+                other_name: '',
+                phone: '',
+                request_id: '',
+                title: '',
+            }),
             status: '',
         }
     },
@@ -320,10 +387,6 @@ export default {
         change() {
             this.options = {penColor: "#00f",};
         },
-		resume() {
-            this.options = {penColor: "#00f",};
-        },
-		//sign(id){this.$Progress.start();$('#signaturetModal').modal('show');this.$Progress.finish();},
         getInitials(){
             axios.get('/api/guarantor_requests/'+this.$route.params.id)
             .then(response => {
@@ -341,7 +404,6 @@ export default {
             this.confirmationData.post('/api/guarantor_requests') 
             .then(response =>{
                 this.$Progress.finish();
-                //this.loadPage(response);
                 Swal.fire({
                     icon: 'success',
                     title: 'The Loan has been guaranteed',
@@ -361,13 +423,34 @@ export default {
             this.status = response.data.status;
             this.message = response.data.message;
         },
+        rejectLoan(){
+            this.rejectData.request_id = this.$route.params.id;
+            this.rejectDatathis.confirmationData.post('/api/guarantor_requests/reject')
+            .then(response =>{
+                this.$Progress.finish();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'The Loan Guarantee Offer has been rejected',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+                this.$router.push('/requests/thanks');
+            })
+            .catch(()=>{
+                Swal.fire({icon: 'error', title: 'Oops...', text: 'Something went wrong!', footer: 'Please try again later!'});
+                this.$Progress.fail();
+            })
+        },
+        resume() {
+            this.options = {penColor: "#00f",};
+        },
         save() {
             const { isEmpty, data } = this.$refs.signaturePad.saveSignature();
             this.confirmationData.guarantor_signature = data;
         },
-        uploadAddressProof(){},
-        uploadPassport(){},
-        uploadValidID(){},
+        toggleRequest(){
+            this.reject = !this.reject;
+        },
         undo() {
             this.$refs.signaturePad.undoSignature();
         }

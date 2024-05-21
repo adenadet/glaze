@@ -173,4 +173,27 @@ trait GuarantorTrait{
             $this->log_activity_user_activity(Auth::user(), 'Guarantor Request Create', false, $request->input('loan_id'));
         }
     }
+
+    public function guarantor_reject_request($request){
+        try{
+            DB::beginTransaction();
+            $gr = GuarantorRequest::where('id', '=', $request->input('request_id'))->first();
+
+            $gr->first_name = $request->input('first_name');
+            $gr->other_name = $request->input('other_name');
+            $gr->last_name = $request->input('last_name');
+            $gr->email = $request->input('email');
+            $gr->title = $request->input('title');
+            $gr->description = $request->input('comment');
+            $gr->status = 2;
+
+            $gr->save();
+            
+            DB::commit();
+            return 'Completed';
+        }
+        catch(Exception $e){
+            DB::rollBack();
+        }
+    }
 }

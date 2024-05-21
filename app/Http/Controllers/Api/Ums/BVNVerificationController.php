@@ -30,14 +30,26 @@ class BVNVerificationController extends Controller
 
     public function store(Request $request)
     {
-        if($_GET['point'] == 'customer'){
-            $unverified_bvns = $this->kyc_bvn_customer_get_all('unconfirmed', true, true, $_GET['page'] ?? 1);
+        if($request->input('point') == 'customer'){
+            if($request->input('items') == 'bvn&nin') {
+                $bvn_verification = $this->kyc_bvn_customer_confirm($request->input('validation_id'), $request);
+                $nin_verification = $this->kyc_nin_customer_confirm($request->input('validation_id'), $request);
+            }
+            else if($request->input('items') == 'bvn') {
+                $bvn_verification = $this->kyc_bvn_customer_confirm($request->input('validation_id'), $request);
+            }
         }
-        else if($_GET['point'] == 'guarantor'){
-            $unverified_bvns = $this->kyc_bvn_guarantor_get_all('unconfirmed', true, true, $_GET['page'] ?? 1);
+        else if($request->input('point') == 'guarantor'){
+            if($request->input('items') == 'bvn&nin') {
+                $bvn_verification = $this->kyc_bvn_guarantor_confirm($request->input('validation_id'), $request);
+                $nin_verification = $this->kyc_nin_guarantor_confirm($request->input('validation_id'), $request);
+            }
+            else if($request->input('items') == 'bvn') {
+                $bvn_verification = $this->kyc_bvn_guarantor_confirm($request->input('validation_id'), $request);
+            }
         }
         return response()->json([
-            'unverified_bvns' => $unverified_bvns,
+            'confirmation' => "Completed",
         ]);
     }
 

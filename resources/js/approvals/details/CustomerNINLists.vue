@@ -3,7 +3,7 @@
         <thead class="bg-dark">
             <tr>
                 <th>Customer</th>
-                <th>nin</th>
+                <th>NIN</th>
                 <th>Updated</th>
                 <th>Status</th>
                 <th></th>

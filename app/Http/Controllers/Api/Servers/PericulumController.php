@@ -15,7 +15,7 @@ class PericulumController extends Controller
     public function bvn_query(Request $request)
     {
         $feedback = $this->periculum_bvn_verification($request);
-        return json_decode($feedback);
+        return response()->json($feedback);
     }
 
     public function destroy($id)
@@ -44,7 +44,7 @@ class PericulumController extends Controller
 
     public function nin_query(Request $request)
     {
-        $feedback = $this->periculum_nin_verification();
+        $feedback = $this->periculum_nin_verification($request);
         return json_decode($feedback);
     }
 

@@ -11,10 +11,8 @@ const getters = {};
 const actions = {
     loginUser({state, commit}){
         if (state.user.et == '' || state.user.et == null){
-            //console.log(state.user.grant_type);
-            axios.post('/api/servers/periculum')
+            axios.get('/api/servers/periculum')
             .then(response => {
-                console.log(response);
                 if (response.data.access_token != null ){
                     commit('setUserToken', response.data);   
                 }

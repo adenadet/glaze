@@ -8,23 +8,43 @@ use App\Models\Log\Activity;
 
 trait PericulumTrait{
     public function periculum_bvn_verification($request){
-        $feedback = Http::withOptions(['verify' => false])->withToken($request->input('token'))
+        $data = ["bvn" =>$request->input('bvn'),];
+        $feedback = Http::acceptJson()->withBody(json_encode($data), 'application/json')
+        ->withToken($request->input('token'))
         ->withOptions(['verify' => false])
-        ->post(config('app.periculum_url').'/verify/bvn', [
-            "statementKey" => 1, 
-            "bvn" => 22168282056,
-        ]);
-        return $feedback;
+        ->post('https://api.insights-periculum.io/verify/bvn');
+        if ($feedback->status() == 200){
+            $response = json_decode($feedback->body());
+        }
+        else{
+            $response = [
+                'status' => $feedback->status(),
+                'message' => 'Error occurred',
+            ];
+        }
+        return $response;
     }
 
-    public function periculum_nin_verification(){
-        $feedback = Http::withOptions(['verify' => false])->withToken(config('app.periculum_client_strain'))
+    public function periculum_nin_verification($request){
+        //echo $request->input('nin');
+        $data = ["nin" =>$request->input('nin'),];
+        $feedback = Http::acceptJson()->withBody(json_encode($data), 'application/json')
+        ->withToken($request->input('token'))
         ->withOptions(['verify' => false])
-        ->post(config('app.periculum_url').'/verify/nin', [
-            "statementKey" => 1, 
-            "nin" => $request->nin ?? 66157865385,
-        ]);
-        return $feedback;
+        ->post('https://api.insights-periculum.io/verify/nin');
+        //print_r($feedback->body());
+        //echo $feedback->status(); 
+        if ($feedback->status() == 200){
+            $response = json_decode($feedback->body());
+            //print_r($response);
+        }
+        else{
+            $response = json_encode([
+                'status' => $feedback->status(),
+                'message' => 'Error occurred'
+            ]);
+        }
+        return $response;
     }
 
     public function periculum_validation(){

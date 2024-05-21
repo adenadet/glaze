@@ -17,11 +17,11 @@
             </div>
         </div>
         <div class="card custom-card">
-            <div class="card-header justify-content-between">
+            <div class="card-header justify-content-between bg-dark">
                 <div class="card-title">All Loans </div>
             </div>
-            <div class="card-body">
-                <div class="table-responsive">
+            <div class="card-body p-0">
+                <div class="table-responsive p-0">
                     <table class="table text-nowrap table-striped">
                         <thead>
                             <tr>

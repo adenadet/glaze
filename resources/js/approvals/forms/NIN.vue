@@ -4,7 +4,7 @@
         <div class="card-header">
             <h3 class="card-title">Confirm {{ type | firstUp }} nin</h3>
             <div class="card-tools">
-                <button class="btn btn-warning btn-sm" @click="PericulumninCheck()" type="button">
+                <button class="btn btn-warning btn-sm" @click="PericulumninCheck()" type="button" v-if="verify == 'nin'">
                     Check using Periculum
                 </button>
             </div>
