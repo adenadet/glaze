@@ -35,6 +35,7 @@ class RegisterController extends Controller
             'password'      => ['required', 'string', 'min:8',],
             'phone'         => ['required', 'numeric', 'min:10',],
             'bvn'           => ['required', 'numeric', 'min:11',],
+            'nin'           => ['required', 'numeric', 'min:11',],
         ]);
     }
 
@@ -48,6 +49,7 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
             'phone' => $data['phone'],
             'bvn' => $data['bvn'],
+            'nin' => $data['nin'],
         ]);
 
         $customer = Customer::create([
@@ -58,7 +60,6 @@ class RegisterController extends Controller
         ]);
         
         $user->assignRole('Customer');
-
         $this->create_gemini_customer($customer, $user);
 
         Activity::create([

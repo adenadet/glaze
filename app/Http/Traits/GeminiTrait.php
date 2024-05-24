@@ -83,11 +83,12 @@ trait GeminiTrait{
             "StateCode" => "",
             "Title" => ""
         ]);
-        $response = json_decode($feedback->body());
-        echo $response;
-        $customer->gemini_id = $response->CustomerID;
-
-        $customer->save();
+        if($feedback->status() == 200){
+            $response = json_decode($feedback->body());
+            //echo $response;
+            $customer->gemini_id = $response->CustomerID;
+            $customer->save();
+        }
     }
 
     public function create_gemini_loan_request($loan){

@@ -7,7 +7,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>{{config('app.name')}} | Register</title>
         <meta name="Description" content="Bootstrap Responsive Admin Web Dashboard HTML5 Template">
-        <meta name="Author" content="Spruko Technologies Private Limited">
+        <meta name="Author" content="{{config('app.author')}}">
         <meta name="keywords" content="admin,admin dashboard,admin panel,admin template,bootstrap,clean,dashboard,flat,jquery,modern,responsive,premium admin templates,responsive admin,ui,ui kit.">
         <link rel="icon" href="{{asset(config('app.logo'))}}" type="image/x-icon">
         <script src="{{asset('assets/js/authentication-main.js')}}"></script>
@@ -56,23 +56,28 @@
                                     </div>
                                     <div class="col-xl-4 mt-0 mb-3"> 
                                         <label class="form-label text-default">BVN</label> 
-                                        <input type="text" class="form-control form-control-lg @error('bvn') is-invalid @enderror" id="bvn" name="bvn" placeholder="bank verification number" required> 
+                                        <input type="text" class="form-control form-control-lg @error('bvn') is-invalid @enderror" id="bvn" name="bvn" placeholder="bank verification number" required  minlength="11"> 
                                         @error('bvn')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
                                     </div>
-                                    <div class="col-xl-6 mb-3"> 
+                                    <div class="col-xl-4 mt-0 mb-3"> 
+                                        <label class="form-label text-default">NIN</label> 
+                                        <input type="text" class="form-control form-control-lg @error('bvn') is-invalid @enderror" id="nin" name="nin" placeholder="national identification number" required  minlength="11"> 
+                                        @error('bvn')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
+                                    </div>
+                                    <div class="col-xl-4 mt-0 mb-3"> 
                                         <label class="form-label text-default d-block">Password</label> 
                                         <div class="input-group"> 
-                                            <input type="password" class="form-control form-control-lg" id="signup-password" placeholder="password" name="password"> 
+                                            <input type="password" class="form-control form-control-lg" id="signup-password" placeholder="password" name="password" minlength="8"> 
                                             <button class="btn btn-light" onclick="createpassword('signup-password',this)" type="button" id="button-addon2">
                                                 <i class="align-middle fa fa-eye-slash"></i>
                                             </button>
                                             @error('password')<span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>@enderror
                                         </div>
                                     </div>
-                                    <div class="col-xl-6 mb-3"> 
+                                    <div class="col-xl-4 mt-0 mb-3"> 
                                         <label class="form-label text-default d-block">Retype Password</label> 
                                         <div class="input-group"> 
-                                            <input type="password" class="form-control form-control-lg" id="signup-confirmpassword" placeholder="confirm password" name="password_confirmation"> 
+                                            <input type="password" class="form-control form-control-lg" id="signup-confirmpassword" placeholder="confirm password" name="password_confirmation" minlength="8"> 
                                             <button class="btn btn-light" onclick="createpassword('signup-confirmpassword',this)" type="button" id="button-addon21">
                                                 <i class="align-middle fa fa-eye-slash"></i>
                                             </button> 

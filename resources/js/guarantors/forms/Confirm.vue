@@ -201,7 +201,7 @@
                                             <div class="col-md-12">
                                                 <div class="form--group">
                                                     <label>Residential Address</label>
-                                                    <wysiwyg rows=3 v-model="confirmationData.address"  required/>
+                                                    <wysiwyg rows=3 v-model="confirmationData.residential_address" required/>
                                                 </div>
                                             </div>
                                         </div>
@@ -400,7 +400,7 @@ export default {
         },
         guaranteeLoan(){
             this.confirmationData.request_id = this.$route.params.id;
-            this.save();
+            //this.save();
             this.confirmationData.post('/api/guarantor_requests') 
             .then(response =>{
                 this.$Progress.finish();

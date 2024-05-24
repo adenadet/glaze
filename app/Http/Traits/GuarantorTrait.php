@@ -22,13 +22,13 @@ use Illuminate\Support\Facades\Http;
 trait GuarantorTrait{
     use FileTrait, LogTrait;
     public function create_guarantor($request){
-        $guarantor_request = GuarantorRequest::where('id', '=', $request->input('request_id'))->first();
-        $address_proof = $request->input('address_proof') != null ? $this->file_upload_by_type($request->input('address_proof'), $request->input('address_proof_type'), 'uploads/guarantors', $request->input('request_id')) : null;
-        $guarantor_signature = $request->input('guarantor_signature') != null ? $this->file_upload_by_type($request->input('guarantor_signature'), 'image', 'img/guarantors', $request->input('request_id')) : null;
-        $passport = $request->input('passport') != null ? $this->file_upload_by_type($request->input('passport'), $request->input('passport_type'), 'uploads/guarantors', $request->input('request_id')) : null;
-        $valid_id = $request->input('valid_id') != null ? $this->file_upload_by_type($request->input('valid_id'), $request->input('valid_id_type'), 'uploads/guarantors', $request->input('request_id')) : null;
-        
         try{
+            $guarantor_request = GuarantorRequest::where('id', '=', $request->input('request_id'))->first();
+            $address_proof = $request->input('address_proof') != null ? $this->file_upload_by_type($request->input('address_proof'), $request->input('address_proof_type'), 'uploads/guarantors', $request->input('request_id')) : null;
+            $guarantor_signature = $request->input('guarantor_signature') != null ? $this->file_upload_by_type($request->input('guarantor_signature'), 'image', 'img/guarantors', $request->input('request_id')) : null;
+            $passport = $request->input('passport') != null ? $this->file_upload_by_type($request->input('passport'), $request->input('passport_type'), 'uploads/guarantors', $request->input('request_id')) : null;
+            $valid_id = $request->input('valid_id') != null ? $this->file_upload_by_type($request->input('valid_id'), $request->input('valid_id_type'), 'uploads/guarantors', $request->input('request_id')) : null;
+            
             $guarantor = Guarantor::create([
                 'loan_id'=> $guarantor_request->loan_id,
                 'request_id'=> $request->input('request_id'),
@@ -45,8 +45,7 @@ trait GuarantorTrait{
                 'employer_email'=> $request->input('employer_email'),
                 'marital_status'=> $request->input('marital_status'),
                 'relationship'=> $request->input('relationship'),
-                //'address'=> $request->input('address'),
-                'residential_address'=> $request->input('address'),
+                'residential_address'=> $request->input('residential_address'),
                 'bvn'=> $request->input('bvn'),
                 'status'=> 1,
                 'nationality_id' => $request->input('nationality_id'),
