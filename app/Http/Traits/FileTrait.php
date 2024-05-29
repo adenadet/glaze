@@ -28,4 +28,12 @@ trait FileTrait{
             return $location.'/'.$new_name;
         }
     }
+
+    public function file_upload_user_profile_image($file, $item_id, $location){
+        if (!is_null($file)){
+            $image = ((!is_null($item_id)) ? ($item_id."-") : '').time().".".explode('/',explode(':', substr($file, 0, strpos($file, ';')))[1])[1];
+            \Image::make($file)->save(public_path($location.'/').$image);
+            $file_url = $image;
+        }
+    }
 }

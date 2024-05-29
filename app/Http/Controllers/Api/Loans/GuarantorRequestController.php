@@ -46,7 +46,7 @@ class GuarantorRequestController extends Controller
             'employer_email'=> 'required|email',
             'marital_status'=> 'required',
             'relationship'=> 'required',
-            'address'=> 'required',
+            'residential_address'=> 'required',
             'bvn'=> 'required|numeric',
             'nationality_id' => 'required|numeric',
             'dob' => 'required|date',

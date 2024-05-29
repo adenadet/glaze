@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Traits;
-
+use App\Http\Traits\FileTrait;
+use App\Http\Traits\GeminiTrait;
 use App\Models\Area;
 use App\Models\Branch;
 use App\Models\Department;
@@ -15,6 +16,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Http;
 
 trait UserTrait{
+    use FileTrait, GeminiTrait;
+
     public function all_staffs(){
         return Staff::orderBy('unique_id', 'ASC')->with(['user.roles', 'branch', 'department', 'roles'])->get();
     }
@@ -58,6 +61,8 @@ trait UserTrait{
             'last_name' => $request->input('last_name'),
             'middle_name' => $request->input('middle_name') ?? NULL,
             'bvn' => $request->input('bvn') ?? 12345678901,
+            'nin' => $request->input('nin') ?? 12345678901,
+            'image' => 'default.png',
             'sex' => $request->input('sex'),
             'phone' => $request->input('phone'),
             'dob' => $request->input('dob'),
@@ -66,15 +71,11 @@ trait UserTrait{
         ]);
 
         //Process Image
-        $image_url = 'default.png';
-        if (!is_null($request['image'])){
-            $image = $request['id']."-".time().".".explode('/',explode(':', substr( $request['image'], 0, strpos($request['image'], ';')))[1])[1];
-            \Image::make($request['image'])->save(public_path('img/profile/').$image);
-            $image_url = $image;
+        if (!is_null($request->input('image'))){ 
+            $image = $this->file_upload_user_profile_image($request->input('image'), $user->id, 'img/profile'); 
+            $user->image = $image;
+            $user->save();    
         }
-
-        $user->image = $image_url;
-        $user->save();
 
         return $user;
     }
@@ -121,7 +122,7 @@ trait UserTrait{
         $user->last_name = $request->input('last_name');
         $user->unique_id = $request->input('unique_id');
         $user->bvn = $request->input('bvn');
-        //$user->image = $request->input('image');
+        $user->nin = $request->input('nin');
         $user->sex = $request->input('sex');
         $user->phone = $request->input('phone');
         $user->dob = $request->input('dob'); 
@@ -129,6 +130,22 @@ trait UserTrait{
         $user->save();
 
         return $user;
+    }
+
+    public function user_create_customer_from_user($request, $user){
+        $user = is_null($user) ? $this->create_new_user($request): $user;
+
+        $user->assignRole('Customer');
+        $this->create_gemini_customer($customer, $user);
+
+        Activity::create([
+            'subject' => $user->first_name.' '.$user->last_name.' has successfully registered',
+            'url' => 'New Registration',
+            'method' => 'create', 
+            'ip' => \Illuminate\Support\Facades\Request::ip(), 
+            'agent' => \Illuminate\Support\Facades\Request::header('User-Agent'), 
+            'user_id' => $user->id,
+        ]);
     }
 
     public function user_address_create_new($request){

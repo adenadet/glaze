@@ -13,8 +13,8 @@ use App\Models\Loans\GuarantorRequest;
 
 class CreateLoanTest extends TestCase
 {
-    public function test_check_database_loans_table_is_empty(){
-        $this->assertDatabaseMissing('loan_accounts', [
+    public function test_check_database_loans_table_is_not_empty(){
+        $this->assertDatabaseHas('loan_accounts', [
             'id' => 1
         ]);
     }
@@ -109,8 +109,7 @@ class CreateLoanTest extends TestCase
             'employer_email'=> 'aadetunji@saintnicholashospital.com',
             'marital_status'=> 'Married',
             'residential_address' => 'This is a test residential address',
-            'relationship'=> 'Colleague',
-            'address'=> 'This is a test residential address',
+            //'address'=> 'This is a test residential address',
             'bvn'=> '123412341234',
             'nationality_id' => 1,
             'dob' => '1988-09-06',

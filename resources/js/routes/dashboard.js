@@ -8,6 +8,7 @@ import DashboardStaff       from '../dashboard/Staff.vue';
 
 import DashboardBirthday    from '../dashboard/partials/Birthday.vue';
 import DashboardChat        from '../dashboard/partials/Chat.vue';
+import DashboardCustomerKYC from '../dashboard/partials/CustomerKYC.vue';
 import DashboardNewStaff    from '../dashboard/partials/NewStaff.vue';
 import DashboardNotice      from '../dashboard/partials/Notice.vue';
 import DashboardStaffMonth  from '../dashboard/partials/StaffMonth.vue';
@@ -17,6 +18,7 @@ import DashboardTicket      from '../dashboard/partials/Ticket.vue';
 Vue.component('DashboardMain',          DashboardMain);
 Vue.component('DashboardBirthday',      DashboardBirthday);
 Vue.component('DashboardChat',          DashboardChat);
+Vue.component('DashboardCustomerKYC',   DashboardCustomerKYC);
 Vue.component('DashboardNewStaff',      DashboardNewStaff);
 Vue.component('DashboardNotice',        DashboardNotice);
 Vue.component('DashboardStaff',         DashboardStaff);

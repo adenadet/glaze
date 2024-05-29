@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Traits\GeminiTrait;
 use App\Http\Traits\UserTrait;
 use App\Models\Area;
+use App\Models\Country;
 use App\Models\NextOfKin;
 use App\Models\Settings\KYCItem;
 use App\Models\State;
@@ -78,6 +79,7 @@ class ProfileController extends Controller
             $user->last_name = $request['last_name'];
             $user->phone = $request['phone'];
             $user->bvn = $request['bvn'];
+            $user->bvn = $request['nin'];
             $user->sex = $request['sex'];
             $user->dob = $request['dob'];
             $user->image = $image_url;
@@ -90,17 +92,15 @@ class ProfileController extends Controller
             $user = $this->create_new_user($request);
         }
         
-        
         $nok = NextOfKin::where('user_id', '=', $user->id)->count();
         if ($nok == 0){
-            echo "No Next of Kin";
+            //echo "No Next of Kin";
         }
 
         return response()->json([
             'added' => $user,
             'user' => User::where('id', auth('api')->id())->with(['customer_address','customer_accounts','state'])->first(),
             'areas' => Area::select('name', 'id')->where('state_id', 25)->get(),
-            'branches' => Branch::all(),
             'states' => State::where('country_id', 1)->get(),
             'nok' => NextOfKin::where('user_id', auth('api')->id())->first(),
             'nations' => Country::orderBy('name', 'ASC')->get(),

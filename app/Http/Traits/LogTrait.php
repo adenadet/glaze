@@ -57,6 +57,10 @@ trait LogTrait{
                 $subject = ($user ? $user->first_name.' '.$user->last_name: 'Unknown user').($status ? ' has verified' : ' failed to verify').' a Customer Address with id: '.$item_id;
                 $method = 'verify';
             break;
+            case 'Customer Creation Self':
+                $subject = $user->first_name.' '.$user->last_name.' has successfully registered';
+                $method = 'create';
+            break;
             case 'Guarantor Request Create':
                 $subject =  ($user ? $user->first_name.' '.$user->last_name: 'Unknown user').($status ? ' has created' : ' failed to create').' a Guarantor for Loan of id: '.$item_id;
                 $method = 'delete';
@@ -65,6 +69,7 @@ trait LogTrait{
                 $subject =  ($user ? $user->first_name.' '.$user->last_name: 'Unknown user').($status ? ' has deleted' : ' failed to delete').' a Guarantor Request with id: '.$item_id;
                 $method = 'delete';
             break;
+        
             default:
                 $subject = ($user ? $user->first_name.' '.$user->last_name: 'Unknown user').($status ? ' has acted' : ' action failed on ').' an Element with id: '.$item_id;
                 $method = 'action';
@@ -72,7 +77,7 @@ trait LogTrait{
         }
         Activity::create([
             'subject' => $subject,
-            'url' => 'Delete',
+            'url' => url()->current(),
             'method' => $method, 
             'ip' => \Illuminate\Support\Facades\Request::ip(), 
             'agent' => \Illuminate\Support\Facades\Request::header('User-Agent'), 

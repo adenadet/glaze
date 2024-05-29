@@ -46,7 +46,7 @@
         <div class="col-md-3 col-sm-12">
             <label>NIN</label>
             <div class="form-group">
-                <input name="nin" id="nin" type="number" class="form-control" placeholder="National Identification Number" v-model="BioData.nin" :class="{'is-invalid' : BioData.errors.has('bvn') }" required>
+                <input name="nin" id="nin" type="number" class="form-control" placeholder="National Identification Number" v-model="BioData.nin" :class="{'is-invalid' : BioData.errors.has('nin') }" required>
             </div>
         </div>
         <div class="col-md-3 col-sm-12">

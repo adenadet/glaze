@@ -20,7 +20,7 @@ class DisbursementController extends Controller
     public function index()
     {
         return response()->json([      
-            'accounts' => $this->account_all('disbursement', $_GET['page']),
+            'accounts' => $this->account_all('disbursement', $_GET['page'] ?? 1),
         ]);
     }
 
