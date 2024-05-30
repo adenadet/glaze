@@ -131,13 +131,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-sm-3">
-                                        <div class="form-group">
-                                            <label>Bank Verification Number</label>
-                                            <input type="text" required class="form-control" id="bvn" name="bvn" maxlength="11" placeholder="Bank Verification Number" v-model="confirmationData.bvn"/>
-                                        </div>
-                                    </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-4">
                                         <div class="form-group">
                                             <label>Marital Status</label>
                                             <select class="form-control" id="marital_status" required name="marital_status" v-model="confirmationData.marital_status">
@@ -149,24 +143,37 @@
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-4">
                                         <div class="form-group">
                                             <label>Relationship with Guarantee</label>
                                             <input type="text" class="form-control" id="relationship" name="relationship" v-model="confirmationData.relationship" required/>
                                         </div>
                                     </div>
-                                    <div class="col-sm-3">
+                                    <div class="col-sm-4">
                                         <div class="form-group">
                                             <label>Annual Income Range</label>
                                             <select class="form-control" id="net_income"  required name="net_income" v-model="confirmationData.net_income">
                                                 <option value="">--Select Net Income Range--</option>
                                                 <option value="<500000">less than 500,000</option>
-                                                <option value="500,000 - 2,000,000">500,000 - 1,000,000</option>
-                                                <option value="500,000 - 2,000,000">1,000,000 - 10,000,000</option>
+                                                <option value="500,000 - 1,000,000">500,000 - 1,000,000</option>
+                                                <option value="1,000,000 - 10,000,000">1,000,000 - 10,000,000</option>
                                                 <option value=">10000000">greater than 10,000,000</option>
                                             </select>
                                         </div>
                                     </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>Bank Verification Number</label>
+                                            <input type="text" required class="form-control" id="bvn" name="bvn" maxlength="11" placeholder="Bank Verification Number" v-model="confirmationData.bvn"/>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label>National Identification Number</label>
+                                            <input type="text" required class="form-control" id="nin" name="nin" maxlength="11" placeholder="National Identification Number" v-model="confirmationData.nin"/>
+                                        </div>
+                                    </div>
+                                    
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
@@ -235,7 +242,6 @@
                                         </div>
                                     </div>   
                                 </div>
-                                
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <div class="form--group">
@@ -297,7 +303,6 @@ export default {
         return  {
             account: {},
             confirmationData: new Form({
-                address: '',
                 address_proof: '',
                 address_proof_type: '',
                 bvn: '',
@@ -310,12 +315,13 @@ export default {
                 employer_phone: '',
                 first_name: '',
                 gender: '',
+                guarantor_signature: '',
                 id: '',
-                loan_id: '',
                 last_name: '',
                 marital_status: '',
                 middle_name: '',
                 net_income: '',
+                nin: '',
                 passport: '',
                 passport_type: '',
                 phone: '',
@@ -400,7 +406,7 @@ export default {
         },
         guaranteeLoan(){
             this.confirmationData.request_id = this.$route.params.id;
-            //this.save();
+            this.save();
             this.confirmationData.post('/api/guarantor_requests') 
             .then(response =>{
                 this.$Progress.finish();
@@ -410,7 +416,7 @@ export default {
                     showConfirmButton: false,
                     timer: 1500
                 });
-                this.$router.push('/requests/thanks');
+                //this.$router.push('/requests/thanks');
             })
             .catch(()=>{
                 Swal.fire({icon: 'error', title: 'Oops...', text: 'Something went wrong!', footer: 'Please try again later!'});

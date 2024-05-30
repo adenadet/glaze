@@ -22,13 +22,15 @@ use Illuminate\Support\Facades\Http;
 trait GuarantorTrait{
     use FileTrait, LogTrait;
     public function create_guarantor($request){
+        DB::beginTransaction();
         try{
             $guarantor_request = GuarantorRequest::where('id', '=', $request->input('request_id'))->first();
+            
             $address_proof = $request->input('address_proof') != null ? $this->file_upload_by_type($request->input('address_proof'), $request->input('address_proof_type'), 'uploads/guarantors', $request->input('request_id')) : null;
             $guarantor_signature = $request->input('guarantor_signature') != null ? $this->file_upload_by_type($request->input('guarantor_signature'), 'image', 'img/guarantors', $request->input('request_id')) : null;
             $passport = $request->input('passport') != null ? $this->file_upload_by_type($request->input('passport'), $request->input('passport_type'), 'uploads/guarantors', $request->input('request_id')) : null;
             $valid_id = $request->input('valid_id') != null ? $this->file_upload_by_type($request->input('valid_id'), $request->input('valid_id_type'), 'uploads/guarantors', $request->input('request_id')) : null;
-            
+
             $guarantor = Guarantor::create([
                 'loan_id'=> $guarantor_request->loan_id,
                 'request_id'=> $request->input('request_id'),
@@ -49,6 +51,7 @@ trait GuarantorTrait{
                 'bvn'=> $request->input('bvn'),
                 'status'=> 1,
                 'nationality_id' => $request->input('nationality_id'),
+                'nin' => $request->input('nin'),
                 'dob' => $request->input('dob'),
                 'description'=> $request->input('description') ?? NULL,
                 'net_income'=> $request->input('net_income'),
@@ -58,8 +61,7 @@ trait GuarantorTrait{
                 'valid_id' => $valid_id,
                 'passport' => $passport,
             ]);
-
-            
+            DB::commit();
         return $guarantor;
         }
         catch (Exception $e){
@@ -69,41 +71,49 @@ trait GuarantorTrait{
     }
 
     public function guarantor_confirm_request($request){
-        $guarantor_request = GuarantorRequest::where('id', '=', $request->input('request_id'))->first();
-        $guarantor = $this->create_guarantor($request);
+        DB::beginTransaction();
+        try{
+            $guarantor_request = GuarantorRequest::where('id', '=', $request->input('request_id'))->first();
+            $guarantor = $this->create_guarantor($request);
+            if ($guarantor){
+                $guarantor_request->status = 1;
+                $guarantor_request->description = $request->input('description');
+                $guarantor_request->save();
 
-        $guarantor_request->status = 1;
-        $guarantor_request->description = $request->input('description');
-        $guarantor_request->save();
+                $loan = Account::where('id', '=',  $guarantor_request->loan_id)->with(['user', 'type'])->first();
+                
+                if (is_null($loan->guaranteed_date)){
+                    $loan_type = Type::where('id', '=', $loan->type_id)->with('requirements')->first();
+                    $guarantors = Guarantor::where('loan_id', '=', $loan->id)->where('status', '=', 1)->count();
 
-        $loan = Account::where('id', '=',  $guarantor_request->loan_id)->with(['user', 'type'])->first();
-        
-        if (is_null($loan->guaranteed_date)){
-            $loan_type = Type::where('id', '=', $loan->type_id)->with('requirements')->first();
-            $guarantors = Guarantor::where('loan_id', '=', $loan->id)->where('status', '=', 1)->count();
+                    $guarantors_needed = 0; 
 
-            $guarantors_needed = 0; 
+                    foreach ($loan_type->requirements as $requirement){
+                        if ($requirement->type == 'guarantors'){
+                            $guarantors_needed += $requirement->rate;
+                        }
+                    }
 
-            foreach ($loan_type->requirements as $requirement){
-                if ($requirement->type == 'guarantors'){
-                    $guarantors_needed += $requirement->rate;
+                    if($guarantors >= $guarantors_needed){
+                        $loan->guaranteed_date = date('Y-m-d H:i:s');
+                        $loan->status = 6;
+                        $loan->save();
+
+                        Mail::to($loan->user->email)->send(new GuaranteedMail($loan));
+                    }
                 }
             }
+            DB::commit();    
+            Mail::to($loan->user->email)->send(new ConfirmMail($loan, $guarantor));
+            
+            Mail::to($guarantor->email)->send(new ThanksMail($loan, $guarantor));
 
-            if($guarantors >= $guarantors_needed){
-                $loan->guaranteed_date = date('Y-m-d H:i:s');
-                $loan->status = 6;
-                $loan->save();
+            return $guarantor;
 
-                Mail::to($loan->user->email)->send(new GuaranteedMail($loan));
-            }
         }
-
-        Mail::to($loan->user->email)->send(new ConfirmMail($loan, $guarantor));
-        
-        Mail::to($guarantor->email)->send(new ThanksMail($loan, $guarantor));
-
-        return $guarantor;
+        catch(Exception $e){
+            DB::rollback();
+        }
 
     }
 

@@ -1,6 +1,7 @@
 <template>
 <section  v-if="guarantor != null">
-    <div class="card">
+<div class="card">
+    <div class="card-body">
         <div class="row">
             <div class="col-sm-3">
                 <div class="form-group">
@@ -28,13 +29,7 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-3">
-                <div class="form-group">
-                    <label>Bank Verification Number</label>
-                    <div class="form-control" id="bvn" name="bvn" maxlength="11" placeholder="Bank Verification Number" v-html="guarantor.bvn"></div>
-                </div>
-            </div>
-            <div class="col-sm-3">
+            <div class="col-sm-4">
                 <div class="form-group">
                     <label>Marital Status</label>
                     <div class="form-control">
@@ -42,13 +37,13 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-4">
                 <div class="form-group">
                     <label>Relationship with Guarantee</label>
                     <div class="form-control" id="relationship" name="relationship" v-html="guarantor.relationship" ></div>
                 </div>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-4">
                 <div class="form-group">
                     <label>Annual Income Range</label>
                     <div class="form-control" id="net_income"  name="net_income" >
@@ -57,6 +52,18 @@
                         <span v-else-if="guarantor.net_income= '1,000,000 - 10,000,000'">1,000,000 - 10,000,000</span>
                         <span v-else-if="guarantor.net_income= '>10000000'">greater than 10,000,000</span>
                     </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label>Bank Verification Number</label>
+                    <div class="form-control" id="bvn" name="bvn" maxlength="11" placeholder="Bank Verification Number" v-html="guarantor.bvn"></div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label>National Identification Number</label>
+                    <div class="form-control" id="nin" name="nin" maxlength="11" placeholder="Bank Verification Number" v-html="guarantor.nin"></div>
                 </div>
             </div>
         </div>
@@ -92,7 +99,7 @@
                     <div class="col-md-12">
                         <div class="form--group">
                             <label>Residential Address</label>
-                            <div rows=3 v-html="guarantor.official_address"></div>
+                            <div rows=3 v-html="guarantor.residential_address"></div>
                         </div>
                     </div>
                 </div>
@@ -127,6 +134,35 @@
             </div>   
         </div>
         <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Passport Photograph</label>
+                    <div class="form-control">
+                        <a v-show="guarantor.passport != null" :href="'/'+guarantor.passport" target="_blank"><i class="fa fa-file mr-1"></i>View Attachment</a>
+                        <span v-show="guarantor.passport == null">No Attachment</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Proof of Address</label>
+                    <div class="form-control">
+                        <a v-show="guarantor.address_proof != null" :href="'/'+guarantor.address_proof" target="_blank"><i class="fa fa-file mr-1"></i>View Attachment</a>
+                        <span v-show="guarantor.address_proof == null">No Attachment</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Valid Identification</label>
+                    <div class="form-control">
+                        <a v-show="guarantor.valid_id != null" :href="'/'+guarantor.valid_id" target="_blank"><i class="fa fa-file mr-1"></i>View Attachment</a>
+                        <span v-show="guarantor.valid_id == null">No Attachment</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-sm-6">
                 <div class="form--group">
                     <label>Comment</label>
@@ -136,11 +172,12 @@
             <div class="col-sm-6">
                 <div class="form--group">
                     <label>Signature</label>
-                    <img :src="guarantor.guarantor_signature != null ? '/'+guarantor.guarantor_signature : ''" />
+                    <img class="img-fluid" :src="guarantor.guarantor_signature != null ? '/'+guarantor.guarantor_signature : ''" />
                 </div>
             </div>   
         </div>
     </div>
+</div>
 </section>
 <section v-else>
     <p>Select Guarantor To View</p>
