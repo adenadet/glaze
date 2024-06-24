@@ -100,7 +100,7 @@ trait LoanAccountTrait{
             
         if ($loan_type->interest_type == 'Flat'){
             $principal = $request->input('amount');
-            $rate = 0.6 ;
+            $rate = 0.66 ;
             $time = $request->input('frequency') == 'weeks' ? ($request->input('duration') / 52) : ($request->input('duration') / 12);
             $totalPayment = $request->input('amount') * (1 + ($rate * $time));
             $emiMonthly =  $totalPayment / $request->input('duration');
@@ -160,12 +160,6 @@ trait LoanAccountTrait{
         
         $loan_file->save();
 
-        return $loan_file;
-        
-        /*response()->json([
-            'message' => $request->input('status') == 1 ? 'Successfully Approved' : 'Successfully Rejected',
-            'files' => $this->file_get_loan_files_by_id($loan_file->loan_id),
-        ]);*/
-         
+        return $loan_file;     
     }
 }

@@ -11,23 +11,16 @@ class MDConfirmationMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    /**
-     * Create a new message instance.
-     *
-     * @return void
-     */
-    public function __construct()
+    public $loan;
+
+    public function __construct($loan)
     {
-        //
+        $this->loan = $loan;
     }
 
-    /**
-     * Build the message.
-     *
-     * @return $this
-     */
     public function build()
     {
-        return $this->view('view.name');
+        return $this->subject('Pending Loan Confirmation Notification')
+        ->view('mails.loans.confirm-md');
     }
 }

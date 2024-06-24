@@ -116,10 +116,7 @@
         computed:{
             adminInterestRate(){
                 let getIndex = this.loan_types.map(object => object.id).indexOf(this.loanData.loan_type_id);
-                console.log(getIndex);
                 let interest = 36;
-            
-                //return (1 + (interest/100));
                 return 1;
             },
             tenureMonths(){return Number(this.loanData.duration);},
@@ -131,7 +128,7 @@
             totalInterest(){return Number(this.totalPayment - this.loanAmount);},
             newTotalPayment(){
                 var tenure = this.loanData.frequency == "weeks" ? (this.loanData.duration/52) : (this.loanData.duration/12);
-                return Number(this.loanData.amount * (1 + (0.6 * tenure)));
+                return Number(this.loanData.amount * (1 + (0.66 * tenure)));
             }
         },
         data(){
