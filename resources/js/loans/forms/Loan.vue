@@ -1,5 +1,6 @@
 <template>
-<section class="row">
+<section class="row overlay-wrapper">
+    <div v-if="loading" class="overlay dark"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>
     <div class="col-md-6">
         <div class="row">
             <form @submit.prevent="editMode ? updateLoan() : createLoan() ">
@@ -134,6 +135,7 @@
         data(){
             return {
                 banks: [],
+                loading: false,
                 loan_types: [],
                 loanData: new Form({
                     id:'',
@@ -162,16 +164,19 @@
             change() {this.options = {penColor: "#00f",};},
             createLoan(){
                 this.$Progress.start();
+                this.loading = true;
                 if (this.loanData.signature_type == 'manual'){this.save();}
-                else{this.updateSignature();}
+                else{this.updateSignature(e);}
                 this.loanData.post('/api/loans/accounts')
                 .then(response=>{
                     this.$Progress.finish();
+                    this.loading = false;
                     Swal.fire({icon: 'success', title: response.data.message,});
                     Fire.$emit('getGuarantors', response);
                 })
                 .catch(()=>{
                     this.$Progress.fail();
+                    this.loading = false;
                     Swal.fire({
                         icon: 'error',
                         title: 'Your form was not sent try again later!',
@@ -179,11 +184,14 @@
                 });
             },
             getInitials(){
+                this.loading = true;
                 axios.get('/api/loans/accounts/initials').then(response =>{
+                    this.loading = false;
                     this.banks = response.data.all_banks;
                     this.loan_types = response.data.loan_types;
                 })
                 .catch(()=>{
+                    this.loading = false;
                     toast.fire({icon: 'error', title: 'Loan Form Initialization failed',})
                 });
             },
@@ -196,8 +204,10 @@
                     this.$refs.signaturePad.undoSignature();
             },
             updateLoan(id){
+                this.loading = true;
                 this.loanData.put('/api/loans/accounts/'+this.loanData.id)
                 .then(response=>{
+                    this.loading = false;
                     Swal.fire({icon: 'success', title: response.data.message,});
                 })
                 .catch(()=>{

@@ -1,5 +1,6 @@
 <template>
     <section class="card">
+        <div v-if="loading" class="overlay dark"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>
         <div class="card-header">
             <h3 class="card-title" v-if="file != null && file.file_name != null">{{ file.file_name }} Confirmation</h3>
             <h3 class="card-title" v-else>Something Went Wrong</h3>
@@ -38,6 +39,7 @@ export default {
             account: {},
             current: {},
             file: {},
+            loading: false,
             loan_types: [],
             fileConfirmationData: new Form({
                 approved_remarks: '',
@@ -48,9 +50,11 @@ export default {
     },
     methods:{
         createConfirmation(){
+            this.loading = true;
             this.fileConfirmationData.file_id = this.file.id;
             this.fileConfirmationData.put('/api/loans/files/confirm/'+this.file.id)
             .then(response=>{
+                this.loading = false;
                 Fire.$emit('GetCourse', response);
                 Swal.fire({
                     icon: 'success',
@@ -59,6 +63,7 @@ export default {
                 this.fileConfirmationData.reset();
             })
             .catch(()=>{
+                this.loading = false;
                 this.$Progress.fail();
                 Swal.fire({
                     icon: 'error',

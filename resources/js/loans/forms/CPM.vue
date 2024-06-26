@@ -1,5 +1,6 @@
 <template>
-    <section>
+    <section class="container-fluid overlay-wrapper">
+        <div class="overlay dark" v-if="loading"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>
         <div class="row" v-show="!final">
             <div class="col-md-12">
                 <form @submit.prevent="createTemplate()">
@@ -104,7 +105,7 @@ export default {
                 .then(response => {
                     this.$Progress.finish();
                     Fire.$emit('refreshCPM', response);
-                    Swal.fire({ icon: 'success', title: 'The Checklist has been saved', showConfirmButton: false, timer: 1500 });
+                    Swal.fire({ icon: 'success', title: 'The CPM has been saved', showConfirmButton: false, timer: 1500 });
                     this.cpmData.reset();
                 })
                 .catch(() => {

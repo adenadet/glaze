@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <div class="card-header">
+        <div class="card-header bg-dark">
             <h3 class="card-title">Loan Summary</h3>
             <button type="button" v-if="source == 'staff'" class="card-tools btn-sm btn btn-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
             <div class="dropdown-menu" v-if="source == 'staff'">

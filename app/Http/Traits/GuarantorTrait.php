@@ -26,10 +26,10 @@ trait GuarantorTrait{
         try{
             $guarantor_request = GuarantorRequest::where('id', '=', $request->input('request_id'))->first();
             
-            $address_proof = $request->input('address_proof') != null ? $this->file_upload_by_type($request->input('address_proof'), $request->input('address_proof_type'), 'uploads/guarantors', $request->input('request_id')) : null;
-            $guarantor_signature = $request->input('guarantor_signature') != null ? $this->file_upload_by_type($request->input('guarantor_signature'), 'image', 'img/guarantors', $request->input('request_id')) : null;
-            $passport = $request->input('passport') != null ? $this->file_upload_by_type($request->input('passport'), $request->input('passport_type'), 'uploads/guarantors', $request->input('request_id')) : null;
-            $valid_id = $request->input('valid_id') != null ? $this->file_upload_by_type($request->input('valid_id'), $request->input('valid_id_type'), 'uploads/guarantors', $request->input('request_id')) : null;
+            $address_proof = $request->input('address_proof') != null ? $this->file_upload_by_type($request->input('address_proof'), $request->input('address_proof_type'), 'uploads/guarantors', $request->input('request_id').'-AP') : null;
+            $guarantor_signature = $request->input('guarantor_signature') != null ? $this->file_upload_by_type($request->input('guarantor_signature'), 'image', 'img/guarantors', $request->input('request_id').'-GS') : null;
+            $passport = $request->input('passport') != null ? $this->file_upload_by_type($request->input('passport'), $request->input('passport_type'), 'uploads/guarantors', $request->input('request_id').'-PP') : null;
+            $valid_id = $request->input('valid_id') != null ? $this->file_upload_by_type($request->input('valid_id'), $request->input('valid_id_type'), 'uploads/guarantors', $request->input('request_id').'-VI') : null;
 
             $guarantor = Guarantor::create([
                 'loan_id'=> $guarantor_request->loan_id,

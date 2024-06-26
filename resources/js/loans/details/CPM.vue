@@ -1,7 +1,7 @@
 <template>
 <section>
     <div class="card">
-        <div class="card-header">
+        <div class="card-header bg-dark">
             <h3 class="card-title">Credit Proposal Memorandum Details</h3>
         </div>
         <div class="card-body">

@@ -14,7 +14,7 @@
         </div>
     </div>
     <div class="card">
-        <div class="card-header">
+        <div class="card-header bg-dark">
             <h3 class="card-title">Loan Officer Checklist</h3>
         </div>
         <div class="card-body">
@@ -79,14 +79,14 @@ export default {
                 this.$Progress.finish();
                 toast.fire({
                     icon: 'success',
-                    title: 'Account was loaded successfully',
+                    title: 'Account Check List was loaded successfully',
                 });
             })
             .catch(()=>{
                 this.$Progress.fail();
                 toast.fire({
                     icon: 'error',
-                    title: 'Accounts was not loaded successfully',
+                    title: 'Account Check List was not loaded successfully',
                 })
             });
         },

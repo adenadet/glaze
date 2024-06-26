@@ -14,7 +14,7 @@
         </div>
     </div>
     <div class="card">
-        <div class="card-header">
+        <div class="card-header bg-dark">
             <h3 class="card-title">Loan Credit Score</h3>
             <button  v-if="source == 'risk'" class="card-tools btn btn-sm btn-primary" @click="addNew">Get New Credit Score</button>
         </div>
@@ -119,7 +119,7 @@ export default {
                 this.$Progress.fail();
                 toast.fire({
                     icon: 'error',
-                    title: 'Accounts was not loaded successfully',
+                    title: 'Account Credit Score was not loaded successfully',
                 })
             });
         },
