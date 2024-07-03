@@ -65,13 +65,13 @@
                 <input name="dob" id="dob" type="date" data-provide="datepicker" data-date-autoclose="true" class="form-control" placeholder="Birth Date" v-model="BioData.dob" :class="{'is-invalid' : BioData.errors.has('dob') }">
             </div>
         </div>
-        <div class="col-md-3 col-sm-12">
+        <div :class="editing ? 'col-sm-12' : 'col-sm-6'">
             <label>Profile Picture</label>
             <div class="form-group">
                 <input type="file" class="form-control" placeholder="Birth Date" @change="updateProfilePic">
             </div>
         </div>
-        <div class="col-md-6 col-sm-12">
+        <div class="col-md-6 col-sm-12" v-if="!editing">
             <label>&nbsp;</label>
             <div class="form-group">
                 <div type="file" class="form-control">{{ BioData.image }}</div>
@@ -101,6 +101,7 @@ export default {
                 phone:'', 
                 sex:'', 
             }),
+            editing: false,
         }
     },
     mounted() {
@@ -133,6 +134,7 @@ export default {
             return photo;
             },
         updateProfilePic(e){
+            this.editing = true;
             let file = e.target.files[0];
             let reader = new FileReader();
             if (file['size'] < 2000000){
@@ -142,6 +144,7 @@ export default {
             }
             else{
                 Swal.fire({type: 'error', title: 'File is too large'});
+                this.editing = false;
             }
         },
     },

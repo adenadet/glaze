@@ -99,7 +99,8 @@ export default {
     data(){
         return  {
             areas:[],  
-            editMode: true, 
+            editMode: true,
+            employer: {}, 
             kyc_items: {},
             nations: [],  
             nok:{},
@@ -132,19 +133,21 @@ export default {
             });
         },
         reloadProfile(response){
-            this.user = response.data.user;
             this.areas = response.data.areas;
             this.branches = response.data.branches;
             this.departments = response.data.departments;
-            this.states = response.data.states;
-            this.nok = response.data.nok;
-            this.nations = response.data.nations;
+            this.employer = response.data.employer;
             this.kyc_items = response.data.kyc_items;
             this.kyc_list = response.data.kyc_list;
+            this.nations = response.data.nations;
+            this.nok = response.data.nok;
             this.sectors = response.data.sectors;
             this.socials = response.data.socials;
+            this.states = response.data.states;
+            this.user = response.data.user;
             
             Fire.$emit('BasicDataFill', this.user);
+            Fire.$emit('EmployerDataFill', this.employer);
             Fire.$emit('NextOfKinFill', this.nok); 
             Fire.$emit('AddressDataFill', this.user.customer_address);
             Fire.$emit('SocialDataFill', {'user': this.user, 'socials': this.socials})

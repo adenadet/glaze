@@ -1,5 +1,6 @@
 <template>
-<section>
+<section class="overlay-wrapper">
+
     <form>
     <alert-error :form="EmploymentData"></alert-error> 
     <div class="row">
@@ -13,8 +14,8 @@
         <div class="col-sm-3">
             <div class="form-group">
                 <label>Status</label>
-                <input type="text" class="form-control" id="status" name="status" v-model="EmploymentData.status" :class="{'is-invalid' : EmploymentData.errors.has('status') }"/>
-                <has-error :form="EmploymentData" field="status"></has-error> 
+                <input type="text" class="form-control" id="employment_status" name="employment_status" v-model="EmploymentData.employment_status" :class="{'is-invalid' : EmploymentData.errors.has('status') }"/>
+                <has-error :form="EmploymentData" field="employment_status"></has-error> 
             </div>
         </div>
         <div class="col-sm-3">
@@ -35,7 +36,7 @@
         <div class="col-sm-3">
             <div class="form-group">
                 <label>State</label>
-                <select class="form-control" id="employer_state_id" name="employer_state_id" placeholder="Last Name *" required v-model="EmploymentData.employer_state_id" :class="{'is-invalid' : EmploymentData.errors.has('employer_state_id') }" @change="updateLGAs">
+                <select class="form-control" id="employer_state_id" name="employer_state_id" required v-model="EmploymentData.employer_state_id" :class="{'is-invalid' : EmploymentData.errors.has('employer_state_id') }" @change="updateLGAs">
                     <option value="">--Select Local Government</option>
                     <option v-for="state in states" :value="state.StateCode" :key="state.StateCode">{{ state.StateName }}</option> 
                 </select>
@@ -45,7 +46,7 @@
         <div class="col-sm-3">
             <div class="form-group">
                 <label>Local Government Area</label>
-                <select class="form-control" id="employer_lga_id" name="employer_lga_id" placeholder="Last Name *" required v-model="EmploymentData.employer_lga_id" :class="{'is-invalid' : EmploymentData.errors.has('employer_lga_id') }">
+                <select class="form-control" id="employer_lga_id" name="employer_lga_id" required v-model="EmploymentData.employer_lga_id" :class="{'is-invalid' : EmploymentData.errors.has('employer_lga_id') }">
                     <option value="">--Select Local Government</option>
                     <option v-for="area in lgas" :value="area.LGANo" :key="area.LGANo">{{ area.LGAName }}</option> 
                 </select>
@@ -142,11 +143,13 @@ export default {
             let photo = (this.EmploymentData.image.length >= 150) ? this.EmploymentData.image : "./"+this.EmploymentData.image;
             return photo;
             },
-            updateEmploymentData(){
+        updateEmploymentData(){
             this.$Progress.start();
-            this.EmploymentData.post('/api/ums/bios')
+            this.loading = true;
+            this.EmploymentData.post('/api/ums/profile/employee')
             .then(response =>{
                 this.$Progress.finish();
+                this.loading = false;
                 Fire.$emit('Reload', response);
                 Swal.fire({
                     icon: 'success',
@@ -156,6 +159,7 @@ export default {
                     });
                 })
             .catch(()=>{
+                this.loading = false;
                 Swal.fire({icon: 'error', title: 'Oops...', text: 'Something went wrong!', footer: 'Please try again later!'});
                 this.$Progress.fail();
             });          
@@ -180,6 +184,7 @@ export default {
         sectors: Array,
         states: Array,
         user: Object,
+        
     }
 }
 </script>

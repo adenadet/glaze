@@ -18,7 +18,7 @@ trait FileTrait{
             $new_name = $id."-".time().".".explode('/',explode(':', substr( $file, 0, strpos($file, ';')))[1])[1];
             $image = $id."-".time().".".explode('/',explode(':', substr( $file, 0, strpos($file, ';')))[1])[1];
             $upload = \Image::make($file)->save(public_path($location).'/'.$new_name);
-            if ($upload){echo "Image uploaded successfully"; return $location.'/'.$new_name;}
+            if ($upload){ return $location.'/'.$new_name;}
             else {echo "Error uploading image";}
         }
         else if (($type == 'pdf') || ($type == 'PDF') ||($type == 'Pdf')){

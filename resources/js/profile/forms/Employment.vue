@@ -105,7 +105,7 @@ export default {
     methods:{
         updateEmploymentData(){
             this.$Progress.start();
-            this.EmploymentData.post('/api/ums/bios')
+            this.EmploymentData.post('/api/ums/employees')
             .then(response =>{
                 this.$Progress.finish();
                 Fire.$emit('Reload', response);
@@ -121,22 +121,6 @@ export default {
                 this.$Progress.fail();
                 });  
                     
-        },
-        getProfilePic(){
-            let photo = (this.EmploymentData.image.length >= 150) ? this.EmploymentData.image : "./"+this.EmploymentData.image;
-            return photo;
-            },
-        updateProfilePic(e){
-            let file = e.target.files[0];
-            let reader = new FileReader();
-            if (file['size'] < 2000000){
-                reader.onloadend = (e) => {this.EmploymentData.image = reader.result}
-                reader.readAsDataURL(file)
-                //alert(reader.result)
-            }
-            else{
-                Swal.fire({type: 'error', title: 'File is too large'});
-            }
         },
     },
     props:{

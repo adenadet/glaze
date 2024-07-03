@@ -11,6 +11,7 @@ use App\Models\NextOfKin;
 use App\Models\Settings\KYCItem;
 use App\Models\State;
 use App\Models\Ums\SocialMedia;
+use App\Models\Ums\CustomerEmployer;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,8 +19,37 @@ use Illuminate\Support\Facades\DB;
 class ProfileController extends Controller
 {
     use GeminiTrait, UserTrait;
+    public function employees(Request $request)
+    {
+        $employer = CustomerEmployer::updateOrcreate(['user_id' => auth('api')->id()], 
+            [
+                'customer_id' => null,
+                'name' => $request->input['name'],
+                'employment_date' => $request->input['employment_date'] ?? null,
+                'educational_level' => $request->input['educational_level'] ?? null,
+                'employment_status' => $request->input['status'] ?? null,
+                'employer_lga_id' => $request->input['lga_id'] ? :null,
+                'landmark' => null,
+                'monthly_income' => $request->input['monthly_income'] ?? null,
+                'pay_day' => $request->input['pay_day'] ?? null,
+                'pension_number' => $request->input['pension_number'] ?? null,
+                'tax_no' => $request->input['tax_number'] ?? null,
+                'employer_telephone_no' => $request->input['employer_telephone_no'] ?? null,
+                'employer_sector_code' => $request->input['employer_sector_code'] ?? null,
+                'staff_id' => $request->input['staff_id'] ?? null,
+                'employer_address' => $request->input['employer_address'] ?? null,
+                'employer_city' => $request->input['employer_city'] ?? null,
+                'employer_email' => $request->input['employer_email'] ?? null,
+                'status'  => $request->input['status'] ?? 1,
+                'end_date' => $request->input['end_date'] ?? null,
+                'created_by' => auth('api')->id(),
+                'updated_by' => auth('api')->id(),
+            ]
+        );
+    }
+    
     public function index(){
-        $kyc_items = KYCItem::select( 'setting_kyc_items.*', 
+        $kyc_items = KYCItem::select( 'setting_kyc_items.*',
             DB::raw('(select file from `user_kyc_items` where setting_kyc_items.id = user_kyc_items.item_id and user_kyc_items.user_id = '.auth('api')->id().' order by id asc limit 1) as kyc_file'),
             DB::raw('(select identification from `user_kyc_items` where setting_kyc_items.id = user_kyc_items.item_id and user_kyc_items.user_id = '.auth('api')->id().' order by id asc limit 1) as kyc_identification'),
             DB::raw('(select expiry_date from `user_kyc_items` where setting_kyc_items.id = user_kyc_items.item_id and user_kyc_items.user_id = '.auth('api')->id().' order by id asc limit 1) as kyc_expiry_date'),
@@ -28,6 +58,7 @@ class ProfileController extends Controller
 
         return response()->json([
             'areas' => Area::select('id', 'name')->orderBy('name', 'ASC')->get(),
+            'employer' => CustomerEmployer::where('user_id', '=', auth('api')->id())->first(),
             'kyc_items' => $kyc_items,
             'kyc_list' => KYCItem::all(),
             'nok' => NextOfKin::where('user_id', auth('api')->id())->first(),

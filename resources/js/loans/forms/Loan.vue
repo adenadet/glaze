@@ -166,7 +166,6 @@
                 this.$Progress.start();
                 this.loading = true;
                 if (this.loanData.signature_type == 'manual'){this.save();}
-                else{this.updateSignature(e);}
                 this.loanData.post('/api/loans/accounts')
                 .then(response=>{
                     this.$Progress.finish();
