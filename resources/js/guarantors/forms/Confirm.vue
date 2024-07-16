@@ -388,8 +388,6 @@ export default {
                         this.confirmationData.valid_id = reader.result;
                         this.confirmationData.valid_id_type = ((file['type'] == 'image/png') || (file['type'] == 'image/jpg') || (file['type'] == 'image/jpeg')) ? 'Image': 'PDF';
                     }
-                    console.log(fileKey);
-                    console.log(reader.result);
                 }
                 reader.readAsDataURL(file)
             }

@@ -16,7 +16,7 @@
             <li>Loan Term: {{$loan->duration}} {{$loan->frequency}}</li>
         </ul></p>
 
-        <p>For further details, about this loan <a href="{{config('app.url')}}/staff/loans/'{{{{$loan->id}}">click here</a><p>
+        <p>For further details, about this loan <a href="{{config('app.url')}}/staff/loans/'{{$loan->id}}">click here</a><p>
 
         <p>Sincerely, <br />
         <br />

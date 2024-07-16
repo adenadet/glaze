@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 
-import RequestGuarantorConfirm           from '../guarantors/forms/Confirm.vue';
+import RequestGuarantorConfirm           from '../guarantors/Confirm.vue';
 
 
 Vue.component('RequestGuarantorConfirm', RequestGuarantorConfirm);

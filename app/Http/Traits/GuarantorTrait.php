@@ -46,7 +46,6 @@ trait GuarantorTrait{
                 'employer_phone'=> $request->input('employer_phone'),
                 'employer_email'=> $request->input('employer_email'),
                 'marital_status'=> $request->input('marital_status'),
-                'relationship'=> $request->input('relationship'),
                 'residential_address'=> $request->input('residential_address'),
                 'bvn'=> $request->input('bvn'),
                 'status'=> 1,
