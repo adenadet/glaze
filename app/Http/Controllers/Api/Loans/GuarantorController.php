@@ -130,8 +130,6 @@ class GuarantorController extends Controller
             'marital_status'=> 'required',
             'relationship'=> 'required',
             'address'=> 'required',
-            'bvn'=> 'required|numeric',
-            'nationality_id' => 'required|numeric',
             'dob' => 'required|date',
             'net_income'=> 'required',
         ]);

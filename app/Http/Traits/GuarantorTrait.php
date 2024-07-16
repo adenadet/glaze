@@ -31,37 +31,40 @@ trait GuarantorTrait{
             $passport = $request->input('passport') != null ? $this->file_upload_by_type($request->input('passport'), $request->input('passport_type'), 'uploads/guarantors', $request->input('request_id').'-PP') : null;
             $valid_id = $request->input('valid_id') != null ? $this->file_upload_by_type($request->input('valid_id'), $request->input('valid_id_type'), 'uploads/guarantors', $request->input('request_id').'-VI') : null;
 
-            $guarantor = Guarantor::create([
+            $guarantor = Guarantor::updateOrCreate(
+            [
                 'loan_id'=> $guarantor_request->loan_id,
                 'request_id'=> $request->input('request_id'),
-                'title'=> $request->input('title'),
-                'first_name'=> $request->input('first_name'),
-                'middle_name'=> $request->input('middle_name'),
-                'last_name'=> $request->input('last_name'),
-                'relationship'=> $request->input('relationship'),
+            ],
+            [
+                'address_proof' => $address_proof,
+                'bvn'=> $request->input('bvn') ?? '00000000000',
+                'description'=> $request->input('description') ?? NULL,
+                'dob' => $request->input('dob'),
                 'email'=> $request->input('email'),
-                'phone'=> $request->input('phone'),
                 'employer'=> $request->input('employer'),
                 'employer_address'=> $request->input('employer_address'),
                 'employer_phone'=> $request->input('employer_phone'),
                 'employer_email'=> $request->input('employer_email'),
-                'marital_status'=> $request->input('marital_status'),
-                'residential_address'=> $request->input('residential_address'),
-                'bvn'=> $request->input('bvn'),
-                'status'=> 1,
-                'nationality_id' => $request->input('nationality_id'),
-                'nin' => $request->input('nin'),
-                'dob' => $request->input('dob'),
-                'description'=> $request->input('description') ?? NULL,
-                'net_income'=> $request->input('net_income'),
+                'first_name'=> $request->input('first_name'),
                 'guarantor_date' => date('Y-m-d H:i:s'),
                 'guarantor_signature' => $guarantor_signature,
-                'address_proof' => $address_proof,
-                'valid_id' => $valid_id,
+                'last_name'=> $request->input('last_name'),
+                'marital_status'=> $request->input('marital_status'),
+                'middle_name'=> $request->input('middle_name'),
+                'nationality_id' => $request->input('nationality_id'),
+                'net_income'=> $request->input('net_income'),
+                'nin' => $request->input('nin') ?? '000000000000',
                 'passport' => $passport,
+                'phone'=> $request->input('phone'),
+                'relationship'=> $request->input('relationship'),
+                'residential_address'=> $request->input('residential_address'),
+                'status'=> 1,
+                'title'=> $request->input('title'),
+                'valid_id' => $valid_id,
             ]);
             DB::commit();
-        return $guarantor;
+            return $guarantor;
         }
         catch (Exception $e){
             print_r ($e->getMessage());
@@ -69,13 +72,22 @@ trait GuarantorTrait{
         }
     }
 
-    public function guarantor_confirm_request($request){
+    public function guarantor_complete_request($request, $id){
         DB::beginTransaction();
         try{
-            $guarantor_request = GuarantorRequest::where('id', '=', $request->input('request_id'))->first();
-            $guarantor = $this->create_guarantor($request);
+            $guarantor_request = GuarantorRequest::where('id', '=', $id)->first();
+            $guarantor = Guarantor::where('request_id', '=', $id)->first();
             if ($guarantor){
-                $guarantor_request->status = 1;
+                $address_proof = $request->input('address_proof') != null ? $this->file_upload_by_type($request->input('address_proof'), $request->input('address_proof_type'), 'uploads/guarantors', $request->input('request_id').'-AP') : null;
+                $valid_id = $request->input('valid_id') != null ? $this->file_upload_by_type($request->input('valid_id'), $request->input('valid_id_type'), 'uploads/guarantors', $request->input('request_id').'-VI') : null;
+    
+                $guarantor->bvn= $request->input('bvn') ?? '00000000000';
+                $guarantor->nin = $request->input('nin') ?? '000000000000';
+                $guarantor->address_proof = $address_proof;
+                $guarantor->valid_id = $valid_id;
+                $guarantor->save();
+
+                $guarantor_request->status = 3;
                 $guarantor_request->description = $request->input('description');
                 $guarantor_request->save();
 
@@ -108,12 +120,29 @@ trait GuarantorTrait{
             Mail::to($guarantor->email)->send(new ThanksMail($loan, $guarantor));
 
             return $guarantor;
+        }
+        catch(Exception $e){
+            DB::rollback();
+        }
+    }
+    public function guarantor_confirm_request($request){
+        DB::beginTransaction();
+        try{
+            $guarantor_request = GuarantorRequest::where('id', '=', $request->input('request_id'))->first();
+            $guarantor = $this->create_guarantor($request);
+            if ($guarantor){
+                $guarantor_request->status = 1;
+                $guarantor_request->description = $request->input('description');
+                $guarantor_request->save();
+
+            }
+            DB::commit();    
+            return $guarantor;
 
         }
         catch(Exception $e){
             DB::rollback();
         }
-
     }
 
     public function guarantor_delete_request($id){

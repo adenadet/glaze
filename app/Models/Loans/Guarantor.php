@@ -2,10 +2,11 @@
 
 namespace App\Models\Loans;
 
+use App\Models\Structure;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Guarantor extends Model
+class Guarantor extends Structure
 {
     protected $primaryKey = 'id';
     protected $table = 'loan_guarantors';

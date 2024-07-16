@@ -143,11 +143,6 @@ trait LoanAccountTrait{
 
         return $loan;
     }
-
-    public function account_get_account_repayments($id){
-        return Repayment::where('loan_id', '=', $id)->get();
-    }
-
     public function account_file_confirmation($request, $id)
     {
         $loan_file = File::where('id', '=', $id)->first();
@@ -162,4 +157,11 @@ trait LoanAccountTrait{
 
         return $loan_file;     
     }
+
+    public function account_get_account_by_id($id, $detailed){
+        $account = Account::where('id','=', $id);
+        $account = $detailed ? $account->with(['user', 'type', 'repayments']) : $account->with(['user', 'type']);
+        return $account->first();
+    }
+
 }

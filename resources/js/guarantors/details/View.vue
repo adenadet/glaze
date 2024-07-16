@@ -191,8 +191,7 @@ export default {
         }
     },
     mounted() {
-        Fire.$on('GuarantorDataFill', guarantor => {
-            alert("Working");
+        Fire.$on('GuarantorDetailDataFill', guarantor => {
             this.guarantor = guarantor;
         });
     },

@@ -23,43 +23,8 @@
         <div class="col-md-6">
             <LoanDetailFiles source="Customer" :account="account" :files="account.files"/>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-12">
             <LoanDetailRepayments />
-        </div>
-        <div class="col-md-4"> 
-            <div class="card custom-card"> 
-                <div class="card-header justify-content-between"> 
-                    <div class="card-title"> Upcoming Repayment Date </div>
-                </div> 
-                <div class="card-body"> 
-                    <div class="tab-content pt-3 my-3"> 
-                        <div class="tab-pane show active border-0 p-0" id="mon" role="tabpanel"> 
-                            <ul class="list-unstyled mb-0 upcoming-events-list" style="width:100% !important"> 
-                                <li> 
-                                    <div class="d-flex align-items-top justify-conent-between"  style="width:100% !important"> 
-                                        <div class="flex-fill"> 
-                                            <p class="mb-0 fs-14">Meeting with client</p>
-                                            <p class="mb-0 text-muted">Video Conference</p>
-                                        </div> 
-                                        <div> 
-                                            <span class="text-muted">
-                                                <i class="fa-regular fa-clock align-middle ml-1 mr-1 d-inline-block"></i>9:00am - 10:00am
-                                            </span> 
-                                        </div>
-                                        <div class="text-right border-left ml-5"> &nbsp; &nbsp;
-                                            <button type="button" class="btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
-                                            <div class="dropdown-menu">
-                                                <button class="btn btn-block dropdown-item" @click="makeRepayment({})"><i class="fa fa-money-bill mr-1 text-success"></i> Pay Now</button>
-                                                <button class="btn btn-block dropdown-item" @click="deleteLoan(1)"><i class="fa fa-trash mr-1 text-danger"></i> Delete Loan Request</button>
-                                            </div> 
-                                        </div> 
-                                    </div> 
-                                </li>  
-                            </ul> 
-                        </div>  
-                    </div> 
-                </div> 
-            </div> 
         </div>
     </div>
 </section>

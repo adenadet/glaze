@@ -65,12 +65,12 @@
                             <td>{{ index | addOne }}</td>
                             <td>{{ guarantor.first_name+' '+guarantor.last_name }}</td>
                             <td>{{ guarantor.email }} | {{ guarantor.phone }}</td>
-                            <td>{{ guarantor.status == 0 ? 'Not Done' : (guarantor.status == 1 ? 'Confirmed': (guarantor.status == 2 ? 'Rejected' : 'Unknown')) }}</td>
+                            <td>{{ guarantor.status == 0 ? 'Not Done' : (guarantor.status == 1 ? 'Ongoing': (guarantor.status == 2 ? 'Rejected' : (guarantor.status == 3 ? 'Confirmed': 'Unknown'))) }}</td>
                             <td :title="guarantor.description">{{ guarantor.description }}</td>
                             <td>
                                 <button type="button" class="btn btn-light" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i class="fas fa-ellipsis-v"></i></button>
                                 <div class="dropdown-menu">
-                                    <button class="btn btn-block dropdown-item" v-if="guarantor.status == 1" @click="viewGuarantor(guarantor.guarantor)"><i class="fa fa-eye mr-1 text-primary"></i> View </button>
+                                    <button class="btn btn-block dropdown-item" v-if="guarantor.status == 3" @click="viewGuarantor(guarantor.guarantor)"><i class="fa fa-eye mr-1 text-primary"></i> View </button>
                                     <button class="btn btn-block dropdown-item" v-else @click="resendGuarantor(guarantor.id)"><i class="fa fa-reply mr-1"></i> Resend Request</button>
                                     <button v-if="guarantor.status == 0" class="btn btn-block dropdown-item" @click="deleteGuarantor(guarantor.id)"><i class="fa fa-trash mr-1 text-danger"></i> Delete Guarantor Request</button>
                                 </div>
@@ -187,7 +187,7 @@ export default {
             });
         },
         viewGuarantor(guarantor){
-            Fire.$emit('GuarantorDataFill', guarantor);
+            Fire.$emit('GuarantorDetailDataFill', guarantor);
             $('#GuarantorViewModal').modal('show');
         },
     },

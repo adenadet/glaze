@@ -91,7 +91,6 @@ export default {
             .then(response =>{
                 this.$Progress.finish();
                 Fire.$emit('Reload', response);
-                if (this.continue_to == "AccountStatement"){Fire.$emit('addAccountStatement', this.loan);}
                 Swal.fire({icon: 'success', title: 'The Guarantors details has been created', showConfirmButton: false, timer: 1500});
             })
             .catch(()=>{
@@ -108,14 +107,14 @@ export default {
                 this.$Progress.finish();
                 toast.fire({
                     icon: 'success',
-                    title: 'Departments were loaded successfully',
+                    title: 'Loan Account details were loaded successfully',
                 });
             })
             .catch(()=>{
                 this.$Progress.fail();
                 toast.fire({
                     icon: 'error',
-                    title: 'Departments were not loaded successfully',
+                    title: 'Loan Account details were not loaded successfully',
                 })
             });
         },

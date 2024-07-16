@@ -1,6 +1,5 @@
 <template>
-<section class="container-fluid overlay-wrapper">
-    <div class="overlay dark" v-if="loading"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>
+<section class="container-fluid">
     <div class="row">
         <div class="col-md-12">
             <div class="card">
@@ -12,8 +11,42 @@
                     </div>
                 </div>
                 <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Loan Summary</h3>
+                                    
+                                </div>
+                                <div class="card-body p-0">
+                                    <table class="table table-sm table-bordered table-hover table-stripped">
+                                        <tbody>
+                                            <tr>
+                                                <td >Loan Name</td>
+                                                <td colspan="3"><strong>{{ account.name }} [{{ account.unique_id }}]</strong></td>
+                                                <td>Loan Type</td>
+                                                <td><strong>{{ account.type ? account.type.name : 'Old Type' }}</strong></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Requested By</td>
+                                                <td colspan="3"><strong>{{ account.user | fullName }}</strong></td>
+                                                <td>Requested On</td>
+                                                <td><strong>{{ account.created_at | excelDate }}</strong></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">Amount</td>
+                                                <td colspan="2"><strong>{{ account.amount | currency }}</strong></td>
+                                                <td>Estimated Monthly Installment</td>
+                                                <td><strong>{{ account.emi | currency }}</strong></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="overlay-wrapper">
-                        <!--div class="overlay" v-if="loading"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div-->
+                        <div class="overlay" v-if="loading"><i class="fas fa-3x fa-sync-alt fa-spin"></i><div class="text-bold pt-2">Loading...</div></div>
                         <div class="card" v-if="status == 'Pending'">
                             <form class="" method="POST" @submit.prevent="rejectLoan()" v-if="reject">
                                 <div class="card-header">Guarantor's Information</div>
@@ -130,6 +163,19 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>Bank Verification Number</label>
+                                                <input type="text" required class="form-control" id="bvn" name="bvn" maxlength="11" placeholder="Bank Verification Number" v-model="confirmationData.bvn"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="form-group">
+                                                <label>National Identification Number</label>
+                                                <input type="text" required class="form-control" id="nin" name="nin" maxlength="11" placeholder="National Identification Number" v-model="confirmationData.nin"/>
+                                            </div>
+                                        </div>
+                                        
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
@@ -205,6 +251,20 @@
                                                 <input type="file" class="form-control" @change="addFile('passport', $event)" required/>
                                                 <input type="hidden" v-model="confirmationData.passport" id="guarantor_passport" name="guarantor_passport"/>
                                             </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form--group">
+                                                <label>Valid Identification</label>
+                                                <input type="file" class="form-control" @change="addFile('valid_id', $event)" required/>
+                                                <input type="hidden" v-model="confirmationData.valid_id" id="guarantor_valid_id" name="guarantor_valid_id"/>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <div class="form--group">
+                                                <label>Proof of Address</label>
+                                                <input type="file" class="form-control" @change="addFile('address_proof', $event)" required/>
+                                                <input type="hidden" v-model="confirmationData.guarantor_valid_id" id="guarantor_address_proof" name="guarantor_address_proof"/>
+                                            </div>
                                         </div>   
                                     </div>
                                     <div class="row">
@@ -272,6 +332,7 @@ export default {
                 request_id: '',
                 residential_address: '',
                 signature: '',
+                status: '',
                 title: '',
                 valid_id: '',
                 valid_id_type: '',
@@ -280,7 +341,7 @@ export default {
             guarantor: {},
             loading: false,
             message: '',
-            //nations: [],
+            nations: [],
             options:{
 				penColor:"rgb(0,0,255)",
 				backgroundColor:"rgb(255,255,255)",
@@ -297,10 +358,11 @@ export default {
                 request_id: '',
                 title: '',
             }),
+            status: '',
         }
     },
     mounted() {
-        //this.getInitials();
+        this.getInitials();
     },
     methods:{
         addFile(fileKey, event) {
@@ -333,6 +395,17 @@ export default {
         change() {
             this.options = {penColor: "#00f",};
         },
+        getInitials(){
+            axios.get('/api/guarantor_requests/'+this.$route.params.id)
+            .then(response => {
+                this.loadPage(response);
+                toast.fire({ icon: 'success', title: 'Loan Accounts loaded successfully', });
+            })
+            .catch(() => {
+                this.$Progress.fail();
+                toast.fire({ icon: 'error', title: 'Loan Accounts not loaded successfully', });
+            });
+        },
         guaranteeLoan(){
             this.confirmationData.request_id = this.$route.params.id;
             this.save();
@@ -347,7 +420,7 @@ export default {
                     timer: 1500
                 });
                 this.loading = false;
-                Fire.$emit('reloadGuarantorConfirm', response);
+                this.$router.push('/requests/thanks');
             })
             .catch(()=>{
                 this.loading = false;
@@ -396,10 +469,7 @@ export default {
             this.$refs.signaturePad.undoSignature();
         }
     },
-    props:{
-        nations: Array,
-        status: String,
-    },
+    props:{},
 }
 </script>
 <style>

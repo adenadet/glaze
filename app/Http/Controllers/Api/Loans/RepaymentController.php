@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Loans;
 
 use App\Http\Controllers\Controller;
+use App\Http\Traits\LoanAccountTrait;
 use Illuminate\Http\Request;
 
 use App\Models\Finance\AllBank;
@@ -19,6 +20,7 @@ use GuzzleHttp\HandlerStack;
 
 class RepaymentController extends Controller
 {
+    use LoanAccountTrait;
     public function initials()
     {
         $loans = Account::where('user_id', auth('api')->id())->with(['repayments', 'user'])->get();
@@ -91,6 +93,7 @@ class RepaymentController extends Controller
     public function show($id)
     {
         return response()->json([
+            'account' => $this->account_get_account_by_id($id, 'true'),
             'repayment' => Repayment::where('id', '=', $id)->with(['loans'])->first(),
             'status' => 'Repayment successfully added',
         ]);
