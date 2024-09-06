@@ -198,6 +198,7 @@ trait GuarantorTrait{
                     'created_by' => auth('api')->id(),
                     'updated_by' => auth('api')->id(),
                 ]);
+                echo $guarantor['email'];
                 Mail::to($guarantor['email'])->send(new RequestMail($loan, $gr));
             }
             $this->log_activity_user_activity(Auth::user(), 'Guarantor Request Create', false, $request->input('loan_id'));

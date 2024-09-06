@@ -87,9 +87,9 @@ class GuarantorController extends Controller
     {
         $gr = GuarantorRequest::where('id', '=', $id)->first();
         $loan = Account::where('id', '=', $gr->loan_id)->with('user')->first();
-
-        Mail::to($gr->email)->send(new RequestMail($loan, $gr));
-        
+        //echo $gr->email;
+        $error = Mail::to($gr->email)->send(new RequestMail($loan, $gr));
+        if ($error){}
         return response()->json([
             'message' => 'Guarantor added successfully',       
         ]);  
@@ -128,7 +128,6 @@ class GuarantorController extends Controller
             'employer_phone'=> 'required',
             'employer_email'=> 'required|email',
             'marital_status'=> 'required',
-            'relationship'=> 'required',
             'address'=> 'required',
             'dob' => 'required|date',
             'net_income'=> 'required',
